@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--背景色-->
+    <color name="wis_bg_grey">#F3F4F5</color>
+    <color name="wis_color_373737">#373737</color>
+    <!--辅助灰色-->
+    <color name="wis_color_AFAFAF">#AFAFAF</color>
+</resources>
