@@ -1,4 +1,4 @@
-# Wisdao 多图片选择库 kotlin版本
+# Wisdom 多图片选择库 kotlin版本
 
 ### 项目介绍
  
