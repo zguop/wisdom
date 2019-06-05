@@ -1,1 +1,1 @@
-include ':app', ':wisdao_lib', ':wisdao_impl'
+include ':app', ':wisdom_lib', ':wisdom_impl'

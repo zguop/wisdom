@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.waitou.wisdao_impl.ui.PhotoWallActivity
-import com.waitou.wisdao_lib.Wisdom
-import com.waitou.wisdao_lib.config.ofAll
-import com.waitou.wisdao_lib.config.ofImage
-import com.waitou.wisdao_lib.config.ofVideo
+import com.waitou.wisdom_impl.ui.PhotoWallActivity
+import com.waitou.wisdom_lib.Wisdom
+import com.waitou.wisdom_lib.config.ofAll
+import com.waitou.wisdom_lib.config.ofImage
+import com.waitou.wisdom_lib.config.ofVideo
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

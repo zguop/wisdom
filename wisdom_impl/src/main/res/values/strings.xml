@@ -1,0 +1,7 @@
+<resources>
+    <string name="wis_preview_count">预览(%1$d/%2$d)</string>
+    <string name="wis_picture">图片</string>
+    <string name="wis_video">视频</string>
+    <string name="wis_gif">GIF</string>
+    <string name="wis_complete">完成</string>
+</resources>
