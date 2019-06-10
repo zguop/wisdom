@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import com.to.aboomy.statusbar_lib.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_anim.*
 
 /**
@@ -29,10 +30,9 @@ class AnimActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anim)
-
+        StatusBarUtil.transparencyBar(this, false)
         pager.adapter = PhotoPagerAdapter(supportFragmentManager)
         pager.addOnPageChangeListener(this)
-
     }
 
 

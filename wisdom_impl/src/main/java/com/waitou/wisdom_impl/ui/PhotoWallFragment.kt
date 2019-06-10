@@ -82,7 +82,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 finish(listOf(media))
             } else {
                 //预览 position 减去相机的占位
-                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "sharedView")
+                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
                 nextToPreView(PhotoPreviewActivity::class.java, adapter.selectMedias, position - 1, currentAlbumId, make.toBundle())
             }
         }

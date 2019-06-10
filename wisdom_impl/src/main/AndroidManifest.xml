@@ -10,7 +10,7 @@
             android:supportsRtl="true">
 
         <activity android:name=".ui.PhotoWallActivity"/>
-        <activity android:name=".ui.PhotoPreviewActivity"/>
+        <activity android:name=".ui.PhotoPreviewActivity" />
     </application>
 
 

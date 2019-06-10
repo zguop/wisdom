@@ -5,7 +5,6 @@ import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.text.format.Formatter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,11 +49,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val mediaViewHolder =
                     MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
             mediaViewHolder.itemView.setOnClickListener {
-                val currentTimeMillis = System.currentTimeMillis()
                 mediaClick?.invoke(medias[mediaViewHolder.adapterPosition], mediaViewHolder.adapterPosition, it)
-                val end = System.currentTimeMillis() - currentTimeMillis
-                Log.e("aa" , " end " + end)
-
             }
             mediaViewHolder.itemView.checkView.setOnCheckedChangeListener { _, _ ->
                 mediaCheckedChange(medias[mediaViewHolder.adapterPosition])

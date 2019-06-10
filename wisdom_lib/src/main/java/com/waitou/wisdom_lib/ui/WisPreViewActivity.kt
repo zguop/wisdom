@@ -112,6 +112,6 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
         i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, selectMedias)
         i.putExtra(EXTRA_PREVIEW_RESULT_EXIT, exit)
         setResult(Activity.RESULT_OK, i)
-        finish()
+        super.onBackPressed()
     }
 }
