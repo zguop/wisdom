@@ -9,10 +9,10 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.bean.ResultMedia
+import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ILoaderAlbumCall
 import com.waitou.wisdom_lib.call.ILoaderMediaCall
-import com.waitou.wisdom_lib.call.OnResultMediaListener
+import com.waitou.wisdom_lib.call.OnMediaListener
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
@@ -24,14 +24,20 @@ import com.waitou.wisdom_lib.utils.CameraStrategy
  */
 abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCall {
 
-    companion object{
-        val TAG: String = WisdomWallFragment::class.java.simpleName
+    companion object {
+        @JvmField
+        val TAG: String = WisdomWallFragment::class.java.name + hashCode()
     }
 
-    var onResultMediaListener: OnResultMediaListener? = null
+    var onResultMediaListener: OnMediaListener? = null
+    lateinit var currentAlbumId: String
+
     private val albumCollection by lazy { AlbumCollection() }
     private val mediaCollection by lazy { MediaCollection() }
     private val cameraStrategy by lazy { CameraStrategy(this) }
+
+    private var cameraPermissionGranted: (() -> Unit)? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +62,17 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
     }
 
+    private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
+        activity?.let {
+            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                this.cameraPermissionGranted = cameraPermissionGranted
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            } else {
+                cameraPermissionGranted?.invoke()
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
@@ -64,7 +81,7 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
                     startLoading()
                 }
                 if (permissions.contains(Manifest.permission.CAMERA)) {
-                    takeMedia()
+                    checkPermissionOnCamera(cameraPermissionGranted)
                 }
             } else {
                 if (shouldShowRequestPermissionRationale(permissions[0])) {
@@ -76,26 +93,56 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
     }
 
+    /**
+     * 加载目录
+     */
     fun loadAlbum() {
         albumCollection.loadAlbum()
     }
 
-    fun loadMedia(bucketId: String = Album.ALBUM_ID_ALL) {
-        mediaCollection.loadMedia(bucketId)
+    /**
+     * 加载相册
+     * @param albumId 目录id 默认加载全部
+     */
+    fun loadMedia(albumId: String = Album.ALBUM_ID_ALL) {
+        currentAlbumId = albumId
+        mediaCollection.loadMedia(albumId)
     }
 
-    fun takeMedia() {
-        activity?.let {
-            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
-            } else {
+    /**
+     * 打开相机拍照 复写onCameraResult方法接收相机回调
+     */
+    fun startCameraImage() {
+        checkPermissionOnCamera {
+            activity?.let {
                 cameraStrategy.startCamera(it, WisdomConfig.getInstance().authorities, WisdomConfig.getInstance().directory)
             }
         }
     }
 
-    fun finish(resultMedias: ArrayList<ResultMedia>) {
+    /**
+     * 打开相机录像，复写onCameraResult方法接收相机回调
+     */
+    fun startCameraVideo() {
+        checkPermissionOnCamera {
+            activity?.let {
+                cameraStrategy.startCameraVideo(it, WisdomConfig.getInstance().authorities, WisdomConfig.getInstance().directory)
+            }
+        }
+    }
+
+    /**
+     * 关闭 回调数据 link {WisdomWallActivity onResultFinish}
+     */
+    fun finish(resultMedias: List<Media>) {
         onResultMediaListener?.onResultFinish(resultMedias)
+    }
+
+    /**
+     * 跳转到预览页面 复写onPreviewResult 处理预览回调数据
+     */
+    fun nextToPreView(clazz: Class<out WisPreViewActivity>, selectMedia: List<Media>, currentPosition: Int = 0, albumId: String, bundle: Bundle? = null) {
+        onResultMediaListener?.nextToPreView(clazz, selectMedia, currentPosition, albumId, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -105,11 +152,33 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            onCameraResult(cameraStrategy.onCameraResult())
+            cameraStrategy.onCameraResultAction { onCameraResult(it) }
+        }
+
+        //预览页面回来
+        if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
+            val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
+            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
+            handlePreview(exit, medias)
         }
     }
 
+    protected fun handlePreview(exit: Boolean, medias: List<Media>) {
+        if (exit) {
+            onResultMediaListener?.onResultFinish(medias)
+            return
+        }
+        onPreviewResult(medias)
+        onResultMediaListener?.onPreViewResult(medias)
+    }
+
+
+    /**
+     * **************************下面是必须实现和可复写的方法**************************
+     */
     abstract fun startLoading()
+
     open fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
-    open fun onCameraResult(resultMedia: ResultMedia) {}
+    open fun onCameraResult(media: Media) {}
+    open fun onPreviewResult(medias: List<Media>) {}
 }

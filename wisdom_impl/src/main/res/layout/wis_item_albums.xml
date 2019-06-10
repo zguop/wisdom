@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@android:color/white"
+        android:background="#E3FFFFFF"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">

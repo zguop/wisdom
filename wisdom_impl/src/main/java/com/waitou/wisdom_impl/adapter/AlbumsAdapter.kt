@@ -24,17 +24,19 @@ class AlbumsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         return AlbumsViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_albums, p0, false))
-            .apply { itemView.setOnClickListener { function?.invoke(adapterPosition) } }
+                .apply { itemView.setOnClickListener { function?.invoke(adapterPosition) } }
     }
 
     override fun getItemCount(): Int = albums.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val album = albums[position]
-        WisdomConfig.getInstance().iImageEngine?.displayThumbnail(
-            holder.itemView.img,
-            Uri.fromFile(File(album.albumPath)),
-            getScreenImageResize()
+        val screenImageResize = getScreenImageResize()
+        WisdomConfig.getInstance().iImageEngine?.displayImage(
+                holder.itemView.img,
+                Uri.fromFile(File(album.albumPath)),
+                screenImageResize,
+                screenImageResize
         )
         holder.itemView.name.text = album.albumName
         holder.itemView.num.text = album.count.toString()

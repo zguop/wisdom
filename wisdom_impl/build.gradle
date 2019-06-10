@@ -16,7 +16,7 @@ dependencies {
     implementation rootProject.ext.dependencies['recyclerview']
     implementation rootProject.ext.dependencies['lifecycle_extensions']
     implementation rootProject.ext.dependencies["statusbarlib"]
-
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api project(':wisdom_lib')
 }

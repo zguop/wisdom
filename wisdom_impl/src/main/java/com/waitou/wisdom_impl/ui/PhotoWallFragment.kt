@@ -2,6 +2,7 @@ package com.waitou.wisdom_impl.ui
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,7 +14,8 @@ import com.waitou.wisdom_impl.adapter.MediasAdapter
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.bean.ResultMedia
+import com.waitou.wisdom_lib.config.onlyImages
+import com.waitou.wisdom_lib.config.onlyVideos
 import com.waitou.wisdom_lib.ui.WisdomWallFragment
 import com.waitou.wisdom_lib.utils.isSingleImage
 
@@ -34,7 +36,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
         if (medias.isEmpty()) {
             return
         }
-        adapter.replaceData(medias)
+        adapter.replaceMedias(medias)
     }
 
     override fun startLoading() {
@@ -55,23 +57,33 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
         Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onCameraResult(resultMedia: ResultMedia) {
-        finish(arrayListOf(resultMedia))
+    override fun onCameraResult(media: Media) {
+        finish(listOf(media))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val recyclerView = RecyclerView(activity!!)
         recyclerView.layoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         recyclerView.layoutManager = GridLayoutManager(activity, 3)
         recyclerView.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         this.adapter = MediasAdapter()
         recyclerView.adapter = adapter
         adapter.checkedListener = this
-        adapter.cameraClick = View.OnClickListener { takeMedia() }
-        adapter.mediaClick = View.OnClickListener {
+        adapter.cameraClick = View.OnClickListener {
+            when {
+                onlyImages() -> startCameraImage()
+                onlyVideos() -> startCameraVideo()
+                else -> startCameraImage()
+            }
+        }
+        adapter.mediaClick = { media, position, view ->
             if (isSingleImage()) {
-                finish(arrayListOf(ResultMedia((it.tag as Media).path, (it.tag as Media).uri)))
+                finish(listOf(media))
+            } else {
+                //预览 position 减去相机的占位
+                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "sharedView")
+                nextToPreView(PhotoPreviewActivity::class.java, adapter.selectMedias, position - 1, currentAlbumId, make.toBundle())
             }
         }
         return recyclerView
@@ -84,5 +96,10 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
 
     override fun onChange() {
         viewModule.selectCountLiveData.postValue(adapter.selectMedias)
+    }
+
+    override fun onPreviewResult(medias: List<Media>) {
+        adapter.replaceSelectMedias(medias)
+        onChange()
     }
 }

@@ -7,13 +7,13 @@
                                                   android:background="@android:color/white">
 
     <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawableTop="@drawable/wis_svg_ic_camera"
-            android:drawablePadding="3dp"
-            android:text="拍一张"
-            android:textSize="14sp"
-            tools:text="拍一张"/>
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/wis_svg_ic_camera"
+        android:drawablePadding="3dp"
+        android:text="拍一张"
+        android:textSize="14sp"
+        tools:text="拍一张"/>
 </com.waitou.wisdom_impl.view.SquareRelativeLayout>

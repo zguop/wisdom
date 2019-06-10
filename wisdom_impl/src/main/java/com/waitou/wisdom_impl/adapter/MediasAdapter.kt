@@ -5,11 +5,11 @@ import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.text.format.Formatter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.waitou.wisdom_impl.R
-import com.waitou.wisdom_impl.view.CheckView
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.utils.getScreenImageResize
@@ -33,7 +33,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var checkedListener: OnCheckedChangedListener? = null
     var cameraClick: View.OnClickListener? = null
-    var mediaClick: View.OnClickListener? = null
+    var mediaClick: ((Media, Int, View) -> Unit)? = null
 
     init {
         setHasStableIds(true)
@@ -42,19 +42,22 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         VIEW_TYPE_CAPTURE -> {
             val cameraViewHolder =
-                CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false))
+                    CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false))
             cameraViewHolder.itemView.setOnClickListener { cameraClick?.onClick(it) }
             cameraViewHolder
         }
         else -> {
             val mediaViewHolder =
-                MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
+                    MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
             mediaViewHolder.itemView.setOnClickListener {
-                it.tag = medias[mediaViewHolder.adapterPosition]
-                mediaClick?.onClick(it)
+                val currentTimeMillis = System.currentTimeMillis()
+                mediaClick?.invoke(medias[mediaViewHolder.adapterPosition], mediaViewHolder.adapterPosition, it)
+                val end = System.currentTimeMillis() - currentTimeMillis
+                Log.e("aa" , " end " + end)
+
             }
-            mediaViewHolder.itemView.checkView.setOnCheckedChangeListener { checkView, isChecked ->
-                mediaCheckedChange(checkView, medias[mediaViewHolder.adapterPosition], mediaViewHolder.adapterPosition)
+            mediaViewHolder.itemView.checkView.setOnCheckedChangeListener { _, _ ->
+                mediaCheckedChange(medias[mediaViewHolder.adapterPosition])
             }
             mediaViewHolder
         }
@@ -77,15 +80,13 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holde is CameraViewHolder) {
             holde.itemView.text.text = media.mediaName
         } else {
-            WisdomConfig.getInstance().iImageEngine?.displayThumbnail(
-                holde.itemView.media,
-                media.uri,
-                getScreenImageResize()
+            WisdomConfig.getInstance().iImageEngine?.displayImage(
+                    holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize()
             )
             holde.itemView.checkView.setCheckedNum(selectMediaIndexOf(media))
             holde.itemView.media.setColorFilter(
-                if (holde.itemView.checkView.isChecked)
-                    Color.argb(80, 0, 0, 0) else Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP
+                    if (holde.itemView.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
+                    PorterDuff.Mode.SRC_ATOP
             )
             holde.itemView.checkView.visibility = if (isSingleImage()) View.GONE else View.VISIBLE
             holde.itemView.size.text = Formatter.formatFileSize(holde.itemView.context, media.size)
@@ -97,7 +98,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    private fun mediaCheckedChange(checkView: CheckView, media: Media, position: Int) {
+    private fun mediaCheckedChange(media: Media) {
         val checkedNumIndex = selectMediaIndexOf(media)
         if (checkedNumIndex > 0) {
             selectMedias.remove(media)
@@ -120,9 +121,15 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return if (indexOf >= 0) indexOf + 1 else indexOf
     }
 
-    fun replaceData(medias: List<Media>) {
+    fun replaceMedias(medias: List<Media>) {
         this.medias.clear()
         this.medias.addAll(medias)
+        notifyDataSetChanged()
+    }
+
+    fun replaceSelectMedias(medias: List<Media>) {
+        this.selectMedias.clear()
+        this.selectMedias.addAll(medias)
         notifyDataSetChanged()
     }
 

@@ -11,14 +11,16 @@ import com.waitou.wisdom_lib.call.IImageEngine
  * date 2019-06-03
  */
 class GlideEngine : IImageEngine {
+    override fun displayImage(target: ImageView, uri: Uri, w: Int, h: Int) {
 
-    override fun displayThumbnail(target: ImageView, uri: Uri, resize: Int) {
         Glide.with(target)
-            .load(uri)
-            .apply(
-                RequestOptions()
-                    .override(resize, resize)
-            )
-            .into(target)
+                .load(uri)
+                .apply(
+                        RequestOptions()
+                                .override(w, h)
+                )
+                .into(target)
     }
+
+
 }

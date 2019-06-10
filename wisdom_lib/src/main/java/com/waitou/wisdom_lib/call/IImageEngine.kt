@@ -8,5 +8,5 @@ import android.widget.ImageView
  * date 2019-06-03
  */
 interface IImageEngine {
-    fun displayThumbnail(target: ImageView, uri: Uri, resize: Int)
+    fun displayImage(target: ImageView, uri: Uri, w: Int, h: Int)
 }

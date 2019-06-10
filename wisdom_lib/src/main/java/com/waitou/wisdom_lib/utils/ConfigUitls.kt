@@ -8,6 +8,7 @@ import com.waitou.wisdom_lib.config.WisdomConfig
  * auth aboom
  * date 2019-06-03
  */
+
 fun isSingleImage(): Boolean {
     return WisdomConfig.getInstance().maxSelectLimit == 1
 }

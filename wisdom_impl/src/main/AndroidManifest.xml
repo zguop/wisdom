@@ -9,8 +9,8 @@
             android:allowBackup="true"
             android:supportsRtl="true">
 
-        <activity android:name="com.waitou.wisdom_impl.ui.PhotoWallActivity"/>
-
+        <activity android:name=".ui.PhotoWallActivity"/>
+        <activity android:name=".ui.PhotoPreviewActivity"/>
     </application>
 
 

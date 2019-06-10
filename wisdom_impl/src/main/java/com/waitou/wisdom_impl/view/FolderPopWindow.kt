@@ -3,7 +3,9 @@ package com.waitou.wisdom_impl.view
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -32,6 +34,16 @@ class FolderPopWindow(context: Context, adapter: RecyclerView.Adapter<*>) : Popu
     }
 
     override fun showAsDropDown(parent: View) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val rect = Rect()
+                parent.getGlobalVisibleRect(rect)
+                val h = parent.resources.displayMetrics.heightPixels - rect.bottom
+                height = h
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         super.showAsDropDown(parent)
         contentView.popList.post {
             val maxHeight = (Resources.getSystem().displayMetrics.density * 300 + .5f).toInt()

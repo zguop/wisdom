@@ -24,7 +24,8 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
     override fun loadInBackground(): Cursor? {
         val cursor = super.loadInBackground()
         //设备不具备相机功能
-        if (!WisdomConfig.getInstance().isCamera || !context.applicationContext.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+        if (!WisdomConfig.getInstance().isCamera ||
+            !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             return cursor
         }
         //添加一个相册的item

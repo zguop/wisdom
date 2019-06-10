@@ -3,6 +3,8 @@ package com.waitou.wisdom_lib.bean
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
+import android.os.Parcel
+import android.os.Parcelable
 import android.provider.MediaStore
 import com.waitou.wisdom_lib.config.isGif
 import com.waitou.wisdom_lib.config.isImage
@@ -17,6 +19,7 @@ class Media(
          * 主键
          */
         val mediaId: String,
+
         /**
          * 名称
          */
@@ -36,7 +39,8 @@ class Media(
         /**
          * video in ms
          */
-        val duration: Long) {
+        val duration: Long
+) : Parcelable {
 
     /**
      * path
@@ -64,9 +68,10 @@ class Media(
         return isVideo(mediaType)
     }
 
-    fun isGif():Boolean{
+    fun isGif(): Boolean {
         return isGif(mediaType)
     }
+
 
     override fun toString(): String {
         return "Media(mediaId='$mediaId', mediaName='$mediaName', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
@@ -85,5 +90,63 @@ class Media(
                     cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
             )
         }
+
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Media> {
+            override fun createFromParcel(parcel: Parcel): Media {
+                return Media(parcel)
+            }
+
+            override fun newArray(size: Int): Array<Media?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(mediaId)
+        parcel.writeString(mediaName)
+        parcel.writeString(mediaType)
+        parcel.writeString(path)
+        parcel.writeLong(size)
+        parcel.writeLong(duration)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Media
+        if (mediaId != other.mediaId) return false
+        if (mediaName != other.mediaName) return false
+        if (mediaType != other.mediaType) return false
+        if (path != other.path) return false
+        if (size != other.size) return false
+        if (duration != other.duration) return false
+        if (uri != other.uri) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = mediaId.hashCode()
+        result = 31 * result + mediaName.hashCode()
+        result = 31 * result + mediaType.hashCode()
+        result = 31 * result + path.hashCode()
+        result = 31 * result + size.hashCode()
+        result = 31 * result + duration.hashCode()
+        result = 31 * result + uri.hashCode()
+        return result
+    }
+
+    private constructor(parcel: Parcel) : this(
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readLong(),
+            parcel.readLong()
+    )
 }

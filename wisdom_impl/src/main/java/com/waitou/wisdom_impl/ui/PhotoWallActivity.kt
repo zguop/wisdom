@@ -8,11 +8,10 @@ import com.waitou.basic_lib.photo.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.view.FolderPopWindow
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.bean.ResultMedia
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 import com.waitou.wisdom_lib.ui.WisdomWallFragment
-import kotlinx.android.synthetic.main.wis_activity_photo_wall_impl.*
+import kotlinx.android.synthetic.main.wis_activity_photo_wall.*
 import kotlinx.android.synthetic.main.wis_include_title_bar.*
 
 /**
@@ -27,7 +26,7 @@ class PhotoWallActivity : WisdomWallActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.wis_activity_photo_wall_impl)
+        setContentView(R.layout.wis_activity_photo_wall)
         back.setOnClickListener { onBackPressed() }
         barTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wis_svg_ic_arrow_drop_down, 0)
 //        StatusBarUtil.immersiveStatusBarNeedDark(this)
@@ -40,6 +39,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         })
         barTitle.setOnClickListener { showPop() }
         complete.setOnClickListener { complete() }
+        preview.setOnClickListener { preView() }
     }
 
     override fun onCreateBoxingView(tag: String): WisdomWallFragment {
@@ -47,7 +47,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         if (fragment !is WisdomWallFragment) {
             fragment = PhotoWallFragment.newInstance()
             supportFragmentManager.beginTransaction().replace(R.id.contentLayout, fragment, tag)
-                .commitAllowingStateLoss()
+                    .commitAllowingStateLoss()
         }
         return fragment
     }
@@ -63,7 +63,7 @@ class PhotoWallActivity : WisdomWallActivity() {
     private fun updateBottomTextUI(size: Int = 0) {
         complete.isEnabled = size > 0
         preview.isEnabled = size > 0
-        preview.text = getString(R.string.wis_preview_count, size, WisdomConfig.getInstance().maxSelectLimit)
+        complete.text = getString(R.string.wis_complete, size, WisdomConfig.getInstance().maxSelectLimit)
     }
 
     private fun showPop() {
@@ -85,8 +85,13 @@ class PhotoWallActivity : WisdomWallActivity() {
         }
     }
 
+    private fun preView() {
+        val value = viewModule.selectCountLiveData.value
+        nextToPreView(PhotoPreviewActivity::class.java, value.orEmpty())
+    }
+
     private fun complete() {
         val value = viewModule.selectCountLiveData.value
-        onResultFinish(value.orEmpty().map { ResultMedia(it.path, it.uri) }.toList() as ArrayList<ResultMedia>)
+        onResultFinish(value.orEmpty())
     }
 }

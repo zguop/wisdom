@@ -77,7 +77,7 @@ class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         super.onDraw(canvas)
         val padding = Math.max(Math.max(paddingLeft, paddingRight), Math.max(paddingTop, paddingBottom))
         canvas.drawCircle(center, center, center - strokePaint.strokeWidth / 2 - padding, strokePaint)
-        if (isChecked && checkNum != UNCHECKED) {
+        if (isChecked && checkNum > UNCHECKED) {
             canvas.drawCircle(center, center, center - strokePaint.strokeWidth - padding, bgPaint)
             val text = checkNum.toString()
             val baseX = (width - textPaint.measureText(text)) / 2
@@ -90,25 +90,35 @@ class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         setChecked(!isChecked)
     }
 
+    /**
+     * 只有当两者都为true 才算checked
+     */
     override fun isChecked(): Boolean {
-        return isChecked && checkNum != UNCHECKED
+        return isChecked && checkNum > UNCHECKED
     }
 
     override fun setChecked(checked: Boolean) {
-        isChecked = checked
-        listener?.onCheckedChanged(this, checked)
+        if (isChecked != checked) {
+            isChecked = checked
+            listener?.onCheckedChanged(this, checked)
+        }
     }
 
     fun setCheckedNum(checkedNum: Int) {
         //已经勾选了，checkNum = UNCHECKED 表示第一次勾选，开启动画
-        if (isChecked && checkedNum != UNCHECKED && checkNum == UNCHECKED) {
+        if (checkedNum > UNCHECKED && checkNum == UNCHECKED) {
             val loadAnimation = AnimationUtils.loadAnimation(context, R.anim.wis_check_in)
             startAnimation(loadAnimation)
         }
+        initCheckedNum(checkedNum)
+    }
+
+    /**
+     * 初始化数字checked，不会触发onCheckedChanged
+     */
+    fun initCheckedNum(checkedNum: Int) {
         this.checkNum = checkedNum
-        if (checkNum == UNCHECKED) {
-            isChecked = false
-        }
+        this.isChecked = checkNum > UNCHECKED
         invalidate()
     }
 

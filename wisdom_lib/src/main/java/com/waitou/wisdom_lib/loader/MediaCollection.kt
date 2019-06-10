@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ILoaderMediaCall
+import com.waitou.wisdom_lib.ui.WisPreViewActivity
 import java.lang.ref.WeakReference
 
 /**
@@ -43,7 +44,7 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onLoadFinished(p0: Loader<Cursor>, cursor: Cursor?) {
-        context.get()?.let {
+        context.get()?.let { context ->
             cursor?.let {
                 if (!cursor.isBeforeFirst) {
                     return
@@ -51,6 +52,10 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
                 val list = mutableListOf<Media>()
                 while (it.moveToNext()) {
                     val media = Media.valueOf(cursor)
+                    //在预览页面，不添加相册的占位
+                    if (context is WisPreViewActivity && it.isFirst) {
+                        continue
+                    }
                     list.add(media)
                 }
                 iLoaderMediaCall.get()?.mediaResult(list)

@@ -12,7 +12,6 @@ import com.waitou.wisdom_lib.call.IImageEngine
  *  压缩图片
  *  多少kb以内的图片不进行压缩
  *  是否显示gif
- *
  */
 class WisdomConfig private constructor() {
 

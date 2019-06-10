@@ -42,6 +42,11 @@ class MainActivity : AppCompatActivity() {
                 .isCamera(isCamera)
                 .forResult(0x11, PhotoWallActivity::class.java)
         }
+
+
+        action.setOnClickListener {
+            startActivity(Intent(this,JaActivity::class.java))
+        }
     }
 
 
