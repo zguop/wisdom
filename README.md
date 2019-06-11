@@ -6,6 +6,7 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 
 ### 核心库 wisdom_lib
 - 不依赖任何第三方库（轻量）
+- 不具备任何UI处理(基类提供实现)
 - 兼容不同版本，对6.0适配权限处理，7.0使用FileProvider获取图片路径(fileProvider自定义配置)
 - 提供核心的图片查询结果封装返回
 - 实现该库，只关心界面逻辑即可
@@ -51,7 +52,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 ```
         
 ### 项目截图
-![](gif/1560244261536.gif)![](gif/1560244286807.gif)
+![](gif/1560244261536.jpg)![](gif/1560244286807.jpg)
+![](gif/auto5.gif)
 
 
 ### 更新
