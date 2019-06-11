@@ -53,8 +53,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         
 ### 项目截图
 
-<div><img width="280" height="600" src="gif/auto5.gif"/></div>
-<div><img width="280" height="600" src="gif/1560244261536.jpg"/></div>
+<div><img width="300" height="600" src="gif/auto5.gif"/></div><div><img width="300" height="600" src="gif/1560244261536.jpg"/></div>
 
 
 ### 更新
