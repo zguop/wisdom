@@ -14,3 +14,5 @@ dependencies {
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+apply from:'https://raw.githubusercontent.com/CodePoem/UploadRepository/master/bintray/uploadBintrayNoJavadoc.gradle'

@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
 
         go.setOnClickListener {
             Wisdom.of(this@MainActivity)
-                .config(ofType)
-                .imageEngine(GlideEngine())
-                .selectLimit(Integer.valueOf(num.text.toString()))
-                .fileProvider("$packageName.utilcode.provider", "image")
-                .isCamera(isCamera)
-                .forResult(0x11, PhotoWallActivity::class.java)
+                .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
+                .imageEngine(GlideEngine()) //图片加载引擎
+                .selectLimit(Integer.valueOf(num.text.toString())) //选择的最大数量 数量1为单选模式
+                .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
+                .isCamera(isCamera) //是否打开相机，
+                .forResult(0x11, PhotoWallActivity::class.java) //requestCode，界面实现Activity，需要继承于核心库activity
         }
 
 
@@ -54,9 +54,8 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (Activity.RESULT_OK == resultCode) {
             if (requestCode == 0x11 && data != null) {
-                val resultMedia = Wisdom.obtainResult(data)
+                val resultMedia = Wisdom.obtainResult(data) //获取回调数据
                 Log.e("aa", resultMedia.toString())
-
             }
         }
     }

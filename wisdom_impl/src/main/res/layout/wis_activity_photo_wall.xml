@@ -8,7 +8,9 @@
     <include layout="@layout/wis_include_title_bar"/>
 
     <FrameLayout
+        android:layout_above="@+id/footer"
         android:id="@+id/contentLayout"
+        android:layout_marginBottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/titleBar"/>
