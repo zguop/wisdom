@@ -1,10 +1,12 @@
 package com.waitou.wisdom_impl.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
@@ -27,7 +29,15 @@ class PhotoPreviewFragment : Fragment() {
         }
     }
 
+    private var onPhotoTapListener: OnOutsidePhotoTapListener? = null
     private var media: Media? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnOutsidePhotoTapListener) {
+            onPhotoTapListener = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +51,16 @@ class PhotoPreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        image.setOnClickListener { onPhotoTapListener?.onOutsidePhotoTap(null) }
         media?.let {
-            val uri = it.uri
-
-//            val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, uri)
+            //            val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, uri)
 //            val metrics = resources.displayMetrics
 //            val point = Point(metrics.widthPixels, metrics.heightPixels)
 
 //            Log.e("aa" ,point.toString())
 
 //            Log.e("aa" , " bitmap w = " + bitmap.width + " H = "   + bitmap.height)
-
+            //测试来看 这个比例目前清晰度没什么问题
             WisdomConfig.getInstance().iImageEngine?.displayImage(image, it.uri, 480, 800)
         }
     }

@@ -53,13 +53,13 @@ class FolderPopWindow(context: Context, adapter: RecyclerView.Adapter<*>) : Popu
                 layoutParams.height = maxHeight
                 contentView.popList.layoutParams = layoutParams
             }
-            val showAnim = AnimationUtils.loadAnimation(contentView.context, R.anim.wis_album_show)
+            val showAnim = AnimationUtils.loadAnimation(contentView.context, R.anim.wis_top_in)
             contentView.popList.startAnimation(showAnim)
         }
     }
 
     override fun dismiss() {
-        val dismissAnim = AnimationUtils.loadAnimation(contentView.context, R.anim.wis_album_dismiss)
+        val dismissAnim = AnimationUtils.loadAnimation(contentView.context, R.anim.wis_top_out)
         contentView.popList.startAnimation(dismissAnim)
         dismissAnim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationRepeat(animation: Animation?) {}

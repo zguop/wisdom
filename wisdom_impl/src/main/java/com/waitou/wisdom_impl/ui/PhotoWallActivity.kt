@@ -2,7 +2,9 @@ package com.waitou.wisdom_impl.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Color
 import android.os.Bundle
+import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.basic_lib.photo.adapter.AlbumsAdapter
 import com.waitou.basic_lib.photo.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_impl.R
@@ -28,8 +30,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wis_activity_photo_wall)
         back.setOnClickListener { onBackPressed() }
-        barTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.wis_svg_ic_arrow_drop_down, 0)
-//        StatusBarUtil.immersiveStatusBarNeedDark(this)
+        StatusBarUtil.setStatusBarColor(this, Color.WHITE)
         viewModule = ViewModelProviders.of(this)[PhotoWallViewModule::class.java]
         viewModule.albumLiveData.observe(this, Observer { addAlbum(it) })
         viewModule.selectCountLiveData.observe(this, Observer { data ->

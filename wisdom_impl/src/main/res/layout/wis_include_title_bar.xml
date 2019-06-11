@@ -4,7 +4,7 @@
              android:id="@+id/titleBar"
              android:layout_width="match_parent"
              android:layout_height="?android:attr/actionBarSize"
-             android:background="?attr/colorPrimary"
+             android:background="@android:color/white"
              android:elevation="4dp">
 
     <ImageView
@@ -22,12 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
+        android:drawableEnd="@drawable/wis_svg_ic_arrow_drop_down"
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lines="1"
         android:maxEms="10"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorPrimary"
         android:textStyle="bold"
         tools:text="标题标题标题标题标题"/>
 </FrameLayout>

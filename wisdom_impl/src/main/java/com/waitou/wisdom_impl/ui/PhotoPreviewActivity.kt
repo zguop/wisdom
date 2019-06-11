@@ -1,38 +1,46 @@
 package com.waitou.wisdom_impl.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisPreViewActivity
 import kotlinx.android.synthetic.main.wis_activity_preview.*
-import kotlinx.android.synthetic.main.wis_include_title_bar.*
 
 /**
  * auth aboom
  * date 2019-06-06
  */
-class PhotoPreviewActivity : WisPreViewActivity() {
+class PhotoPreviewActivity : WisPreViewActivity(), OnOutsidePhotoTapListener {
 
     private lateinit var medias: List<Media>
+    private var isBarHide = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wis_activity_preview)
         StatusBarUtil.transparencyBar(this, false)
-        titleBar.setBackgroundColor(Color.TRANSPARENT)
         pager.addOnPageChangeListener(pageChange)
         back.setOnClickListener { onBackPressed() }
         checkView.setOnCheckedChangeListener { _, _ ->
             mediaCheckedChange(medias[currentPosition])
         }
         complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
+
+        //不可以编辑隐藏编辑按钮
+        if (!isEditor()) {
+            checkView.visibility = View.GONE
+            bottomBar.visibility = View.GONE
+        }
     }
 
     override fun mediaResult(medias: List<Media>) {
@@ -84,5 +92,22 @@ class PhotoPreviewActivity : WisPreViewActivity() {
             currentPosition = p0
             refreshSelectedUI(true)
         }
+    }
+
+    override fun onOutsidePhotoTap(imageView: ImageView?) {
+        val animTop = AnimationUtils.loadAnimation(this,
+                if (isBarHide) R.anim.wis_top_in else R.anim.wis_top_out)
+        animTop.fillAfter = true
+        titleBar.startAnimation(animTop)
+        checkView.isEnabled = isBarHide
+        back.isEnabled = isBarHide
+        //可以编辑 才有底部的动画
+        if (isEditor()) {
+            val animFade = AnimationUtils.loadAnimation(this,
+                    if (isBarHide) R.anim.wis_fade_in else R.anim.wis_fade_out)
+            bottomBar.startAnimation(animFade)
+            complete.isEnabled = isBarHide
+        }
+        isBarHide = !isBarHide
     }
 }

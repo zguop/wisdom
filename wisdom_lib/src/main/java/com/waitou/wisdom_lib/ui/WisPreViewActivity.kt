@@ -84,7 +84,6 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
         }
     }
 
-
     override fun onBackPressed() {
         onResultFinish(false)
     }
@@ -92,7 +91,7 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
     /**
      * true 可以操作checkBox的模式
      */
-    fun isEidtor(): Boolean {
+    fun isEditor(): Boolean {
         return previewModule == WIS_PREVIEW_MODULE_TYPE_EDIT
     }
 
@@ -112,6 +111,7 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
         i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, selectMedias)
         i.putExtra(EXTRA_PREVIEW_RESULT_EXIT, exit)
         setResult(Activity.RESULT_OK, i)
-        super.onBackPressed()
+        //如果推出了就直接finish，否则就当做back返回
+        if (exit) finish() else super.onBackPressed()
     }
 }

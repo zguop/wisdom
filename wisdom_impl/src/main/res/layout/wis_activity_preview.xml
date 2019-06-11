@@ -12,23 +12,54 @@
         android:transitionName="preview" />
 
     <FrameLayout
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#80000000"
-        android:paddingTop="20dp">
+        android:paddingTop="15dp">
 
-        <include layout="@layout/wis_include_title_bar" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize">
 
-        <com.waitou.wisdom_impl.view.CheckView
-            android:id="@+id/checkView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:padding="10dp" />
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/wis_svg_ic_arrow_back"
+                android:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/barTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:maxEms="10"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                tools:text="标题标题标题标题标题" />
+
+            <com.waitou.wisdom_impl.view.CheckView
+                android:id="@+id/checkView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:padding="10dp" />
+        </FrameLayout>
 
     </FrameLayout>
 
+
     <RelativeLayout
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"

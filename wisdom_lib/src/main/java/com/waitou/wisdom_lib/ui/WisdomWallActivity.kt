@@ -42,7 +42,7 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_ALBUM_ID, albumId)
         i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_MODULE_TYPE, WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT)
         val fragment = supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG)
-        fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)
+        fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

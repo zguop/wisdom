@@ -1,5 +1,5 @@
 def VSupportSdk = "28.0.0"
-def leakcanaryCanary = "1.5.4"
+def leakcanaryCanary = "1.6.3"
 ext {
     android = [
             compileSdkVersion: 28,
@@ -11,7 +11,7 @@ ext {
 
     dependencies = [
             "appcompat-v7"             : "com.android.support:appcompat-v7:${VSupportSdk}",
-            "recyclerview"          : "com.android.support:recyclerview-v7:${VSupportSdk}",
+            "recyclerview"             : "com.android.support:recyclerview-v7:${VSupportSdk}",
             "lifecycle_extensions"     : "android.arch.lifecycle:extensions:1.1.1",
             "leakcanary-canary-debug"  : "com.squareup.leakcanary:leakcanary-android:${leakcanaryCanary}", //检测内存泄漏的
             "leakcanary-canary-release": "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryCanary}",
