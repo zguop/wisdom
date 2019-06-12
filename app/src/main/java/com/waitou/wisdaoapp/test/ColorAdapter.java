@@ -1,4 +1,4 @@
-package com.waitou.wisdaoapp;
+package com.waitou.wisdaoapp.test;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

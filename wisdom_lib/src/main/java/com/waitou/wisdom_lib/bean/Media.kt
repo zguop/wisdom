@@ -19,11 +19,6 @@ class Media(
          * 主键
          */
         val mediaId: String,
-
-        /**
-         * 名称
-         */
-        val mediaName: String,
         /**
          * type
          */
@@ -74,7 +69,7 @@ class Media(
 
 
     override fun toString(): String {
-        return "Media(mediaId='$mediaId', mediaName='$mediaName', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
+        return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
     }
 
     companion object {
@@ -83,13 +78,13 @@ class Media(
         fun valueOf(cursor: Cursor): Media {
             return Media(
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
-                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE)),
-                    cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
             )
         }
+
 
         @JvmField
         val CREATOR = object : Parcelable.Creator<Media> {
@@ -105,7 +100,6 @@ class Media(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(mediaId)
-        parcel.writeString(mediaName)
         parcel.writeString(mediaType)
         parcel.writeString(path)
         parcel.writeLong(size)
@@ -121,7 +115,6 @@ class Media(
         if (javaClass != other?.javaClass) return false
         other as Media
         if (mediaId != other.mediaId) return false
-        if (mediaName != other.mediaName) return false
         if (mediaType != other.mediaType) return false
         if (path != other.path) return false
         if (size != other.size) return false
@@ -132,7 +125,6 @@ class Media(
 
     override fun hashCode(): Int {
         var result = mediaId.hashCode()
-        result = 31 * result + mediaName.hashCode()
         result = 31 * result + mediaType.hashCode()
         result = 31 * result + path.hashCode()
         result = 31 * result + size.hashCode()
@@ -142,7 +134,6 @@ class Media(
     }
 
     private constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,

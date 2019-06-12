@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.support.v7.widget.GridLayoutManager
+import com.waitou.wisdaoapp.test.JaActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
+import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
@@ -17,9 +19,17 @@ class MainActivity : AppCompatActivity() {
     private var isCamera = true
     private var ofType = ofAll()
 
+
+    private lateinit var adapter: MainAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        list.layoutManager = GridLayoutManager(this, 3)
+        list.addItemDecoration(GridSpacingItemDecoration(3, 4, true))
+        this.adapter = MainAdapter()
+        list.adapter = this.adapter
+
 
         camera.setOnCheckedChangeListener { _, isChecked ->
             isCamera = isChecked
@@ -33,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         go.setOnClickListener {
             Wisdom.of(this@MainActivity)
                 .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
@@ -45,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
 
         action.setOnClickListener {
-            startActivity(Intent(this,JaActivity::class.java))
+            startActivity(Intent(this, JaActivity::class.java))
         }
     }
 
@@ -55,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         if (Activity.RESULT_OK == resultCode) {
             if (requestCode == 0x11 && data != null) {
                 val resultMedia = Wisdom.obtainResult(data) //获取回调数据
-                Log.e("aa", resultMedia.toString())
+                this.adapter.replaceMedias(resultMedia)
             }
         }
     }

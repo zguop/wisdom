@@ -41,18 +41,18 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         VIEW_TYPE_CAPTURE -> {
             val cameraViewHolder =
-                CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false))
+                    CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false))
             cameraViewHolder.itemView.setOnClickListener { cameraClick?.onClick(it) }
             cameraViewHolder
         }
         else -> {
             val mediaViewHolder =
-                MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
+                    MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
             mediaViewHolder.itemView.setOnClickListener {
                 //预览界面退回，快速点击存在角标问题
                 val adapterPosition =
-                    if (mediaViewHolder.adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                    else mediaViewHolder.adapterPosition
+                        if (mediaViewHolder.adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                        else mediaViewHolder.adapterPosition
                 mediaClick?.invoke(medias[adapterPosition], adapterPosition, it)
             }
             mediaViewHolder.itemView.checkView.setOnCheckedChangeListener { _, _ ->
@@ -77,15 +77,15 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holde: RecyclerView.ViewHolder, position: Int) {
         val media = medias[position]
         if (holde is CameraViewHolder) {
-            holde.itemView.text.text = media.mediaName
+            holde.itemView.cameraText.text = media.path
         } else {
             WisdomConfig.getInstance().iImageEngine?.displayImage(
-                holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize()
+                    holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize()
             )
             holde.itemView.checkView.setCheckedNum(selectMediaIndexOf(media))
             holde.itemView.media.setColorFilter(
-                if (holde.itemView.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
-                PorterDuff.Mode.SRC_ATOP
+                    if (holde.itemView.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
+                    PorterDuff.Mode.SRC_ATOP
             )
             holde.itemView.checkView.visibility = if (isSingleImage()) View.GONE else View.VISIBLE
             holde.itemView.size.text = Formatter.formatFileSize(holde.itemView.context, media.size)

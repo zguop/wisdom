@@ -7,8 +7,8 @@ import android.database.MergeCursor
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.config.onlyImages
-import com.waitou.wisdom_lib.config.onlyVideos
+import com.waitou.wisdom_lib.utils.onlyImages
+import com.waitou.wisdom_lib.utils.onlyVideos
 
 /**
  * auth aboom
@@ -89,7 +89,6 @@ class AlbumLoader private constructor(context: Context, selection: String, selec
             return AlbumLoader(context, selection, selectionArgs.toTypedArray())
         }
     }
-
 }
 
 

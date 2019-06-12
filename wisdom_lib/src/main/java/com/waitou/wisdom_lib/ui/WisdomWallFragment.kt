@@ -163,7 +163,7 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
     }
 
-    protected fun handlePreview(exit: Boolean, medias: List<Media>) {
+    open fun handlePreview(exit: Boolean, medias: List<Media>) {
         if (exit) {
             onResultMediaListener?.onResultFinish(medias)
             return
@@ -171,7 +171,6 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         onPreviewResult(medias)
         onResultMediaListener?.onPreViewResult(medias)
     }
-
 
     /**
      * **************************下面是必须实现和可复写的方法**************************

@@ -62,9 +62,9 @@ class CameraStrategy(fragment: Fragment) {
                     storageDir.mkdirs()
                 }
                 val fileName = String.format(
-                        formatStr,
-                        SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
-                                .format(Date())
+                    formatStr,
+                    SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+                        .format(Date())
                 )
                 return File(storageDir, fileName)
             } catch (e: IOException) {
@@ -85,13 +85,13 @@ class CameraStrategy(fragment: Fragment) {
             val absolutePath = filePath.absolutePath
             val extension = MimeTypeMap.getFileExtensionFromUrl(absolutePath)
             //使用系统API，获取MimeTypeMap的单例实例，然后调用其内部方法获取文件后缀名（扩展名）所对应的MIME类型
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase())?:IMAGE_TYPE
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase()) ?: IMAGE_TYPE
             MediaScannerConnection.scanFile(context.application, arrayOf(absolutePath), arrayOf(type)) { path, uri ->
                 functionWeakReference?.get()?.let {
                     val mediaId = uri.lastPathSegment.orEmpty()
                     //获取时长
                     val duration = getDuration(path)
-                    it.invoke(Media(mediaId, filePath.name, type, path, filePath.length(), duration))
+                    it.invoke(Media(mediaId, type, path, filePath.length(), duration))
                 }
             }
         }
@@ -110,7 +110,6 @@ class CameraStrategy(fragment: Fragment) {
     companion object {
         const val CAMERA_REQUEST = 0X11
         const val IMAGE_TYPE = "image/jpeg"
-        const val VIDEO_TYPE = "video/mp4"
     }
 }
 

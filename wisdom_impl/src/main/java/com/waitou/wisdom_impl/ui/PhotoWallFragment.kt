@@ -2,7 +2,6 @@ package com.waitou.wisdom_impl.ui
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,10 +13,10 @@ import com.waitou.wisdom_impl.adapter.MediasAdapter
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.config.onlyImages
-import com.waitou.wisdom_lib.config.onlyVideos
 import com.waitou.wisdom_lib.ui.WisdomWallFragment
 import com.waitou.wisdom_lib.utils.isSingleImage
+import com.waitou.wisdom_lib.utils.onlyImages
+import com.waitou.wisdom_lib.utils.onlyVideos
 
 /**
  * auth aboom
@@ -82,8 +81,8 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 finish(listOf(media))
             } else {
                 //预览 position 减去相机的占位
-                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
-                nextToPreView(PhotoPreviewActivity::class.java, adapter.selectMedias, position - 1, currentAlbumId, make.toBundle())
+//                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
+                nextToPreView(PhotoPreviewActivity::class.java, adapter.selectMedias, position - 1, currentAlbumId, null)
             }
         }
         return recyclerView

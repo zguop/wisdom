@@ -28,14 +28,6 @@ fun ofVideo(): Int {
     return TYPE_VIDEO
 }
 
-fun onlyImages(): Boolean {
-    return WisdomConfig.getInstance().mimeType == TYPE_IMAGE
-}
-
-fun onlyVideos(): Boolean {
-    return WisdomConfig.getInstance().mimeType == TYPE_VIDEO
-}
-
 fun isImage(mediaType: String): Boolean {
     return mediaType.startsWith("image")
 }

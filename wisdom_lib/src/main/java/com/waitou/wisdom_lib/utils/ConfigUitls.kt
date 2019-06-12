@@ -2,6 +2,8 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.res.Configuration
 import android.content.res.Resources
+import com.waitou.wisdom_lib.config.TYPE_IMAGE
+import com.waitou.wisdom_lib.config.TYPE_VIDEO
 import com.waitou.wisdom_lib.config.WisdomConfig
 
 /**
@@ -9,10 +11,26 @@ import com.waitou.wisdom_lib.config.WisdomConfig
  * date 2019-06-03
  */
 
+/**
+ * is a radio
+ */
 fun isSingleImage(): Boolean {
     return WisdomConfig.getInstance().maxSelectLimit == 1
 }
 
+/**
+ * picture type
+ */
+fun onlyImages(): Boolean {
+    return WisdomConfig.getInstance().mimeType == TYPE_IMAGE
+}
+
+/**
+ * video type
+ */
+fun onlyVideos(): Boolean {
+    return WisdomConfig.getInstance().mimeType == TYPE_VIDEO
+}
 
 /**
  * get the right image size

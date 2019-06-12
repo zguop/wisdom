@@ -1,4 +1,4 @@
-package com.waitou.wisdaoapp;
+package com.waitou.wisdaoapp.test;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.waitou.wisdaoapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

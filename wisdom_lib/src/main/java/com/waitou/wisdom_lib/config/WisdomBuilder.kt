@@ -5,7 +5,7 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.call.ICropCall
-import com.waitou.wisdom_lib.call.IImageEngine
+import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
 /**
@@ -54,7 +54,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     /**
      * image loading engine, need to be Implemented
      */
-    fun imageEngine(iImageEngine: IImageEngine): WisdomBuilder {
+    fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
         wisdomConfig.iImageEngine = iImageEngine
         return this
     }

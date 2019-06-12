@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.OnMediaListener
@@ -42,18 +41,7 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_ALBUM_ID, albumId)
         i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_MODULE_TYPE, WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT)
         val fragment = supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG)
-        fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.e("aa", "activity resultCode " + resultCode + " requestCode " + requestCode)
-
-        if (Activity.RESULT_OK != resultCode) {
-            return
-        }
-
-        Log.e("aa", "activity exit  " + (requestCode - 65536) + "   - " + WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE)
+        fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)
     }
 
     override fun onPreViewResult(resultMedias: List<Media>) {

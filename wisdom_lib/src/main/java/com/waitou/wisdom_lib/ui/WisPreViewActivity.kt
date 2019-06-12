@@ -76,7 +76,11 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
 
     override fun onStart() {
         super.onStart()
-        if (isNeedLoading()) {
+        startLoading()
+    }
+
+    open fun startLoading() {
+        if (albumId.isNotEmpty()) {
             mediaCollection.onCreate(this, this)
             mediaCollection.loadMedia(albumId)
         } else {
@@ -93,14 +97,6 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
      */
     fun isEditor(): Boolean {
         return previewModule == WIS_PREVIEW_MODULE_TYPE_EDIT
-    }
-
-    /**
-     * true loadMedia 加载相册
-     * false selectMedias 只显示选中的图片
-     */
-    fun isNeedLoading(): Boolean {
-        return albumId.isNotEmpty()
     }
 
     /**

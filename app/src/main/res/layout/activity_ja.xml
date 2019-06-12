@@ -6,7 +6,7 @@
 
 
     <!--<fragment-->
-        <!--android:name="com.waitou.wisdaoapp.ListFragment"-->
+        <!--android:name="com.waitou.wisdaoapp.test.ListFragment"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"/>-->
 

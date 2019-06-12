@@ -51,12 +51,16 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
                 }
                 val list = mutableListOf<Media>()
                 while (it.moveToNext()) {
-                    val media = Media.valueOf(cursor)
-                    //在预览页面，不添加相册的占位
-                    if (context is WisPreViewActivity && it.isFirst) {
-                        continue
+                    try {
+                        val media = Media.valueOf(cursor)
+                        //在预览页面，不添加相册的占位
+                        if (context is WisPreViewActivity && it.isFirst) {
+                            continue
+                        }
+                        list.add(media)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                    list.add(media)
                 }
                 iLoaderMediaCall.get()?.mediaResult(list)
                 loaderManager?.destroyLoader(ARGS_LOAD_ID)

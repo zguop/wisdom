@@ -7,6 +7,6 @@ import android.widget.ImageView
  * auth aboom
  * date 2019-06-03
  */
-interface IImageEngine {
+interface ImageEngine {
     fun displayImage(target: ImageView, uri: Uri, w: Int, h: Int)
 }

@@ -46,8 +46,12 @@ class AlbumCollection : LoaderManager.LoaderCallbacks<Cursor> {
                 }
                 val list = mutableListOf<Album>()
                 while (it.moveToNext()) {
-                    val photoFolder = Album.valueOf(it)
-                    list.add(photoFolder)
+                    try {
+                        val photoFolder = Album.valueOf(it)
+                        list.add(photoFolder)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
                 onLoaderCallbacks.get()?.albumResult(list)
                 loaderManager?.destroyLoader(LOADER_ID)

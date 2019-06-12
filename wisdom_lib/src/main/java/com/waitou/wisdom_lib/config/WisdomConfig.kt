@@ -1,7 +1,7 @@
 package com.waitou.wisdom_lib.config
 
 import com.waitou.wisdom_lib.call.ICropCall
-import com.waitou.wisdom_lib.call.IImageEngine
+import com.waitou.wisdom_lib.call.ImageEngine
 
 /**
  * auth aboom
@@ -21,7 +21,7 @@ class WisdomConfig private constructor() {
     var directory: String? = null
     var cropCall: ICropCall? = null
     var maxSelectLimit = 1
-    var iImageEngine: IImageEngine? = null
+    var iImageEngine: ImageEngine? = null
 
     fun reset() {
         mimeType = ofAll()

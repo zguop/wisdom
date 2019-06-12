@@ -1,11 +1,14 @@
 package com.waitou.wisdom_impl.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Media
@@ -53,13 +56,21 @@ class PhotoPreviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         image.setOnClickListener { onPhotoTapListener?.onOutsidePhotoTap(null) }
         media?.let {
-            //            val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, uri)
-//            val metrics = resources.displayMetrics
-//            val point = Point(metrics.widthPixels, metrics.heightPixels)
-
-//            Log.e("aa" ,point.toString())
-
-//            Log.e("aa" , " bitmap w = " + bitmap.width + " H = "   + bitmap.height)
+            if (it.isVideo()) {
+                val videoPlay = View(activity)
+                videoPlay.setBackgroundResource(R.drawable.wis_svg_ic_video_play)
+                val density = (resources.displayMetrics.density * 60).toInt()
+                (view as ViewGroup).addView(videoPlay, FrameLayout.LayoutParams(density, density, Gravity.CENTER))
+                videoPlay.setOnClickListener { _ ->
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.setDataAndType(it.uri, it.mediaType)
+                        startActivity(intent)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
             //测试来看 这个比例目前清晰度没什么问题
             WisdomConfig.getInstance().iImageEngine?.displayImage(image, it.uri, 480, 800)
         }

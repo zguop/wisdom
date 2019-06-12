@@ -1,4 +1,4 @@
-package com.waitou.wisdaoapp
+package com.waitou.wisdaoapp.test
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.to.aboomy.statusbar_lib.StatusBarUtil
+import com.waitou.wisdaoapp.R
 import kotlinx.android.synthetic.main.activity_anim.*
 
 /**

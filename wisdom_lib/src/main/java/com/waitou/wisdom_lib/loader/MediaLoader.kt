@@ -10,8 +10,8 @@ import android.support.v4.content.CursorLoader
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
-import com.waitou.wisdom_lib.config.onlyImages
-import com.waitou.wisdom_lib.config.onlyVideos
+import com.waitou.wisdom_lib.utils.onlyImages
+import com.waitou.wisdom_lib.utils.onlyVideos
 
 /**
  * auth aboom
@@ -25,12 +25,12 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
         val cursor = super.loadInBackground()
         //设备不具备相机功能
         if (!WisdomConfig.getInstance().isCamera ||
-            !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             return cursor
         }
         //添加一个相册的item
         val mc = MatrixCursor(PROJECTION)
-        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "capture", "", "", 0, 0))
+        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", "capture", 0, 0))
         return MergeCursor(arrayOf(mc, cursor))
     }
 
@@ -38,9 +38,8 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
         /**
          * 查询media的字段
          */
-      private  val PROJECTION = arrayOf(
+        private val PROJECTION = arrayOf(
                 MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.SIZE,
