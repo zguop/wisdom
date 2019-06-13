@@ -19,7 +19,7 @@ import com.waitou.wisdom_lib.utils.onlyVideos
  */
 class MediaLoader private constructor(context: Context, selection: String?, selectionArgs: Array<String>?) :
         CursorLoader(context, MediaStore.Files.getContentUri("external"),
-                PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_TAKEN + " DESC") {
+                PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " DESC") {
 
     override fun loadInBackground(): Cursor? {
         val cursor = super.loadInBackground()

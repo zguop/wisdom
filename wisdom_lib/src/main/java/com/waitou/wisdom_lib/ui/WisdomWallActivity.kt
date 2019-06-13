@@ -34,7 +34,7 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
                                currentPosition: Int,
                                albumId: String,
                                bundle: Bundle?) {
-        //当前点击的position 所有选择的数据 id
+        //当前点击的position 所有选择的数据 mediaId
         val i = Intent(this, clazz)
         i.putParcelableArrayListExtra(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
         i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)

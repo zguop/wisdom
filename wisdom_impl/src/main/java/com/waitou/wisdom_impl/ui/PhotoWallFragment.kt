@@ -78,6 +78,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
         }
         adapter.mediaClick = { media, position, view ->
             if (isSingleImage()) {
+                //单选完要不要去裁剪
                 finish(listOf(media))
             } else {
                 //预览 position 减去相机的占位

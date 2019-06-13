@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.2'
+    compile 'com.waitou:wisdom_lib:1.0.3'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.2'
+    compile 'com.waitou:wisdom_impl:1.0.3'
 }
 ```
 ### 使用
@@ -59,6 +59,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 
 ### 更新
+    时间：20190613（版本1.0.3）
+    内容：imageEngine增加到三个方法，分别加载(相册封面,缩略图，预览图) picasso加载适配
+
     时间：20190612（版本1.0.2）
     内容：一些功能优化，去除Media图片文件名字段，其实可以通过路径Path获取
     

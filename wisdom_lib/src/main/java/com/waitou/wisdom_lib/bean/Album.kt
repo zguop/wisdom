@@ -1,7 +1,12 @@
 package com.waitou.wisdom_lib.bean
 
+import android.content.ContentUris
 import android.database.Cursor
+import android.net.Uri
 import android.provider.MediaStore
+import com.waitou.wisdom_lib.config.getMimeType
+import com.waitou.wisdom_lib.config.isImage
+import com.waitou.wisdom_lib.config.isVideo
 import com.waitou.wisdom_lib.loader.AlbumLoader
 
 /**
@@ -12,7 +17,7 @@ class Album(
         /**
          * 主键
          */
-        val id: String,
+        private val mediaId: String,
         /**
          * 相册id
          */
@@ -24,14 +29,28 @@ class Album(
         /**
          * 相册图片路径
          */
-        val albumPath: String,
+        val path: String,
         /**
          * 相册有多少张图
          */
         val count: Int) {
 
+    /**
+     * uri
+     */
+    val uri: Uri
+
+    init {
+        val contentUri = when {
+            isImage(getMimeType(path)) -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            isVideo(getMimeType(path)) -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            else -> MediaStore.Files.getContentUri("external")
+        }
+        this.uri = ContentUris.withAppendedId(contentUri, mediaId.toLong())
+    }
+
     override fun toString(): String {
-        return "Album(mediaId='$id', albumId='$albumId', albumName='$albumName', albumPath='$albumPath', count=$count)"
+        return "Album(mediaId='$mediaId', albumId='$albumId', albumName='$albumName', path='$path', count=$count, uri=$uri)"
     }
 
     companion object {

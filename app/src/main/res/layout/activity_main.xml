@@ -67,7 +67,44 @@
                 android:textSize="14sp" />
 
             <!--<RadioButton-->
-            <!--android:id="@+id/rb_audio"-->
+            <!--android:mediaId="@+mediaId/rb_audio"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:text="音频"-->
+            <!--android:textColor="?attr/colorPrimary"-->
+            <!--android:textSize="14sp" />-->
+        </RadioGroup>
+
+
+
+        <RadioGroup
+            android:id="@+id/radio2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/glide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="glide"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/picasso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="picasso"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+            <!--<RadioButton-->
+            <!--android:mediaId="@+mediaId/rb_audio"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginLeft="5dp"-->

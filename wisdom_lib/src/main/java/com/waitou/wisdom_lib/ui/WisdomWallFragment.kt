@@ -153,6 +153,7 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
             cameraStrategy.onCameraResultAction { onCameraResult(it) }
+            //拍完照是不是要去裁剪。
         }
 
         //预览页面回来

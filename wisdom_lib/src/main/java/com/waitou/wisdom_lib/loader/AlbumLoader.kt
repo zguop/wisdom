@@ -16,7 +16,7 @@ import com.waitou.wisdom_lib.utils.onlyVideos
  */
 class AlbumLoader private constructor(context: Context, selection: String, selectionArgs: Array<String>) :
         CursorLoader(context, MediaStore.Files.getContentUri("external"),
-                PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_TAKEN + " DESC") {
+                PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " DESC") {
 
     override fun loadInBackground(): Cursor? {
         val cursor = super.loadInBackground()
@@ -24,18 +24,21 @@ class AlbumLoader private constructor(context: Context, selection: String, selec
         val allAlbum = MatrixCursor(COLUMNS)
         //得到 文件夹下的图片总数
         var totalCount = 0
+        //第一张图片的id
+        var id = Album.ALBUM_ID_ALL
         //拿第一张图片当做封面图片
         var allAlbumCoverPath = ""
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                totalCount += cursor.getInt(cursor.getColumnIndex(COLUMN_COUNT))
+                totalCount += cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNT))
             }
             if (cursor.moveToFirst()) {
-                allAlbumCoverPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA))
+                id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                allAlbumCoverPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
             }
         }
         //插入一条记录到虚拟表
-        allAlbum.addRow(arrayOf(Album.ALBUM_ID_ALL, Album.ALBUM_ID_ALL, Album.ALBUM_NAME_ALL, allAlbumCoverPath, totalCount.toString()))
+        allAlbum.addRow(arrayOf(id, Album.ALBUM_ID_ALL, Album.ALBUM_NAME_ALL, allAlbumCoverPath, totalCount.toString()))
         //合并结果集
         return MergeCursor(arrayOf(allAlbum, cursor))
     }
@@ -74,7 +77,7 @@ class AlbumLoader private constructor(context: Context, selection: String, selec
             val selectionArgs = mutableListOf<String>()
 
             /**
-             * SELECT _id, bucket_id, bucket_display_name, _data, COUNT(*) AS count FROM files WHERE ((media_type=? OR media_type=?) AND _size>0) GROUP BY（bucket_id) ORDER BY datetaken DESC
+             * SELECT _id, bucket_id, bucket_display_name, _data, COUNT(*) AS count FROM files WHERE ((media_type=? OR media_type=?) AND _size>0) GROUP BY（bucket_id) ORDER BY date_modified DESC
              */
             val selection = if (onlyImages() || onlyVideos()) {
                 "${MediaStore.Files.FileColumns.MEDIA_TYPE}=? AND ${MediaStore.MediaColumns.SIZE}>0) GROUP BY (${MediaStore.Images.Media.BUCKET_ID}"

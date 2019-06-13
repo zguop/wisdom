@@ -18,6 +18,8 @@ dependencies {
     implementation rootProject.ext.dependencies["statusbarlib"]
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api project(':wisdom_lib')
+//    api project(':wisdom_lib')
+
+    api 'com.waitou:wisdom_lib:1.0.3'
 }
-apply from:'https://raw.githubusercontent.com/CodePoem/UploadRepository/master/bintray/uploadBintrayNoJavadoc.gradle'
+apply from: 'https://raw.githubusercontent.com/CodePoem/UploadRepository/master/bintray/uploadBintrayNoJavadoc.gradle'

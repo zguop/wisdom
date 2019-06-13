@@ -1,6 +1,5 @@
 package com.waitou.basic_lib.photo.adapter
 
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +7,10 @@ import android.view.ViewGroup
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
+import com.waitou.wisdom_lib.config.getMimeType
+import com.waitou.wisdom_lib.config.isGif
 import com.waitou.wisdom_lib.utils.getScreenImageResize
 import kotlinx.android.synthetic.main.wis_item_albums.view.*
-import java.io.File
 
 /**
  * auth aboom
@@ -32,11 +32,12 @@ class AlbumsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val album = albums[position]
         val screenImageResize = getScreenImageResize()
-        WisdomConfig.getInstance().iImageEngine?.displayImage(
+        WisdomConfig.getInstance().iImageEngine?.displayAlbum(
                 holder.itemView.img,
-                Uri.fromFile(File(album.albumPath)),
+                album.uri,
                 screenImageResize,
-                screenImageResize
+                screenImageResize,
+                isGif(getMimeType(album.path))
         )
         holder.itemView.name.text = album.albumName
         holder.itemView.num.text = album.count.toString()

@@ -29,7 +29,6 @@ class PhotoWallActivity : WisdomWallActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wis_activity_photo_wall)
-        back.setOnClickListener { onBackPressed() }
         StatusBarUtil.setStatusBarColor(this, Color.WHITE)
         viewModule = ViewModelProviders.of(this)[PhotoWallViewModule::class.java]
         viewModule.albumLiveData.observe(this, Observer { addAlbum(it) })
@@ -41,6 +40,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         barTitle.setOnClickListener { showPop() }
         complete.setOnClickListener { complete() }
         preview.setOnClickListener { preView() }
+        back.setOnClickListener { onBackPressed() }
     }
 
     override fun onCreateBoxingView(tag: String): WisdomWallFragment {
@@ -51,6 +51,10 @@ class PhotoWallActivity : WisdomWallActivity() {
                     .commitAllowingStateLoss()
         }
         return fragment
+    }
+
+    override fun onBackPressed() {
+        if (popUpWindow?.isShowing == true) popUpWindow?.dismiss() else super.onBackPressed()
     }
 
     private fun addAlbum(data: List<Album>?) {

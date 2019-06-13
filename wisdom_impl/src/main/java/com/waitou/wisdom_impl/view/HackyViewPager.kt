@@ -8,7 +8,7 @@ import android.view.MotionEvent
 
 /**
  * Hacky fix for Issue #4 and
- * http://code.google.com/p/android/issues/detail?id=18990
+ * http://code.google.com/p/android/issues/detail?mediaId=18990
  *
  *
  * ScaleGestureDetector seems to mess up the touch events, which means that

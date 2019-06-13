@@ -8,5 +8,18 @@ import android.widget.ImageView
  * date 2019-06-03
  */
 interface ImageEngine {
-    fun displayImage(target: ImageView, uri: Uri, w: Int, h: Int)
+    /**
+     * 加载相册封面
+     */
+    fun displayAlbum(target: ImageView, uri: Uri, w: Int, h: Int, isGif: Boolean)
+
+    /**
+     * 加载相册缩略图
+     */
+    fun displayThumbnail(target: ImageView, uri: Uri, w: Int, h: Int, isGif: Boolean)
+
+    /**
+     * 加载预览界面图片
+     */
+    fun displayPreviewImage(target: ImageView, uri: Uri, w: Int, h: Int, isGif: Boolean)
 }

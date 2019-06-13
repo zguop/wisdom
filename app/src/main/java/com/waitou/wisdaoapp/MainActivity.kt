@@ -9,6 +9,7 @@ import com.waitou.wisdaoapp.test.JaActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
+import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private var isCamera = true
     private var ofType = ofAll()
+    private var imageEngine: ImageEngine = GlideEngine()
 
 
     private lateinit var adapter: MainAdapter
@@ -43,15 +45,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        radio2.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.glide -> imageEngine = GlideEngine()
+                R.id.picasso -> imageEngine = PicassoEngine()
+            }
+        }
+
 
         go.setOnClickListener {
             Wisdom.of(this@MainActivity)
-                .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
-                .imageEngine(GlideEngine()) //图片加载引擎
-                .selectLimit(Integer.valueOf(num.text.toString())) //选择的最大数量 数量1为单选模式
-                .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
-                .isCamera(isCamera) //是否打开相机，
-                .forResult(0x11, PhotoWallActivity::class.java) //requestCode，界面实现Activity，需要继承于核心库activity
+                    .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
+                    .imageEngine(imageEngine) //图片加载引擎
+                    .selectLimit(Integer.valueOf(num.text.toString())) //选择的最大数量 数量1为单选模式
+                    .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
+                    .isCamera(isCamera) //是否打开相机，
+                    .forResult(0x11, PhotoWallActivity::class.java) //requestCode，界面实现Activity，需要继承于核心库activity
         }
 
 

@@ -1,5 +1,6 @@
 package com.waitou.wisdom_lib.utils
 
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadataRetriever
@@ -8,8 +9,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
-import android.webkit.MimeTypeMap
 import com.waitou.wisdom_lib.bean.Media
+import com.waitou.wisdom_lib.config.getMimeType
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -62,9 +63,9 @@ class CameraStrategy(fragment: Fragment) {
                     storageDir.mkdirs()
                 }
                 val fileName = String.format(
-                    formatStr,
-                    SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
-                        .format(Date())
+                        formatStr,
+                        SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+                                .format(Date())
                 )
                 return File(storageDir, fileName)
             } catch (e: IOException) {
@@ -83,15 +84,13 @@ class CameraStrategy(fragment: Fragment) {
         weakReference.get()?.activity?.let { context ->
             //使用系统API，获取URL路径中文件的后缀名（扩展名）.jpg .mp4
             val absolutePath = filePath.absolutePath
-            val extension = MimeTypeMap.getFileExtensionFromUrl(absolutePath)
-            //使用系统API，获取MimeTypeMap的单例实例，然后调用其内部方法获取文件后缀名（扩展名）所对应的MIME类型
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase()) ?: IMAGE_TYPE
-            MediaScannerConnection.scanFile(context.application, arrayOf(absolutePath), arrayOf(type)) { path, uri ->
+            val mimeType = getMimeType(absolutePath)
+            MediaScannerConnection.scanFile(context.application, arrayOf(absolutePath), arrayOf(mimeType)) { path, uri ->
                 functionWeakReference?.get()?.let {
-                    val mediaId = uri.lastPathSegment.orEmpty()
+                    val mediaId = ContentUris.parseId(uri).toString()
                     //获取时长
                     val duration = getDuration(path)
-                    it.invoke(Media(mediaId, type, path, filePath.length(), duration))
+                    it.invoke(Media(mediaId, mimeType, path, filePath.length(), duration))
                 }
             }
         }

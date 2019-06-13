@@ -79,8 +79,8 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holde is CameraViewHolder) {
             holde.itemView.cameraText.text = media.path
         } else {
-            WisdomConfig.getInstance().iImageEngine?.displayImage(
-                    holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize()
+            WisdomConfig.getInstance().iImageEngine?.displayThumbnail(
+                    holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
             )
             holde.itemView.checkView.setCheckedNum(selectMediaIndexOf(media))
             holde.itemView.media.setColorFilter(
