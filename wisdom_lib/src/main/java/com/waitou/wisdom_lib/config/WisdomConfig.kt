@@ -1,6 +1,5 @@
 package com.waitou.wisdom_lib.config
 
-import com.waitou.wisdom_lib.call.ICropCall
 import com.waitou.wisdom_lib.call.ImageEngine
 
 /**
@@ -19,7 +18,6 @@ class WisdomConfig private constructor() {
     var isCamera = true
     var authorities = ""
     var directory: String? = null
-    var cropCall: ICropCall? = null
     var maxSelectLimit = 1
     var iImageEngine: ImageEngine? = null
 
@@ -28,7 +26,6 @@ class WisdomConfig private constructor() {
         isCamera = true
         authorities = ""
         directory = null
-        cropCall = null
         maxSelectLimit = 1
         iImageEngine = null
     }

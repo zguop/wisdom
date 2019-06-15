@@ -42,10 +42,15 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:4.9.0"
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    implementation 'com.github.yalantis:ucrop:2.2.3'
+
     implementation rootProject.ext.dependencies["statusbarlib"]
 
     implementation project(':wisdom_impl')
     api 'com.blankj:utilcode:1.23.7'
+
+    api 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+
 
 
 //    implementation 'com.waitou:wisdom_impl:1.0.3'

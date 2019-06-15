@@ -29,11 +29,11 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         }
     }
 
-    override fun nextToPreView(clazz: Class<out WisPreViewActivity>,
-                               selectMedias: List<Media>,
-                               currentPosition: Int,
-                               albumId: String,
-                               bundle: Bundle?) {
+    override fun startPreview(clazz: Class<out WisPreViewActivity>,
+                              selectMedias: List<Media>,
+                              currentPosition: Int,
+                              albumId: String,
+                              bundle: Bundle?) {
         //当前点击的position 所有选择的数据 mediaId
         val i = Intent(this, clazz)
         i.putParcelableArrayListExtra(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))

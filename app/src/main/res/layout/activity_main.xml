@@ -21,7 +21,6 @@
             android:hint="请输入数量"
             android:inputType="number"
             android:maxEms="11"
-            android:text="2"
             android:textSize="14sp" />
 
         <CheckBox
@@ -102,16 +101,43 @@
                 android:text="picasso"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
-
-            <!--<RadioButton-->
-            <!--android:mediaId="@+mediaId/rb_audio"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:text="音频"-->
-            <!--android:textColor="?attr/colorPrimary"-->
-            <!--android:textSize="14sp" />-->
         </RadioGroup>
+
+        <CheckBox
+                android:id="@+id/crop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="是否裁剪图片"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+        <RadioGroup
+                android:id="@+id/radio3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <RadioButton
+                    android:id="@+id/ucrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ucrop"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp" />
+
+            <RadioButton
+                    android:id="@+id/cropper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="crooper"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp" />
+        </RadioGroup>
+
+
 
         <Button
             android:id="@+id/go"

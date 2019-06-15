@@ -17,7 +17,7 @@ interface OnMediaListener {
      * @param albumId 相册id
      * @param bundle 自己实现页面的设置的属性
      */
-    fun nextToPreView(
+    fun startPreview(
         clazz: Class<out WisPreViewActivity>,
         selectMedias: List<Media>,
         currentPosition: Int = 0,

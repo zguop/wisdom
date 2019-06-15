@@ -76,14 +76,20 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 else -> startCameraImage()
             }
         }
-        adapter.mediaClick = { media, position, view ->
+        adapter.mediaClick = { media, position, _ ->
             if (isSingleImage()) {
-                //单选完要不要去裁剪
+                //单选完成结束
                 finish(listOf(media))
             } else {
                 //预览 position 减去相机的占位
 //                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
-                nextToPreView(PhotoPreviewActivity::class.java, adapter.selectMedias, position - 1, currentAlbumId, null)
+                startPreview(
+                        PhotoPreviewActivity::class.java,
+                        adapter.selectMedias,
+                        position - 1,
+                        currentAlbumId,
+                        null
+                )
             }
         }
         return recyclerView

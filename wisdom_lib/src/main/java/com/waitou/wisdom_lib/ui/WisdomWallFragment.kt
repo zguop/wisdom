@@ -141,8 +141,8 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     /**
      * 跳转到预览页面 复写onPreviewResult 处理预览回调数据
      */
-    fun nextToPreView(clazz: Class<out WisPreViewActivity>, selectMedia: List<Media>, currentPosition: Int = 0, albumId: String, bundle: Bundle? = null) {
-        onResultMediaListener?.nextToPreView(clazz, selectMedia, currentPosition, albumId, bundle)
+    fun startPreview(clazz: Class<out WisPreViewActivity>, selectMedia: List<Media>, currentPosition: Int = 0, albumId: String, bundle: Bundle? = null) {
+        onResultMediaListener?.startPreview(clazz, selectMedia, currentPosition, albumId, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -21,8 +21,6 @@ class Wisdom private constructor(sojourn: Any) {
         return WisdomBuilder(this, mineType)
     }
 
-
-
     companion object {
         /**
          * 选择完成后回调数据的key

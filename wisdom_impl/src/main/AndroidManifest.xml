@@ -8,10 +8,9 @@
     <application
             android:allowBackup="true"
             android:supportsRtl="true">
-
-        <activity android:name=".ui.PhotoWallActivity"/>
-        <activity android:name=".ui.PhotoPreviewActivity" />
+        <activity android:name=".ui.PhotoWallActivity"
+                  android:configChanges="orientation|screenSize"/>
+        <activity android:name=".ui.PhotoPreviewActivity"
+                  android:configChanges="orientation|screenSize"/>
     </application>
-
-
 </manifest>

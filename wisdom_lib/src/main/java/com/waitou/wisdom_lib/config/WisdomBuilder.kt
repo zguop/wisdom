@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
-import com.waitou.wisdom_lib.call.ICropCall
 import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
@@ -35,11 +34,6 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     fun fileProvider(authorities: String, directory: String? = null): WisdomBuilder {
         wisdomConfig.authorities = authorities
         wisdomConfig.directory = directory
-        return this
-    }
-
-    fun crop(cropCall: ICropCall): WisdomBuilder {
-        wisdomConfig.cropCall = cropCall
         return this
     }
 

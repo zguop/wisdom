@@ -92,7 +92,7 @@ class PhotoWallActivity : WisdomWallActivity() {
 
     private fun preView() {
         val value = viewModule.selectCountLiveData.value
-        nextToPreView(PhotoPreviewActivity::class.java, value.orEmpty())
+        startPreview(PhotoPreviewActivity::class.java, value.orEmpty())
     }
 
     private fun complete() {

@@ -51,30 +51,6 @@ class CameraStrategy(fragment: Fragment) {
         }
     }
 
-    private fun checkImageFileExistsAndCreate(directory: String?, formatStr: String): File? {
-        if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
-            try {
-                //the path of /storage/emulated/0/Pictures
-                var storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                if (!directory.isNullOrEmpty()) {
-                    storageDir = File(storageDir, directory)
-                }
-                if (!storageDir.exists()) {
-                    storageDir.mkdirs()
-                }
-                val fileName = String.format(
-                        formatStr,
-                        SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
-                                .format(Date())
-                )
-                return File(storageDir, fileName)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-        return null
-    }
-
     /**
      * 方法名 参数 返回值
      */
@@ -96,19 +72,53 @@ class CameraStrategy(fragment: Fragment) {
         }
     }
 
-    private fun getDuration(path: String): Long {
-        return try {
-            val mmr = MediaMetadataRetriever()
-            mmr.setDataSource(path)
-            return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-        } catch (e: Exception) {
-            0
-        }
-    }
-
     companion object {
-        const val CAMERA_REQUEST = 0X11
-        const val IMAGE_TYPE = "image/jpeg"
+        internal const val CAMERA_REQUEST = 0X11
+
+        /**
+         * 获取/storage/emulated/0/Pictures/{directory}/{fileName}
+         * @param directory 目录
+         * @param formatStr IMAGE_%s.jpg
+         *
+         */
+        @JvmStatic
+        fun checkImageFileExistsAndCreate(directory: String?, formatStr: String): File? {
+            if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+                try {
+                    //the path of /storage/emulated/0/Pictures
+                    var storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    if (!directory.isNullOrEmpty()) {
+                        storageDir = File(storageDir, directory)
+                    }
+                    if (!storageDir.exists()) {
+                        storageDir.mkdirs()
+                    }
+                    val fileName = String.format(
+                            formatStr,
+                            SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+                                    .format(Date())
+                    )
+                    return File(storageDir, fileName)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            return null
+        }
+
+        /**
+         * 获取视频的播放时长
+         */
+        @JvmStatic
+        fun getDuration(path: String): Long {
+            return try {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(path)
+                return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            } catch (e: Exception) {
+                0
+            }
+        }
     }
 }
 
