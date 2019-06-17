@@ -1,4 +1,4 @@
-package com.waitou.basic_lib.photo.adapter
+package com.waitou.wisdom_impl.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

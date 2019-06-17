@@ -1,4 +1,4 @@
-package com.waitou.basic_lib.photo.viewmodule
+package com.waitou.wisdom_impl.viewmodule
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel

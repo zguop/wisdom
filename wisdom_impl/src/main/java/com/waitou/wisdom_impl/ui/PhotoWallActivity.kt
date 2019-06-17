@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import com.to.aboomy.statusbar_lib.StatusBarUtil
-import com.waitou.basic_lib.photo.adapter.AlbumsAdapter
-import com.waitou.basic_lib.photo.viewmodule.PhotoWallViewModule
+import com.waitou.wisdom_impl.adapter.AlbumsAdapter
+import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.view.FolderPopWindow
 import com.waitou.wisdom_lib.bean.Album
