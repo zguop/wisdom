@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.3'
+    compile 'com.waitou:wisdom_lib:1.0.4'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.3'
+    compile 'com.waitou:wisdom_impl:1.0.4'
 }
 ```
 ### 使用
