@@ -22,7 +22,7 @@ class AlbumCollection : LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var context: WeakReference<FragmentActivity>
     private lateinit var onLoaderCallbacks: WeakReference<ILoaderAlbumCall>
-    private val loaderManager by lazy { context.get()?.let { LoaderManager.getInstance(it) } }
+    private val loaderManager by lazy { context.get()?.supportLoaderManager }
 
 
     fun onCreate(@NonNull activity: FragmentActivity, @NonNull onLoaderCallbacks: ILoaderAlbumCall) {

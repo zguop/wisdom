@@ -24,7 +24,7 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var context: WeakReference<FragmentActivity>
     private lateinit var iLoaderMediaCall: WeakReference<ILoaderMediaCall>
-    private val loaderManager by lazy { context.get()?.let { LoaderManager.getInstance(it) } }
+    private val loaderManager by lazy { context.get()?.supportLoaderManager }
 
 
     fun onCreate(@NonNull activity: FragmentActivity, @NonNull iLoaderMediaCall: ILoaderMediaCall) {

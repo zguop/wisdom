@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.4'
+    compile 'com.waitou:wisdom_lib:1.0.5'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.4'
+    compile 'com.waitou:wisdom_impl:1.0.5'
 }
 ```
 ### 使用
@@ -59,6 +59,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 
 ### 更新
+    时间：20190621（1.0.5）
+    内容：低版本兼容api兼容，wisdom_impl导入发生资源冲突，则使用exclude group :'com.android.support' 移除support
+
     时间：20190617（1.0.4）
     内容：增加两种图片裁剪实例，sdk本身暂不提供裁剪接口，查看demo获取实现裁剪方式
     
