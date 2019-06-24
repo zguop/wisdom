@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.5'
+    compile 'com.waitou:wisdom_lib:1.0.6'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.5'
+    compile 'com.waitou:wisdom_impl:1.0.6'
 }
 ```
 ### 使用
@@ -55,10 +55,14 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         
 ### 项目截图
 
-<div><img width="300" height="600" src="gif/auto5.gif"/></div><div><img width="300" height="600" src="gif/1560244261536.jpg"/></div>
+<div><img width="300" height="600" src="gif/auto5.gif"/></div>
+<div><img width="300" height="600" src="gif/1560244261536.jpg"/></div>
 
 
 ### 更新
+    时间：20190624（1.0.6）
+    内容：稳定相机兼容性
+
     时间：20190621（1.0.5）
     内容：低版本兼容api兼容，wisdom_impl导入发生资源冲突，则使用exclude group :'com.android.support' 移除support
 

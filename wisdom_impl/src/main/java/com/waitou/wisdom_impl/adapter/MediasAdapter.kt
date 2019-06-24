@@ -88,7 +88,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     PorterDuff.Mode.SRC_ATOP
             )
             holde.itemView.checkView.visibility = if (isSingleImage()) View.GONE else View.VISIBLE
-            holde.itemView.size.text = Formatter.formatFileSize(holde.itemView.context, media.size)
+            holde.itemView.size.text = Formatter.formatShortFileSize(holde.itemView.context, media.size)
             holde.itemView.gif.visibility = if (media.isGif()) View.VISIBLE else View.GONE
             holde.itemView.duration.visibility = if (media.isVideo()) {
                 holde.itemView.duration.text = DateUtils.formatElapsedTime(media.duration / 1000)

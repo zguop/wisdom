@@ -35,6 +35,7 @@ class CameraStrategy(fragment: Fragment) {
             filePath = checkImageFileExistsAndCreate(directory, "IMAGE_%s.jpg") ?: return@let
             val uriForFile = FileProvider.getUriForFile(context, authority, filePath)
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             weakReference.get()?.startActivityForResult(intent, CAMERA_REQUEST)
         }
     }
@@ -47,6 +48,7 @@ class CameraStrategy(fragment: Fragment) {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
             intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30)  //视频时长
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1) //视频质量 0 - 1
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             weakReference.get()?.startActivityForResult(intent, CAMERA_REQUEST)
         }
     }
