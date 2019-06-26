@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.6'
+    compile 'com.waitou:wisdom_lib:1.0.7'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.6'
+    compile 'com.waitou:wisdom_impl:1.0.7'
 }
 ```
 ### 使用
@@ -60,6 +60,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 
 ### 更新
+    时间：20190626（1.0.7）
+    内容：修复了一个bug，进入预览页，由于相机的是否打开，疏忽了position的值，导致position值正确
+    
     时间：20190624（1.0.6）
     内容：稳定相机兼容性
 

@@ -51,7 +51,7 @@ class Media(
         this.uri = ContentUris.withAppendedId(contentUri, mediaId.toLong())
     }
 
-    fun isCapture(): Boolean {
+    fun isCamera(): Boolean {
         return ITEM_ID_CAPTURE == mediaId
     }
 

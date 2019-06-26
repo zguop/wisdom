@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ILoaderMediaCall
-import com.waitou.wisdom_lib.ui.WisPreViewActivity
 import java.lang.ref.WeakReference
 
 /**
@@ -19,6 +18,7 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
         private const val ARGS_ALBUM_ID = "album_id"
+        private const val ARGS_CAMERA = "camera"
         private const val ARGS_LOAD_ID = 2
     }
 
@@ -32,19 +32,22 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
         this.iLoaderMediaCall = WeakReference(iLoaderMediaCall)
     }
 
-    fun loadMedia(albumId: String) {
+    @JvmOverloads
+    fun loadMedia(albumId: String, isCamera: Boolean = false) {
         val bundle = Bundle()
         bundle.putString(ARGS_ALBUM_ID, albumId)
+        bundle.putBoolean(ARGS_CAMERA, isCamera)
         loaderManager?.initLoader(ARGS_LOAD_ID, bundle, this)
     }
 
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-        val albumId = bundle?.getString(ARGS_ALBUM_ID)
-        return MediaLoader.newInstance(context.get()!!, albumId)
+        val albumId = bundle!!.getString(ARGS_ALBUM_ID)
+        val isCamera = bundle.getBoolean(ARGS_CAMERA)
+        return MediaLoader.newInstance(context.get()!!, albumId, isCamera)
     }
 
     override fun onLoadFinished(p0: Loader<Cursor>, cursor: Cursor?) {
-        context.get()?.let { context ->
+        context.get()?.let {
             cursor?.let {
                 if (!cursor.isBeforeFirst) {
                     return
@@ -53,10 +56,6 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
                 while (it.moveToNext()) {
                     try {
                         val media = Media.valueOf(cursor)
-                        //在预览页面，不添加相册的占位
-                        if (context is WisPreViewActivity && it.isFirst) {
-                            continue
-                        }
                         list.add(media)
                     } catch (e: Exception) {
                         e.printStackTrace()

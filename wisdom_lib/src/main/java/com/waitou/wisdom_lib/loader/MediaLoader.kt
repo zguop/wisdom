@@ -9,7 +9,6 @@ import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.utils.onlyImages
 import com.waitou.wisdom_lib.utils.onlyVideos
 
@@ -17,14 +16,14 @@ import com.waitou.wisdom_lib.utils.onlyVideos
  * auth aboom
  * date 2019-05-26
  */
-class MediaLoader private constructor(context: Context, selection: String?, selectionArgs: Array<String>?) :
+class MediaLoader private constructor(context: Context, selection: String?, selectionArgs: Array<String>?, private val isCamera: Boolean) :
         CursorLoader(context, MediaStore.Files.getContentUri("external"),
                 PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " DESC") {
 
     override fun loadInBackground(): Cursor? {
         val cursor = super.loadInBackground()
         //设备不具备相机功能
-        if (!WisdomConfig.getInstance().isCamera ||
+        if (!isCamera ||
                 !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             return cursor
         }
@@ -54,7 +53,7 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
                 MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
         )
 
-        fun newInstance(context: Context, albumId: String?): MediaLoader {
+        fun newInstance(context: Context, albumId: String?, isCamera: Boolean): MediaLoader {
             val selectionArgs = mutableListOf<String>()
 
             var selection = if (onlyImages() || onlyVideos()) {
@@ -75,7 +74,7 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
                 selection += " AND ${MediaStore.Images.Media.BUCKET_ID}=?"
                 selectionArgs.add(albumId!!)
             }
-            return MediaLoader(context, selection, selectionArgs.toTypedArray())
+            return MediaLoader(context, selection, selectionArgs.toTypedArray(), isCamera)
         }
     }
 }

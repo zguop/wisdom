@@ -8,11 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_impl.adapter.MediasAdapter
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
+import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
+import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisdomWallFragment
 import com.waitou.wisdom_lib.utils.isSingleImage
 import com.waitou.wisdom_lib.utils.onlyImages
@@ -62,8 +63,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val recyclerView = RecyclerView(activity!!)
-        recyclerView.layoutParams =
-                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        recyclerView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         recyclerView.layoutManager = GridLayoutManager(activity, 3)
         recyclerView.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         this.adapter = MediasAdapter()
@@ -81,12 +81,12 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 //单选完成结束
                 finish(listOf(media))
             } else {
-                //预览 position 减去相机的占位
 //                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
+                //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
                 startPreview(
                         PhotoPreviewActivity::class.java,
                         adapter.selectMedias,
-                        position - 1,
+                        if (WisdomConfig.getInstance().isCamera) position - 1 else position,
                         currentAlbumId,
                         null
                 )

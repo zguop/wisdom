@@ -63,7 +63,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (medias[position].isCapture()) VIEW_TYPE_CAPTURE else VIEW_TYPE_MEDIA
+        return if (medias[position].isCamera()) VIEW_TYPE_CAPTURE else VIEW_TYPE_MEDIA
     }
 
     override fun getItemCount(): Int {

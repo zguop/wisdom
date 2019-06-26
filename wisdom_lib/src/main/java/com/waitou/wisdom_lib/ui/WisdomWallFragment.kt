@@ -106,7 +106,7 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
      */
     fun loadMedia(albumId: String = Album.ALBUM_ID_ALL) {
         currentAlbumId = albumId
-        mediaCollection.loadMedia(albumId)
+        mediaCollection.loadMedia(albumId, WisdomConfig.getInstance().isCamera)
     }
 
     /**
@@ -176,9 +176,23 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     /**
      * **************************下面是必须实现和可复写的方法**************************
      */
+
     abstract fun startLoading()
 
+    /**
+     * 权限拒绝了回调，包括读写，相机打开权限
+     * @param permissionsDeniedForever 集合包含了用户永久拒绝了权限
+     * @param permissionsDenied 集合包含了用户拒绝了权限
+     */
     open fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
+
+    /**
+     * 相机拍照或者录像后回调，包装成一个media
+     */
     open fun onCameraResult(media: Media) {}
+
+    /**
+     * 预览页面回调，在预览页面做了的事情，将数据源回调更新
+     */
     open fun onPreviewResult(medias: List<Media>) {}
 }
