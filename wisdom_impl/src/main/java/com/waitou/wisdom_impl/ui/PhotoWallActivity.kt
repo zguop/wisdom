@@ -5,10 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import com.to.aboomy.statusbar_lib.StatusBarUtil
-import com.waitou.wisdom_impl.adapter.AlbumsAdapter
-import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.adapter.AlbumsAdapter
 import com.waitou.wisdom_impl.view.FolderPopWindow
+import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
@@ -48,7 +48,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         if (fragment !is WisdomWallFragment) {
             fragment = PhotoWallFragment.newInstance()
             supportFragmentManager.beginTransaction().replace(R.id.contentLayout, fragment, tag)
-                    .commitAllowingStateLoss()
+                .commitAllowingStateLoss()
         }
         return fragment
     }
@@ -72,7 +72,7 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     private fun showPop() {
-        if (popUpWindow == null) {
+        if (popUpWindow == null && albumsAdapter.itemCount > 0) {
             popUpWindow = FolderPopWindow(this, albumsAdapter)
             albumsAdapter.function = { position ->
                 if (albumsAdapter.currentAlbumPos != position) {

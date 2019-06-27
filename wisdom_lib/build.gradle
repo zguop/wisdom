@@ -15,4 +15,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-apply from:'https://raw.githubusercontent.com/CodePoem/UploadRepository/master/bintray/uploadBintrayNoJavadoc.gradle'
+apply from:"${rootProject.projectDir}/uploadBintrayNoJavadoc.gradle"
