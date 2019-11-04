@@ -50,6 +50,8 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         checkPermissionOnStart()
+        beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
+
     }
 
     private fun checkPermissionOnStart() {
@@ -185,6 +187,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
      * @param permissionsDenied 集合包含了用户拒绝了权限
      */
     open fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
+
+    /**
+     * 默认勾选medias，onActivityCreated调用
+     */
+    open fun beforeSelectorMedias(imgMedias: List<Media>?) {}
 
     /**
      * 相机拍照或者录像后回调，包装成一个media

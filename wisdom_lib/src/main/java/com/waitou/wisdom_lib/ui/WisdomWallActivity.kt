@@ -29,17 +29,22 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         }
     }
 
-    override fun startPreview(clazz: Class<out WisPreViewActivity>,
-                              selectMedias: List<Media>,
-                              currentPosition: Int,
-                              albumId: String,
-                              bundle: Bundle?) {
+    override fun startPreview(
+        clazz: Class<out WisPreViewActivity>,
+        selectMedias: List<Media>,
+        currentPosition: Int,
+        albumId: String,
+        bundle: Bundle?
+    ) {
         //当前点击的position 所有选择的数据 mediaId
-        val i = Intent(this, clazz)
-        i.putParcelableArrayListExtra(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
-        i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
-        i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_ALBUM_ID, albumId)
-        i.putExtra(WisPreViewActivity.EXTRA_PREVIEW_MODULE_TYPE, WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT)
+        val i = WisPreViewActivity.getIntent(
+            this,
+            clazz,
+            selectMedias,
+            currentPosition,
+            albumId,
+            WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
+        )
         val fragment = supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG)
         fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)
     }

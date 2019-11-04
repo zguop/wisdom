@@ -1,6 +1,7 @@
 package com.waitou.wisdom_lib.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -47,7 +48,7 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
         internal const val EXTRA_PREVIEW_ALBUM_ID = "extra_preview_albumId"
 
         /**
-         * 预览模式
+         * 预览模式 {WIS_PREVIEW_MODULE_TYPE_EDIT or WIS_PREVIEW_MODULE_TYPE_VISIT}
          */
         internal const val EXTRA_PREVIEW_MODULE_TYPE = "extra_preview_module_type"
 
@@ -55,6 +56,22 @@ abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
          * 返回上一页或者退出相册
          */
         internal const val EXTRA_PREVIEW_RESULT_EXIT = "extra_preview_exit"
+
+        @JvmStatic
+        fun getIntent(context: Context,
+                      clazz: Class<out WisPreViewActivity>,
+                      selectMedias: List<Media>,
+                      currentPosition: Int,
+                      albumId: String?,
+                      moduleType:Int
+        ): Intent {
+            val i = Intent(context, clazz)
+            i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
+            i.putExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
+            i.putExtra(EXTRA_PREVIEW_ALBUM_ID, albumId)
+            i.putExtra(EXTRA_PREVIEW_MODULE_TYPE, moduleType)
+            return i
+        }
     }
 
 

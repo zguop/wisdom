@@ -109,6 +109,12 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
         viewModule.selectCountLiveData.postValue(adapter.selectMedias)
     }
 
+    override fun beforeSelectorMedias(imgMedias: List<Media>?) {
+        imgMedias?.let {
+            adapter.selectMedias.addAll(it)
+        }
+    }
+
     override fun onPreviewResult(medias: List<Media>) {
         adapter.replaceSelectMedias(medias)
         onChange()

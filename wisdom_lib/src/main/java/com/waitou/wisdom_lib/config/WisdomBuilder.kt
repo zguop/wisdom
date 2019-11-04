@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
+import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
@@ -50,6 +51,14 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
         wisdomConfig.iImageEngine = iImageEngine
+        return this
+    }
+
+    /**
+     * 默认勾选
+     */
+    fun setMedias(medias: List<Media>?): WisdomBuilder {
+        wisdomConfig.imgMedias = medias
         return this
     }
 

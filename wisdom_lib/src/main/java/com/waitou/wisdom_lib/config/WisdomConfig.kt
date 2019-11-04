@@ -1,5 +1,6 @@
 package com.waitou.wisdom_lib.config
 
+import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ImageEngine
 
 /**
@@ -20,6 +21,7 @@ class WisdomConfig private constructor() {
     var directory: String? = null
     var maxSelectLimit = 1
     var iImageEngine: ImageEngine? = null
+    var imgMedias:List<Media>? = null
 
     fun reset() {
         mimeType = ofAll()
@@ -28,6 +30,7 @@ class WisdomConfig private constructor() {
         directory = null
         maxSelectLimit = 1
         iImageEngine = null
+        imgMedias = null
     }
 
     companion object {

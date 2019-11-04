@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.8'
+    compile 'com.waitou:wisdom_lib:1.0.9'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.8'
+    compile 'com.waitou:wisdom_impl:1.0.9'
 }
 ```
 ### 使用
@@ -51,6 +51,24 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         }
     }
 }
+
+//直接进入预览页面 预览图片
+
+Wisdom.of(this@MainActivity)
+     .preview()
+     .imageEngine(imageEngine)
+     .setMedias(List<Media>)
+     .go(PhotoPreviewActivity::class.java)
+
+Wisdom.of(this@MainActivity)
+     .preview()
+     .imageEngine(imageEngine)
+     .setPaths(listOf("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=255586071,2019273368&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2028868596,3857587342&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3147757822,2248639000&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=248541496,3500754578&fm=26&gp=0.jpg"))
+     .go(PhotoPreviewActivity::class.java,1)//第二个参数是预览的起始位置
+
 ```
         
 ### 项目截图
@@ -60,6 +78,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 
 ### 更新
+    时间：20191102（1.0.9）
+    内容：默认勾选图片。扩展图片预览功能，可以直接进入图片预览界面浏览
+    
     时间：20190627（1.0.8）
     内容：增强体验，在权限请求拒绝时，pop不可以再弹出
 

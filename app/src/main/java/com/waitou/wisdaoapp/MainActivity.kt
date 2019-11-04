@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import com.theartofdev.edmodo.cropper.CropImage
-import com.waitou.wisdaoapp.test.JaActivity
+import com.waitou.wisdom_impl.ui.PhotoPreviewActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
+import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var selectLimit = 0
     private var isCrop = false
     private var cropType = R.id.ucrop
+    private var   resultMedia:List<Media>? = null
 
 
     private val cropEngine by lazy { UCropEngine() }
@@ -95,12 +98,30 @@ class MainActivity : AppCompatActivity() {
                 .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
                 .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
                 .isCamera(isCamera) //是否打开相机，
+                .setMedias(resultMedia)
                 .forResult(0x11, PhotoWallActivity::class.java) //requestCode，界面实现Activity，需要继承于核心库activity
         }
 
-
         action.setOnClickListener {
-            startActivity(Intent(this, JaActivity::class.java))
+            resultMedia?.let {
+                Wisdom.of(this@MainActivity)
+                    .preview()
+                    .imageEngine(imageEngine)
+                    .setMedias(resultMedia!!)
+                    .go(PhotoPreviewActivity::class.java)
+            }
+
+        }
+
+        action2.setOnClickListener {
+            Wisdom.of(this@MainActivity)
+                .preview()
+                .imageEngine(imageEngine)
+                .setPaths(listOf("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=255586071,2019273368&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2028868596,3857587342&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3147757822,2248639000&fm=26&gp=0.jpg",
+                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=248541496,3500754578&fm=26&gp=0.jpg"))
+                .go(PhotoPreviewActivity::class.java,1)
         }
     }
 
@@ -129,15 +150,25 @@ class MainActivity : AppCompatActivity() {
         }
         //相册回调
         if (requestCode == 0x11) {
-            val resultMedia = Wisdom.obtainResult(data) //获取回调数据
-            if (isCrop) {
-                when (cropType) {
-                    R.id.ucrop -> cropEngine.onStartCrop(this, resultMedia[0].uri, 0x12)
-                    R.id.cropper -> cropperEngine.onStartCrop(this, resultMedia[0].uri)
+            resultMedia = Wisdom.obtainResult(data) //获取回调数据
+            resultMedia?.let {
+                if (isCrop) {
+                    when (cropType) {
+                        R.id.ucrop -> cropEngine.onStartCrop(this, it[0].uri, 0x12)
+                        R.id.cropper -> cropperEngine.onStartCrop(this, it[0].uri)
+                    }
+                    return
                 }
-                return
+                this.adapter.addData(it.map {i -> i.uri }.toList())
+
+
+
+                it.forEach {data->
+                    Log.e("aa" , data.toString())
+                }
             }
-            this.adapter.addData(resultMedia.map { it.uri }.toList())
+
+
         }
         //裁剪回调
         if (requestCode == 0x12) {

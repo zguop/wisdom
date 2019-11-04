@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomBuilder
+import com.waitou.wisdom_lib.config.WisdomPreviewBuilder
 import com.waitou.wisdom_lib.config.ofAll
 import java.lang.ref.WeakReference
 
@@ -19,6 +20,10 @@ class Wisdom private constructor(sojourn: Any) {
     @JvmOverloads
     fun config(mineType: Int = ofAll()): WisdomBuilder {
         return WisdomBuilder(this, mineType)
+    }
+
+    fun preview(): WisdomPreviewBuilder {
+        return WisdomPreviewBuilder(this)
     }
 
     companion object {

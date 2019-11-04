@@ -48,7 +48,11 @@ class Media(
             isVideo() -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             else -> MediaStore.Files.getContentUri("external")
         }
-        this.uri = ContentUris.withAppendedId(contentUri, mediaId.toLong())
+        uri = try {
+            ContentUris.withAppendedId(contentUri, mediaId.toLong())
+        }catch (e: Exception){
+            Uri.parse(path)
+        }
     }
 
     fun isCamera(): Boolean {
