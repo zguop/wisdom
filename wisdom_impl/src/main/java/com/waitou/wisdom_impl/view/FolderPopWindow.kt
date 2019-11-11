@@ -33,18 +33,18 @@ class FolderPopWindow(context: Context, adapter: RecyclerView.Adapter<*>) : Popu
         contentView.setOnClickListener { dismiss() }
     }
 
-    override fun showAsDropDown(parent: View) {
+    override fun showAsDropDown(anchor: View, xoff: Int, yoff: Int, gravity: Int) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val rect = Rect()
-                parent.getGlobalVisibleRect(rect)
-                val h = parent.resources.displayMetrics.heightPixels - rect.bottom
+                anchor.getGlobalVisibleRect(rect)
+                val h = anchor.resources.displayMetrics.heightPixels - rect.bottom
                 height = h
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        super.showAsDropDown(parent)
+        super.showAsDropDown(anchor, xoff, yoff, gravity)
         contentView.popList.post {
             val maxHeight = (Resources.getSystem().displayMetrics.density * 300 + .5f).toInt()
             val height = contentView.popList.height

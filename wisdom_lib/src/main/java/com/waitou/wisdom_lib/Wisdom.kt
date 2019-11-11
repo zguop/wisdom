@@ -17,7 +17,6 @@ class Wisdom private constructor(sojourn: Any) {
 
     internal val sojournReference: WeakReference<Any> = WeakReference(sojourn)
 
-    @JvmOverloads
     fun config(mineType: Int = ofAll()): WisdomBuilder {
         return WisdomBuilder(this, mineType)
     }

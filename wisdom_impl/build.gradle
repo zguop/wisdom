@@ -20,6 +20,6 @@ dependencies {
     api 'com.github.chrisbanes:PhotoView:2.0.0'
 //    api project(':wisdom_lib')
 
-    api 'com.waitou:wisdom_lib:1.0.9'
+    api 'com.waitou:wisdom_lib:1.0.10'
 }
 apply from:"${rootProject.projectDir}/uploadBintrayNoJavadoc.gradle"
