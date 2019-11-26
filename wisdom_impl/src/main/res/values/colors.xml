@@ -6,4 +6,7 @@
     <!--辅助灰色-->
     <color name="wis_color_AFAFAF">#AFAFAF</color>
 
+    <color name="wis_color_transparent_60">#80000000</color>
+
+
 </resources>

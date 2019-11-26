@@ -4,10 +4,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.AlbumsAdapter
-import com.waitou.wisdom_impl.view.FolderPopWindow
 import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.wis_include_title_bar.*
 class PhotoWallActivity : WisdomWallActivity() {
 
     private val albumsAdapter by lazy { AlbumsAdapter() }
-    private var popUpWindow: FolderPopWindow? = null
     private lateinit var viewModule: PhotoWallViewModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +42,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         back.setOnClickListener { onBackPressed() }
     }
 
-    override fun onCreateBoxingView(tag: String): WisdomWallFragment {
+    override fun onCreateView(tag: String): WisdomWallFragment {
         var fragment = supportFragmentManager.findFragmentByTag(tag)
         if (fragment !is WisdomWallFragment) {
             fragment = PhotoWallFragment.newInstance()
@@ -54,7 +53,7 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     override fun onBackPressed() {
-        if (popUpWindow?.isShowing == true) popUpWindow?.dismiss() else super.onBackPressed()
+        if (folderPop.isShowing) folderPop.dismiss() else super.onBackPressed()
     }
 
     private fun addAlbum(data: List<Album>?) {
@@ -72,8 +71,9 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     private fun showPop() {
-        if (popUpWindow == null && albumsAdapter.itemCount > 0) {
-            popUpWindow = FolderPopWindow(this, albumsAdapter)
+        folderPop.getContentView().adapter?:let {
+            folderPop.getContentView().layoutManager = LinearLayoutManager(this)
+            folderPop.getContentView().adapter = albumsAdapter
             albumsAdapter.function = { position ->
                 if (albumsAdapter.currentAlbumPos != position) {
                     albumsAdapter.currentAlbumPos = position
@@ -82,12 +82,10 @@ class PhotoWallActivity : WisdomWallActivity() {
                     barTitle.text = album.albumName
                     loadMedia(album.albumId)
                 }
-                popUpWindow?.dismiss()
+               folderPop.dismiss()
             }
         }
-        popUpWindow?.apply {
-            if (isShowing) dismiss() else showAsDropDown(barTitle)
-        }
+        if(folderPop.isShowing) folderPop.dismiss() else folderPop.show()
     }
 
     private fun preView() {

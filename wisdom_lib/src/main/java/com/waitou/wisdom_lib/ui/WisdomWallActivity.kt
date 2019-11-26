@@ -16,11 +16,11 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragment = onCreateBoxingView(WisdomWallFragment.TAG)
+        val fragment = onCreateView(WisdomWallFragment.TAG)
         fragment.onResultMediaListener = this
     }
 
-    abstract fun onCreateBoxingView(tag: String): WisdomWallFragment
+    abstract fun onCreateView(tag: String): WisdomWallFragment
 
     fun loadMedia(albumId: String) {
         val fragment = supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG)

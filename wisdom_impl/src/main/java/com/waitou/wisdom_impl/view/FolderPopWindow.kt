@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.wis_pop_albums.view.*
  * auth aboom
  * date 2019-05-25
  */
+@Deprecated("link PopView")
 class FolderPopWindow(context: Context, adapter: RecyclerView.Adapter<*>) : PopupWindow(context) {
 
     init {
@@ -38,7 +39,7 @@ class FolderPopWindow(context: Context, adapter: RecyclerView.Adapter<*>) : Popu
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val rect = Rect()
                 anchor.getGlobalVisibleRect(rect)
-                val h = anchor.resources.displayMetrics.heightPixels - rect.bottom
+                val h = anchor.resources.displayMetrics.heightPixels - rect.bottom - yoff
                 height = h
             }
         } catch (e: Exception) {

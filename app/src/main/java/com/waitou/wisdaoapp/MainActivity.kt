@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         //是否裁剪
         crop.setOnCheckedChangeListener { _, isChecked ->
             isCrop = isChecked

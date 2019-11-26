@@ -17,9 +17,9 @@ dependencies {
     implementation rootProject.ext.dependencies['lifecycle_extensions']
     implementation rootProject.ext.dependencies["statusbarlib"]
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api 'com.github.chrisbanes:PhotoView:2.0.0'
+    api 'com.github.chrisbanes:PhotoView:2.1.0'
 //    api project(':wisdom_lib')
 
-    api 'com.waitou:wisdom_lib:1.0.10'
+    api 'com.waitou:wisdom_lib:1.0.11'
 }
 apply from:"${rootProject.projectDir}/uploadBintrayNoJavadoc.gradle"

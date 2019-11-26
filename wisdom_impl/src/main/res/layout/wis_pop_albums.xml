@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/popList"
+
+    <View
+        android:id="@+id/viewOutSide"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"/>
+        android:layout_height="match_parent"
+        android:background="@color/wis_color_transparent_60" />
+
+    <RelativeLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/popList"
+            android:background="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
