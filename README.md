@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.11'
+    compile 'com.waitou:wisdom_lib:1.0.12'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.11'
+    compile 'com.waitou:wisdom_impl:1.0.12'
 }
 ```
 ### 使用
@@ -78,6 +78,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20191129（1.0.12）
+    内容：增加string-en 支持2中语言描述了~~~
+    
     时间：20191126（1.0.11）
     内容：修改切换相册的弹框，不在使用popWindow实现，兼容太难啦 自己写了个view- -
 

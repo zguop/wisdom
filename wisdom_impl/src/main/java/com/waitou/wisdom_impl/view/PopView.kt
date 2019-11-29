@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.wis_pop_albums.view.*
 
 
 class PopView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), Animation.AnimationListener {
 
     companion object {
@@ -46,7 +46,8 @@ class PopView @JvmOverloads constructor(
     var isShowing: Boolean = false
 
     init {
-        View.inflate(context, R.layout.wis_pop_albums, this@PopView).viewOutSide.setOnClickListener {
+        View.inflate(context, R.layout.wis_pop_albums, this@PopView)
+            .viewOutSide.setOnClickListener {
             dismiss()
         }
     }
@@ -80,7 +81,7 @@ class PopView @JvmOverloads constructor(
             val heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
             popList.measure(widthMeasureSpec, heightSpec)
             val planHeight = popList.measuredHeight
-            val maxHeight = (heightPixels * heightPercent).toInt()
+            val maxHeight = (heightPixels * heightPercent).toInt() - top
             if (planHeight > maxHeight) {
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 layoutParams.height = maxHeight
@@ -95,10 +96,10 @@ class PopView @JvmOverloads constructor(
     fun show() {
         isShowing = true
         val translate = TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, -1.0f,
-                Animation.RELATIVE_TO_SELF, 0f
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, -1.0f,
+            Animation.RELATIVE_TO_SELF, 0f
         )
         translate.duration = DURATION.toLong()
         val alpha = AlphaAnimation(0.0f, 1.0f)
@@ -119,10 +120,10 @@ class PopView @JvmOverloads constructor(
         isShowing = false
         val alpha = AlphaAnimation(1.0f, 0.0f)
         val translate = TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, -1.0f
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, -1.0f
         )
         translate.duration = DURATION.toLong()
         alpha.duration = DURATION.toLong()

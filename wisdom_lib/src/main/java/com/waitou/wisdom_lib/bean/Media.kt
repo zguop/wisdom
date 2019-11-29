@@ -18,23 +18,23 @@ class Media(
         /**
          * 主键
          */
-        val mediaId: String,
+        var mediaId: String,
         /**
          * type
          */
-        val mediaType: String,
+        var mediaType: String,
         /**
          * path
          */
-        val path: String,
+        var path: String,
         /**
          * size
          */
-        val size: Long,
+        var size: Long,
         /**
          * video in ms
          */
-        val duration: Long
+        var duration: Long
 ) : Parcelable {
 
     /**

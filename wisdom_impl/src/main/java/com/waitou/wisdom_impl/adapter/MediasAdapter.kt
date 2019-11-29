@@ -77,7 +77,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holde: RecyclerView.ViewHolder, position: Int) {
         val media = medias[position]
         if (holde is CameraViewHolder) {
-            holde.itemView.cameraText.text = media.path
+            holde.itemView.cameraText.text = holde.itemView.context.getString(R.string.wis_take)
         } else {
             WisdomConfig.getInstance().iImageEngine?.displayThumbnail(
                     holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()

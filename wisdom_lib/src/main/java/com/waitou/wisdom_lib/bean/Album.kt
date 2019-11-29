@@ -17,28 +17,28 @@ class Album(
         /**
          * 主键
          */
-        private val mediaId: String,
+        var mediaId: String,
         /**
          * 相册id
          */
-        val albumId: String,
+        var albumId: String,
         /**
          * 相册名称
          */
-        val albumName: String,
+        var albumName: String,
         /**
          * 相册图片路径
          */
-        val path: String,
+        var path: String,
         /**
          * 相册有多少张图
          */
-        val count: Int) {
+        var count: Int) {
 
     /**
      * uri
      */
-    val uri: Uri
+    var uri: Uri
 
     init {
         val contentUri = when {

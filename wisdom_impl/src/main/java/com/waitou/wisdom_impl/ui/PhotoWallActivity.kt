@@ -58,6 +58,7 @@ class PhotoWallActivity : WisdomWallActivity() {
 
     private fun addAlbum(data: List<Album>?) {
         data?.let {
+            it[0].albumName = getString(R.string.wis_all)
             albumsAdapter.replaceData(it)
             barTitle.text = it[0].albumName
             updateBottomTextUI()
