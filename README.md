@@ -75,7 +75,7 @@ Wisdom.of(this@MainActivity)
 
 |图|图|
 |---|---|
-|gif/auto5.gif|gif/1560244261536.jpg|
+|![img1](gif/auto5.gif)|![img1](gif/1560244261536.jpg)|
 
 
 ### 更新
