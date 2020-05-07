@@ -15,7 +15,7 @@ ext {
             "lifecycle_extensions"     : "android.arch.lifecycle:extensions:1.1.1",
             "leakcanary-canary-debug"  : "com.squareup.leakcanary:leakcanary-android:${leakcanaryCanary}", //检测内存泄漏的
             "leakcanary-canary-release": "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryCanary}",
-            "statusbarlib"             : 'com.to.aboomy:statusbar_lib:1.1.8',
+            "statusbarlib"             : 'com.to.aboomy:statusbar_lib:1.2.1',
             "utilcode"                 : 'com.blankj:utilcode:1.23.7',
     ]
 }

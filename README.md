@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.12'
+    compile 'com.waitou:wisdom_lib:1.0.13'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.12'
+    compile 'com.waitou:wisdom_impl:1.0.13'
 }
 ```
 ### 使用
@@ -73,11 +73,15 @@ Wisdom.of(this@MainActivity)
         
 ### 项目截图
 
-<div><img width="300" height="600" src="gif/auto5.gif"/></div>
-<div><img width="300" height="600" src="gif/1560244261536.jpg"/></div>
+|图|图|
+|---|---|
+|gif/auto5.gif|gif/1560244261536.jpg|
 
 
 ### 更新
+    时间：20200507（1.0.13）
+    内容：增加string-pt,string-fr 语言描述~~~
+
     时间：20191129（1.0.12）
     内容：增加string-en 支持2中语言描述了~~~
     

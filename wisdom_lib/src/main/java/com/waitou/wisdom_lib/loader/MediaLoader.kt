@@ -1,5 +1,6 @@
 package com.waitou.wisdom_lib.loader
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -24,7 +25,7 @@ class MediaLoader private constructor(context: Context, selection: String?, sele
         val cursor = super.loadInBackground()
         //设备不具备相机功能
         if (!isCamera ||
-                !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             return cursor
         }
         //添加一个相册的item
