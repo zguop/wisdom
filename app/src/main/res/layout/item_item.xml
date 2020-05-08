@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.waitou.wisdom_impl.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                  android:layout_width="match_parent"
-                                                  android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
             android:id="@+id/image"
             android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+
+    <TextView
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="3dp"
+        android:paddingTop="1dp"
+        android:paddingEnd="3dp"
+        android:paddingBottom="1dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        tools:text="20M" />
 
 </com.waitou.wisdom_impl.view.SquareRelativeLayout>

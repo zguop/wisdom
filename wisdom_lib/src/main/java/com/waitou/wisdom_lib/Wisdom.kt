@@ -42,7 +42,7 @@ class Wisdom private constructor(sojourn: Any) {
         }
 
         @JvmStatic
-        fun obtainCompressResult(data: Intent): List<String> {
+        fun obtainCompressResult(data: Intent): List<String>? {
             return data.getStringArrayListExtra(EXTRA_RESULT_COMPRESS)
         }
 

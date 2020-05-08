@@ -58,7 +58,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     /**
      * image compress engine
      */
-    fun compressEngine(compressEngine: CompressEngine): WisdomBuilder {
+    fun compressEngine(compressEngine: CompressEngine?): WisdomBuilder {
         wisdomConfig.compressEngine = compressEngine
         return this
     }

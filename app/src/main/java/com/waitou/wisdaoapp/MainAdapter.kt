@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_item.view.*
  */
 class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val datas = mutableListOf<Uri>()
+    private val datas = mutableListOf<PathBean>()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         val inflate = LayoutInflater.from(p0.context).inflate(R.layout.item_item, p0, false)
@@ -27,19 +27,21 @@ class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         val media = datas[p1]
         Glide.with(p0.itemView.image)
-                .load(media)
+                .load(media.path)
                 .apply(
                         RequestOptions()
                                 .override(240, 240)
                 )
                 .into(p0.itemView.image)
 
+        p0.itemView.size.text = media.size
+
     }
 
     private class MediaViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
-    fun addData(medias: List<Uri>) {
+    fun addData(medias: List<PathBean>) {
         this.datas.addAll(medias)
         notifyDataSetChanged()
     }
