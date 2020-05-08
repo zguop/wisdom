@@ -1,6 +1,7 @@
 package com.waitou.wisdom_lib.config
 
 import android.webkit.MimeTypeMap
+import java.util.*
 
 /**
  * auth aboom
@@ -45,6 +46,6 @@ fun isGif(mediaType: String): Boolean {
 fun getMimeType(path: String): String {
     val extension = MimeTypeMap.getFileExtensionFromUrl(path)
     //使用系统API，获取MimeTypeMap的单例实例，然后调用其内部方法获取文件后缀名（扩展名）所对应的MIME类型
-    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase()) ?: "image/jpeg"
+    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase(Locale.getDefault())) ?: "image/jpeg"
 }
 

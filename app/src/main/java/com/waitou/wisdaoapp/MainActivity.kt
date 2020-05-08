@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import com.blankj.utilcode.util.SDCardUtils
 import com.theartofdev.edmodo.cropper.CropImage
 import com.waitou.wisdom_impl.ui.PhotoPreviewActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
@@ -16,6 +17,7 @@ import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.config.TYPE_IMAGE
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var isCamera = true
     private var ofType = ofAll()
     private var imageEngine: ImageEngine = GlideEngine()
+    private var compressEngine = TinyCompressEngine()
     private var selectLimit = 0
     private var isCrop = false
     private var cropType = R.id.ucrop
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             Wisdom.of(this@MainActivity)
                 .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
                 .imageEngine(imageEngine) //图片加载引擎
+                .compressEngine(compressEngine)
                 .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
                 .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
                 .isCamera(isCamera) //是否打开相机，
@@ -113,6 +117,7 @@ class MainActivity : AppCompatActivity() {
                     .go(PhotoPreviewActivity::class.java)
             }
 
+            SDCardUtils.isSDCardEnableByEnvironment()
         }
 
         action2.setOnClickListener {

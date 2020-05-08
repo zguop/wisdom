@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
+import com.waitou.wisdom_lib.call.CompressEngine
 import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
@@ -51,6 +52,14 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
         wisdomConfig.iImageEngine = iImageEngine
+        return this
+    }
+
+    /**
+     * image compress engine
+     */
+    fun compressEngine(compressEngine: CompressEngine): WisdomBuilder {
+        wisdomConfig.compressEngine = compressEngine
         return this
     }
 

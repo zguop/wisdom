@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ILoaderAlbumCall
@@ -17,6 +18,7 @@ import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
 import com.waitou.wisdom_lib.utils.CameraStrategy
+import com.waitou.wisdom_lib.utils.SingleMediaScanner
 
 /**
  * auth aboom
@@ -56,8 +58,15 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
 
     private fun checkPermissionOnStart() {
         activity?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                )
             } else {
                 startLoading()
             }
@@ -66,9 +75,16 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
 
     private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
         activity?.let {
-            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 this.cameraPermissionGranted = cameraPermissionGranted
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+                requestPermissions(
+                    arrayOf(Manifest.permission.CAMERA),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                )
             } else {
                 cameraPermissionGranted?.invoke()
             }
@@ -79,7 +95,7 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (permissions.contains(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     startLoading()
                 }
                 if (permissions.contains(Manifest.permission.CAMERA)) {
@@ -117,7 +133,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     fun startCameraImage() {
         checkPermissionOnCamera {
             activity?.let {
-                cameraStrategy.startCamera(it, WisdomConfig.getInstance().authorities, WisdomConfig.getInstance().directory)
+                cameraStrategy.startCamera(
+                    it,
+                    WisdomConfig.getInstance().authorities,
+                    WisdomConfig.getInstance().directory
+                )
             }
         }
     }
@@ -128,7 +148,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     fun startCameraVideo() {
         checkPermissionOnCamera {
             activity?.let {
-                cameraStrategy.startCameraVideo(it, WisdomConfig.getInstance().authorities, WisdomConfig.getInstance().directory)
+                cameraStrategy.startCameraVideo(
+                    it,
+                    WisdomConfig.getInstance().authorities,
+                    WisdomConfig.getInstance().directory
+                )
             }
         }
     }
@@ -154,14 +178,15 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            cameraStrategy.onCameraResultAction { onCameraResult(it) }
-            //拍完照是不是要去裁剪。
+            SingleMediaScanner(activity!!, cameraStrategy.filePath) {
+                onCameraResult(it)
+            }
         }
-
         //预览页面回来
         if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
             val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
-            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
+            val medias =
+                data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
             handlePreview(exit, medias)
         }
     }

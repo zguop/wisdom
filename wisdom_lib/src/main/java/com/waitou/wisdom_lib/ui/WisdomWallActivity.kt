@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.OnMediaListener
+import com.waitou.wisdom_lib.config.WisdomConfig
 
 /**
  * auth aboom
@@ -29,13 +30,7 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         }
     }
 
-    override fun startPreview(
-        clazz: Class<out WisPreViewActivity>,
-        selectMedias: List<Media>,
-        currentPosition: Int,
-        albumId: String,
-        bundle: Bundle?
-    ) {
+    override fun startPreview(clazz: Class<out WisPreViewActivity>, selectMedias: List<Media>, currentPosition: Int, albumId: String, bundle: Bundle?) {
         //当前点击的position 所有选择的数据 mediaId
         val i = WisPreViewActivity.getIntent(
             this,
@@ -54,9 +49,20 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
     }
 
     override fun onResultFinish(resultMedias: List<Media>) {
-        val i = Intent()
-        i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
-        setResult(Activity.RESULT_OK, i)
-        finish()
+        compress(resultMedias) {
+            val i = Intent()
+            i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
+            it?.also {
+                i.putStringArrayListExtra(Wisdom.EXTRA_RESULT_COMPRESS, ArrayList(it))
+            }
+            setResult(Activity.RESULT_OK, i)
+            finish()
+        }
+    }
+
+    private fun compress(resultMedias: List<Media>, function: (List<String>?) -> Unit) {
+        val engine = WisdomConfig.getInstance().compressEngine
+        engine ?: function.invoke(null)
+        engine?.compress(this, resultMedias, function)
     }
 }

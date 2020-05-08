@@ -2,6 +2,7 @@ package com.waitou.wisdaoapp
 
 import android.app.Application
 import com.squareup.leakcanary.LeakCanary
+import com.zxy.tiny.Tiny
 
 /**
  * auth aboom
@@ -11,6 +12,8 @@ class app : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Tiny.getInstance().init(this);
+
         initLeakCanary(this)
     }
 

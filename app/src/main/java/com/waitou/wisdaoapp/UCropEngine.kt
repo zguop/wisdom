@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.Utils
 import com.waitou.wisdom_lib.utils.CameraStrategy
 import com.yalantis.ucrop.UCrop
 import java.io.File
@@ -19,7 +21,7 @@ class UCropEngine {
 
     fun onStartCrop(sojourn: Activity, uri: Uri, requestCode: Int) {
         val file =
-            CameraStrategy.checkImageFileExistsAndCreate("image", "IMAGE_%s.jpg") ?: getCacheFileImagePath(sojourn)
+            CameraStrategy.getImageFileExistsAndCreate(Utils.getApp(),"image", "IMAGE_%s.jpg") ?: getCacheFileImagePath(sojourn)
         val destUri = Uri.Builder()
             .scheme("file")
             .appendPath(file.absolutePath)

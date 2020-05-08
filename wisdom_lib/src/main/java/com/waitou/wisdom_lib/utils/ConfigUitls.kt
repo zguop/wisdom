@@ -2,9 +2,7 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.res.Configuration
 import android.content.res.Resources
-import com.waitou.wisdom_lib.config.TYPE_IMAGE
-import com.waitou.wisdom_lib.config.TYPE_VIDEO
-import com.waitou.wisdom_lib.config.WisdomConfig
+import com.waitou.wisdom_lib.config.*
 
 /**
  * auth aboom
@@ -22,14 +20,14 @@ fun isSingleImage(): Boolean {
  * picture type
  */
 fun onlyImages(): Boolean {
-    return WisdomConfig.getInstance().mimeType == TYPE_IMAGE
+    return WisdomConfig.getInstance().mimeType == ofImage()
 }
 
 /**
  * video type
  */
 fun onlyVideos(): Boolean {
-    return WisdomConfig.getInstance().mimeType == TYPE_VIDEO
+    return WisdomConfig.getInstance().mimeType == ofVideo()
 }
 
 /**
