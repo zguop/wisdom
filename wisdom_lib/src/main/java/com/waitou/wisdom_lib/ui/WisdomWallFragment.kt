@@ -8,7 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.view.View
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.ILoaderAlbumCall
@@ -49,11 +49,10 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         checkPermissionOnStart()
         beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
-
     }
 
     private fun checkPermissionOnStart() {

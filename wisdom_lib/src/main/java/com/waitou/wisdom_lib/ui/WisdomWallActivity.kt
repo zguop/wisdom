@@ -52,17 +52,14 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         compress(resultMedias) {
             val i = Intent()
             i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
-            it?.also {
-                i.putStringArrayListExtra(Wisdom.EXTRA_RESULT_COMPRESS, ArrayList(it))
-            }
             setResult(Activity.RESULT_OK, i)
             finish()
         }
     }
 
-    private fun compress(resultMedias: List<Media>, function: (List<String>?) -> Unit) {
+    private fun compress(resultMedias: List<Media>, function: () -> Unit) {
         val engine = WisdomConfig.getInstance().compressEngine
-        engine ?: function.invoke(null)
+        engine ?: function.invoke()
         engine?.compress(this, resultMedias, function)
     }
 }

@@ -27,5 +27,7 @@ public class PicassoEngine implements ImageEngine {
     @Override
     public void displayPreviewImage(@NotNull ImageView target, @NotNull Uri uri, int w, int h, boolean isGif) {
         Picasso.get().load(uri).resize(w, h).centerInside().into(target);
+
+
     }
 }

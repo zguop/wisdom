@@ -10,11 +10,10 @@ import com.zxy.tiny.callback.FileBatchCallback;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function0;
 
 /**
  * auth aboom
@@ -23,7 +22,7 @@ import kotlin.jvm.functions.Function1;
 public class TinyCompressEngine implements CompressEngine {
 
     @Override
-    public void compress(@NotNull Context context, @NotNull final List<Media> medias, @NotNull final Function1<? super List<String>, Unit> function) {
+    public void compress(@NotNull Context context, @NotNull final List<Media> medias, @NotNull final Function0<Unit> function) {
         Tiny.FileCompressOptions compressOptions = new Tiny.FileCompressOptions();
         compressOptions.config = Bitmap.Config.ARGB_8888;
         String[] fileArray = new String[medias.size()];
@@ -36,17 +35,15 @@ public class TinyCompressEngine implements CompressEngine {
                 .batchCompress(new FileBatchCallback() {
                     @Override
                     public void callback(boolean isSuccess, String[] outfiles, Throwable t) {
-
-                        for (int i = 0; i < outfiles.length; i++) {
-                            Media media = medias.get(i);
-                            if (media.isGif()) {
-                                outfiles[i] = media.getPath();
-                            }
-                            if (outfiles[i] == null) {
-                                outfiles[i] = media.getPath();
+                        if (isSuccess) {
+                            for (int i = 0; i < outfiles.length; i++) {
+                                Media media = medias.get(i);
+                                if (!media.isGif()) {
+                                    media.setCompressPath(outfiles[i]);
+                                }
                             }
                         }
-                        function.invoke(isSuccess ? Arrays.asList(outfiles) : null);
+                        function.invoke();
                     }
                 });
     }

@@ -31,19 +31,9 @@ class Wisdom private constructor(sojourn: Any) {
          */
         const val EXTRA_RESULT_SELECTION = "extra_result_selection"
 
-        /**
-         * 质量压缩后结果
-         */
-        const val EXTRA_RESULT_COMPRESS = "extra_result_compress"
-
         @JvmStatic
         fun obtainResult(data: Intent): List<Media> {
             return data.getParcelableArrayListExtra(EXTRA_RESULT_SELECTION)
-        }
-
-        @JvmStatic
-        fun obtainCompressResult(data: Intent): List<String>? {
-            return data.getStringArrayListExtra(EXTRA_RESULT_COMPRESS)
         }
 
         @JvmStatic

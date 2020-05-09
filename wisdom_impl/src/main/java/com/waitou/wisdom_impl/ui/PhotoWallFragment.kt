@@ -31,6 +31,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
 
     override fun albumResult(albums: List<Album>) {
         viewModule.albumLiveData.postValue(albums)
+        onChange()
     }
 
     override fun mediaResult(medias: List<Media>) {
@@ -101,12 +102,8 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 )
             }
         }
-        return recyclerView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         viewModule = ViewModelProviders.of(activity!!)[PhotoWallViewModule::class.java]
+        return recyclerView
     }
 
     override fun onChange() {

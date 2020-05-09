@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.AlbumsAdapter
@@ -32,9 +33,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         viewModule = ViewModelProviders.of(this)[PhotoWallViewModule::class.java]
         viewModule.albumLiveData.observe(this, Observer { addAlbum(it) })
         viewModule.selectCountLiveData.observe(this, Observer { data ->
-            data?.let {
-                updateBottomTextUI(it.size)
-            }
+            updateBottomTextUI(data?.size ?: 0)
         })
         barTitle.setOnClickListener { showPop() }
         complete.setOnClickListener { complete() }
@@ -61,7 +60,6 @@ class PhotoWallActivity : WisdomWallActivity() {
             it[0].albumName = getString(R.string.wis_all)
             albumsAdapter.replaceData(it)
             barTitle.text = it[0].albumName
-            updateBottomTextUI()
         }
     }
 
@@ -72,7 +70,7 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     private fun showPop() {
-        folderPop.getContentView().adapter?:let {
+        folderPop.getContentView().adapter ?: let {
             folderPop.getContentView().layoutManager = LinearLayoutManager(this)
             folderPop.getContentView().adapter = albumsAdapter
             albumsAdapter.function = { position ->
@@ -83,10 +81,10 @@ class PhotoWallActivity : WisdomWallActivity() {
                     barTitle.text = album.albumName
                     loadMedia(album.albumId)
                 }
-               folderPop.dismiss()
+                folderPop.dismiss()
             }
         }
-        if(folderPop.isShowing) folderPop.dismiss() else folderPop.show()
+        if (folderPop.isShowing) folderPop.dismiss() else folderPop.show()
     }
 
     private fun preView() {

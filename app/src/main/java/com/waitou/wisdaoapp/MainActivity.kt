@@ -10,9 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.SDCardUtils
-import com.blankj.utilcode.util.UriUtils
+import com.blankj.utilcode.util.*
 import com.theartofdev.edmodo.cropper.CropImage
 import com.waitou.wisdom_impl.ui.PhotoPreviewActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
@@ -190,40 +188,30 @@ class MainActivity : AppCompatActivity() {
         //相册回调
         if (requestCode == 0x11) {
             resultMedia = Wisdom.obtainResult(data) //获取回调数据
-            val obtainCompressResult = Wisdom.obtainCompressResult(data)
-
-            val urls = mutableListOf<String>()
-
-            obtainCompressResult?.also {
-                urls.addAll(it)
-            }
-
-            if (urls.isEmpty()) {
-                resultMedia?.map { urls.add(it.path) }
-            }
 
 
-            if (urls.isNotEmpty()) {
+
+            resultMedia?.also {
+                it.forEach {media->
+                    Log.e("aa" , " it " + media.compressNullToPath())
+                }
+
                 if (isCrop) {
                     when (cropType) {
                         R.id.ucrop -> cropEngine.onStartCrop(
                             this,
-                            UriUtils.file2Uri(File(urls[0])),
+                            UriUtils.file2Uri(File(it[0].compressNullToPath())),
                             0x12
                         )
                         R.id.cropper -> cropperEngine.onStartCrop(
                             this,
-                            UriUtils.file2Uri(File(urls[0]))
+                            UriUtils.file2Uri(File(it[0].compressNullToPath()))
                         )
                     }
                     return
                 }
-
-
-                this.adapter.addData(urls.map { PathBean(it, FileUtils.getFileSize(it)) })
+                this.adapter.addData(it.map {media-> PathBean(media.compressNullToPath(), FileUtils.getFileSize(media.compressNullToPath())) })
             }
-
-
         }
         //裁剪回调
         if (requestCode == 0x12) {
@@ -244,5 +232,10 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        KeyboardUtils.hideSoftInput(this)
     }
 }

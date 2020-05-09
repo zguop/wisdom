@@ -15,32 +15,37 @@ import com.waitou.wisdom_lib.config.isVideo
  * date 2019-05-26
  */
 class Media(
-        /**
-         * 主键
-         */
-        var mediaId: String,
-        /**
-         * type
-         */
-        var mediaType: String,
-        /**
-         * path
-         */
-        var path: String,
-        /**
-         * size
-         */
-        var size: Long,
-        /**
-         * video in ms
-         */
-        var duration: Long
+    /**
+     * 主键
+     */
+    var mediaId: String,
+    /**
+     * type
+     */
+    var mediaType: String,
+    /**
+     * path
+     */
+    var path: String,
+    /**
+     * size
+     */
+    var size: Long,
+    /**
+     * video in ms
+     */
+    var duration: Long
 ) : Parcelable {
 
     /**
      * path
      */
     val uri: Uri
+
+    /**
+     * CompressEngine compress
+     */
+    var compressPath: String? = null
 
     init {
         val contentUri = when {
@@ -50,7 +55,7 @@ class Media(
         }
         uri = try {
             ContentUris.withAppendedId(contentUri, mediaId.toLong())
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Uri.parse(path)
         }
     }
@@ -71,6 +76,9 @@ class Media(
         return isGif(mediaType)
     }
 
+    fun compressNullToPath(): String {
+        return compressPath ?: path
+    }
 
     override fun toString(): String {
         return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
@@ -81,14 +89,13 @@ class Media(
 
         fun valueOf(cursor: Cursor): Media {
             return Media(
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
             )
         }
-
 
         @JvmField
         val CREATOR = object : Parcelable.Creator<Media> {
@@ -108,6 +115,7 @@ class Media(
         parcel.writeString(path)
         parcel.writeLong(size)
         parcel.writeLong(duration)
+        parcel.writeString(compressPath)
     }
 
     override fun describeContents(): Int {
@@ -120,7 +128,9 @@ class Media(
         parcel.readString()!!,
         parcel.readLong(),
         parcel.readLong()
-    )
+    ) {
+        compressPath = parcel.readString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
