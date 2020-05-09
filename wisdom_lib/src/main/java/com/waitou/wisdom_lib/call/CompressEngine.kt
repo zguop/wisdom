@@ -8,5 +8,5 @@ import com.waitou.wisdom_lib.bean.Media
  * date 2020/5/8
  */
 interface CompressEngine {
-    fun compress(context: Context, medias: List<Media>, function: (List<String>) -> Unit)
+    fun compress(context: Context, medias: List<Media>, function: (List<String>?) -> Unit)
 }

@@ -26,9 +26,9 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.14'
+    compile 'com.waitou:wisdom_lib:1.0.15'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.14'
+    compile 'com.waitou:wisdom_impl:1.0.15'
 }
 ```
 ### 使用
@@ -79,7 +79,8 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
-    时间：20200509（1.0.14）
+
+    时间：20200509（1.0.15）
     内容：新增图片压缩接口，扩展图片压缩功能，demo集成tiny压缩框架，具体查看TinyCompressEngine类，后面更新luban压缩，其它代码优化
     
     时间：20200507（1.0.13）
