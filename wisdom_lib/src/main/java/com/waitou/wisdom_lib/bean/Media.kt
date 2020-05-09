@@ -114,6 +114,14 @@ class Media(
         return 0
     }
 
+    private constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readLong(),
+        parcel.readLong()
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -136,12 +144,4 @@ class Media(
         result = 31 * result + uri.hashCode()
         return result
     }
-
-    private constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
-            parcel.readString()!!,
-            parcel.readString()!!,
-            parcel.readLong(),
-            parcel.readLong()
-    )
 }
