@@ -47,7 +47,6 @@ class PhotoPreviewFragment : Fragment() {
         media = arguments?.getParcelable(EXTRA_DATA)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.wis_fragment_preview, container, false)
     }
