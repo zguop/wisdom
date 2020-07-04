@@ -79,7 +79,7 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holde is CameraViewHolder) {
             holde.itemView.cameraText.text = holde.itemView.context.getString(R.string.wis_take)
         } else {
-            WisdomConfig.getInstance().iImageEngine?.displayThumbnail(
+            WisdomConfig.getInstance().imageEngine?.displayThumbnail(
                     holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
             )
             holde.itemView.checkView.setCheckedNum(selectMediaIndexOf(media))

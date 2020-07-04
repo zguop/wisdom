@@ -2,6 +2,7 @@ package com.waitou.wisdom_lib.config
 
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.CompressEngine
+import com.waitou.wisdom_lib.call.CropEngine
 import com.waitou.wisdom_lib.call.ImageEngine
 
 /**
@@ -10,8 +11,6 @@ import com.waitou.wisdom_lib.call.ImageEngine
  *
  *  可以选择的图片大小
  *  显示多少秒的内视频
- *  压缩图片
- *  多少kb以内的图片不进行压缩
  *  是否显示gif
  */
 class WisdomConfig private constructor() {
@@ -21,8 +20,9 @@ class WisdomConfig private constructor() {
     var authorities = ""
     var directory: String? = null
     var maxSelectLimit = 1
-    var iImageEngine: ImageEngine? = null
+    var imageEngine: ImageEngine? = null
     var compressEngine: CompressEngine? = null
+    var cropEngine: CropEngine? = null
     var imgMedias: List<Media>? = null
 
     fun reset() {
@@ -31,9 +31,10 @@ class WisdomConfig private constructor() {
         authorities = ""
         directory = null
         maxSelectLimit = 1
-        iImageEngine = null
-        imgMedias = null
+        imageEngine = null
         compressEngine = null
+        cropEngine = null
+        imgMedias = null
     }
 
     companion object {

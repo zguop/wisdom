@@ -64,6 +64,12 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
     }
 
     override fun onCameraResult(media: Media) {
+        if(!startCrop(media)){
+            finish(listOf(media))
+        }
+    }
+
+    override fun onCropResult(media: Media) {
         finish(listOf(media))
     }
 
@@ -89,7 +95,9 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
         adapter.mediaClick = { media, position, _ ->
             if (isSingleImage()) {
                 //单选完成结束
-                finish(listOf(media))
+                if(!startCrop(media)){
+                    finish(listOf(media))
+                }
             } else {
 //                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
                 //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对

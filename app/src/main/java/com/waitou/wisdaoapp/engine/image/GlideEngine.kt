@@ -1,4 +1,4 @@
-package com.waitou.wisdaoapp
+package com.waitou.wisdaoapp.engine.image
 
 import android.net.Uri
 import android.widget.ImageView
@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
+import com.waitou.wisdaoapp.R
 import com.waitou.wisdom_lib.call.ImageEngine
 
 /**

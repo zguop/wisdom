@@ -19,7 +19,7 @@ class WisdomPreviewBuilder(private val wisdom: Wisdom) {
      * image loading engine, need to be Implemented
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomPreviewBuilder {
-        wisdomConfig.iImageEngine = iImageEngine
+        wisdomConfig.imageEngine = iImageEngine
         return this
     }
 
@@ -33,18 +33,32 @@ class WisdomPreviewBuilder(private val wisdom: Wisdom) {
         return this
     }
 
-    fun go(clazz: Class<out WisPreViewActivity>,position: Int = 0) {
+    fun go(clazz: Class<out WisPreViewActivity>, position: Int = 0) {
         requireNotNull(wisdomConfig.imgMedias) { "imgMedias is empty?" }
         val o = wisdom.sojournReference.get()
         if (o is Fragment) {
             val activity = o.activity
             activity?.let {
-                val intent =   WisPreViewActivity.getIntent(activity, clazz, wisdomConfig.imgMedias!!,position,"",WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT)
+                val intent = WisPreViewActivity.getIntent(
+                    activity,
+                    clazz,
+                    wisdomConfig.imgMedias!!,
+                    position,
+                    "",
+                    WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
+                )
                 o.startActivity(intent)
             }
         }
         if (o is Activity) {
-            val intent =   WisPreViewActivity.getIntent(o, clazz, wisdomConfig.imgMedias!!,position,"",WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT)
+            val intent = WisPreViewActivity.getIntent(
+                o,
+                clazz,
+                wisdomConfig.imgMedias!!,
+                position,
+                "",
+                WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
+            )
             o.startActivity(intent)
         }
     }

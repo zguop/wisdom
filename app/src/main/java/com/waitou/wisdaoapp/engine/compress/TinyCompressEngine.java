@@ -1,8 +1,9 @@
-package com.waitou.wisdaoapp;
+package com.waitou.wisdaoapp.engine.compress;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.waitou.wisdom_lib.bean.Media;
 import com.waitou.wisdom_lib.call.CompressEngine;
 import com.zxy.tiny.Tiny;
@@ -27,8 +28,9 @@ public class TinyCompressEngine implements CompressEngine {
         compressOptions.config = Bitmap.Config.ARGB_8888;
         String[] fileArray = new String[medias.size()];
         for (int i = 0; i < medias.size(); i++) {
-            fileArray[i] = medias.get(i).getPath();
+            fileArray[i] = medias.get(i).cropNullToPath();
         }
+        LogUtils.e("开始压缩...");
         Tiny.getInstance().source(fileArray)
                 .batchAsFile()
                 .withOptions(compressOptions)

@@ -18,32 +18,35 @@ import java.util.*
  */
 
 
-class CameraStrategy(fragment: Fragment) {
+class CameraStrategy {
 
-    private val weakReference = WeakReference(fragment)
     lateinit var filePath: File
 
-    fun startCamera(context: Context, authority: String, directory: String?) {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(context.packageManager)?.let {
-            filePath = getImageFileExistsAndCreate(context, "IMAGE_%s.jpg", directory)
-            val uriForFile = FileProvider.getUriForFile(context, authority, filePath)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            weakReference.get()?.startActivityForResult(intent, CAMERA_REQUEST)
+    fun startCamera(fragment: Fragment, authority: String, directory: String?) {
+        fragment.activity?.let { context ->
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.resolveActivity(context.packageManager)?.let {
+                filePath = getImageFileExistsAndCreate(context, "IMAGE_%s.jpg", directory)
+                val uriForFile = FileProvider.getUriForFile(context, authority, filePath)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                fragment.startActivityForResult(intent, CAMERA_REQUEST)
+            }
         }
     }
 
-    fun startCameraVideo(context: Context, authority: String, directory: String?) {
-        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)  // 表示跳转至相机的录视频界面
-        intent.resolveActivity(context.packageManager)?.let {
-            filePath = getImageFileExistsAndCreate(context, "VIDEO_%s.mp4", directory)
-            val uriForFile = FileProvider.getUriForFile(context, authority, filePath)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
-            intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30)  //视频时长
-            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1) //视频质量 0 - 1
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            weakReference.get()?.startActivityForResult(intent, CAMERA_REQUEST)
+    fun startCameraVideo(fragment: Fragment, authority: String, directory: String?) {
+        fragment.activity?.let { context ->
+            val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)  // 表示跳转至相机的录视频界面
+            intent.resolveActivity(context.packageManager)?.let {
+                filePath = getImageFileExistsAndCreate(context, "VIDEO_%s.mp4", directory)
+                val uriForFile = FileProvider.getUriForFile(context, authority, filePath)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile)
+                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30)  //视频时长
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1) //视频质量 0 - 1
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                fragment.startActivityForResult(intent, CAMERA_REQUEST)
+            }
         }
     }
 

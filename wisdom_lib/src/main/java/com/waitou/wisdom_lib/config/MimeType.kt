@@ -1,3 +1,5 @@
+@file:JvmName("MimeType")
+@file:JvmMultifileClass
 package com.waitou.wisdom_lib.config
 
 import android.webkit.MimeTypeMap

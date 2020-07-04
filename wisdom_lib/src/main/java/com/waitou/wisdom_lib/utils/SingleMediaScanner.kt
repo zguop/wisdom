@@ -33,5 +33,4 @@ class SingleMediaScanner(context: Context, private val filePath: File, function:
         val duration = CameraStrategy.getDuration(path)
         functionWeakReference.get()?.invoke(Media(mediaId, mimeType, path, filePath.length(), duration))
     }
-
 }

@@ -21,10 +21,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".test.JaActivity" />
-        <activity android:name=".test.AnimActivity" />
-
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

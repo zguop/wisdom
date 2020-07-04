@@ -18,6 +18,7 @@ import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
 import com.waitou.wisdom_lib.utils.CameraStrategy
+import com.waitou.wisdom_lib.utils.CropStrategy
 import com.waitou.wisdom_lib.utils.SingleMediaScanner
 
 /**
@@ -36,7 +37,8 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
 
     private val albumCollection by lazy { AlbumCollection() }
     private val mediaCollection by lazy { MediaCollection() }
-    private val cameraStrategy by lazy { CameraStrategy(this) }
+    private val cameraStrategy by lazy { CameraStrategy() }
+    private val cropStrategy by lazy { CropStrategy() }
 
     private var cameraPermissionGranted: (() -> Unit)? = null
 
@@ -131,13 +133,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
      */
     fun startCameraImage() {
         checkPermissionOnCamera {
-            activity?.let {
-                cameraStrategy.startCamera(
-                    it,
-                    WisdomConfig.getInstance().authorities,
-                    WisdomConfig.getInstance().directory
-                )
-            }
+            cameraStrategy.startCamera(
+                this,
+                WisdomConfig.getInstance().authorities,
+                WisdomConfig.getInstance().directory
+            )
         }
     }
 
@@ -146,13 +146,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
      */
     fun startCameraVideo() {
         checkPermissionOnCamera {
-            activity?.let {
-                cameraStrategy.startCameraVideo(
-                    it,
-                    WisdomConfig.getInstance().authorities,
-                    WisdomConfig.getInstance().directory
-                )
-            }
+            cameraStrategy.startCameraVideo(
+                this,
+                WisdomConfig.getInstance().authorities,
+                WisdomConfig.getInstance().directory
+            )
         }
     }
 
@@ -166,8 +164,23 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
     /**
      * 跳转到预览页面 复写onPreviewResult 处理预览回调数据
      */
-    fun startPreview(clazz: Class<out WisPreViewActivity>, selectMedia: List<Media>, currentPosition: Int = 0, albumId: String, bundle: Bundle? = null) {
+    fun startPreview(
+        clazz: Class<out WisPreViewActivity>,
+        selectMedia: List<Media>,
+        currentPosition: Int = 0,
+        albumId: String,
+        bundle: Bundle? = null
+    ) {
         onResultMediaListener?.startPreview(clazz, selectMedia, currentPosition, albumId, bundle)
+    }
+
+    /**
+     * 配置了cropEngine进行裁剪
+     */
+    fun startCrop(media: Media): Boolean {
+        WisdomConfig.getInstance().cropEngine ?: return false
+        cropStrategy.startCrop(this, media)
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -179,6 +192,12 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
             SingleMediaScanner(activity!!, cameraStrategy.filePath) {
                 onCameraResult(it)
+            }
+        }
+        // the crop callback
+        WisdomConfig.getInstance().cropEngine?.let {
+            if (cropStrategy.startCropRequest == requestCode) {
+                onCropResult(cropStrategy.cropResult(data))
             }
         }
         //预览页面回来
@@ -221,6 +240,11 @@ abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCa
      * 相机拍照或者录像后回调，包装成一个media
      */
     open fun onCameraResult(media: Media) {}
+
+    /**
+     * 裁剪完成后，调用
+     */
+    open fun onCropResult(media: Media) {}
 
     /**
      * 预览页面回调，在预览页面做了的事情，将数据源回调更新

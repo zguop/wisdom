@@ -1,9 +1,10 @@
-package com.waitou.wisdaoapp;
+package com.waitou.wisdaoapp.engine.image;
 
 import android.net.Uri;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.waitou.wisdaoapp.R;
 import com.waitou.wisdom_lib.call.ImageEngine;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,5 @@ public class PicassoEngine implements ImageEngine {
     @Override
     public void displayPreviewImage(@NotNull ImageView target, @NotNull Uri uri, int w, int h, boolean isGif) {
         Picasso.get().load(uri).resize(w, h).centerInside().into(target);
-
-
     }
 }

@@ -32,7 +32,7 @@ class AlbumsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val album = albums[position]
         val screenImageResize = getScreenImageResize()
-        WisdomConfig.getInstance().iImageEngine?.displayAlbum(
+        WisdomConfig.getInstance().imageEngine?.displayAlbum(
                 holder.itemView.img,
                 album.uri,
                 screenImageResize,

@@ -43,6 +43,11 @@ class Media(
     val uri: Uri
 
     /**
+     * CropEngine crop
+     */
+    var cropPath: String? = null
+
+    /**
      * CompressEngine compress
      */
     var compressPath: String? = null
@@ -80,6 +85,14 @@ class Media(
         return compressPath ?: path
     }
 
+    fun cropNullToPath(): String {
+        return cropPath ?: path
+    }
+
+    fun compressOrCropNullToPath(): String {
+        return compressPath ?: cropPath ?: path
+    }
+
     override fun toString(): String {
         return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
     }
@@ -115,6 +128,7 @@ class Media(
         parcel.writeString(path)
         parcel.writeLong(size)
         parcel.writeLong(duration)
+        parcel.writeString(cropPath)
         parcel.writeString(compressPath)
     }
 
@@ -129,6 +143,7 @@ class Media(
         parcel.readLong(),
         parcel.readLong()
     ) {
+        cropPath = parcel.readString()
         compressPath = parcel.readString()
     }
 

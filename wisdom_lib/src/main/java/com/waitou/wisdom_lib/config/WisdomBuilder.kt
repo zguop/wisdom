@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.call.CompressEngine
+import com.waitou.wisdom_lib.call.CropEngine
 import com.waitou.wisdom_lib.call.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
@@ -51,7 +52,15 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      * image loading engine, need to be Implemented
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
-        wisdomConfig.iImageEngine = iImageEngine
+        wisdomConfig.imageEngine = iImageEngine
+        return this
+    }
+
+    /**
+     * crop engine
+     */
+    fun cropEngine(cropEngine: CropEngine?): WisdomBuilder {
+        wisdomConfig.cropEngine = cropEngine
         return this
     }
 
@@ -64,7 +73,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
-     * 默认勾选
+     * default selector medias
      */
     fun setMedias(medias: List<Media>?): WisdomBuilder {
         wisdomConfig.imgMedias = medias

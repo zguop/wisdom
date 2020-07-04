@@ -76,6 +76,8 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20200705（1.0.16）
+    内容：新增图片裁剪接口，扩展图片裁剪功能，自定义实现CropEngine，demo集成UCrop和Cropper裁剪框架，具体在Demo中查看。
 
     时间：20200509（1.0.15）
     内容：新增图片压缩接口，扩展图片压缩功能，demo集成tiny压缩框架，具体查看TinyCompressEngine类，后面更新luban压缩，其它代码优化

@@ -71,7 +71,7 @@ class PhotoPreviewFragment : Fragment() {
                 }
             }
             //测试来看 这个比例目前清晰度没什么问题
-            WisdomConfig.getInstance().iImageEngine?.displayPreviewImage(image, it.uri, 480, 800, it.isGif())
+            WisdomConfig.getInstance().imageEngine?.displayPreviewImage(image, it.uri, 480, 800, it.isGif())
         }
     }
 }
