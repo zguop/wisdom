@@ -6,6 +6,6 @@ import com.waitou.wisdom_lib.bean.Media
  * auth aboom
  * date 2019-05-26
  */
-interface ILoaderMediaCall {
+interface LoaderMedia {
     fun mediaResult(medias: List<Media>)
 }

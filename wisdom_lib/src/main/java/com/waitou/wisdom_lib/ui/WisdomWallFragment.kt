@@ -11,8 +11,8 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.ILoaderAlbumCall
-import com.waitou.wisdom_lib.call.ILoaderMediaCall
+import com.waitou.wisdom_lib.call.LoaderAlbum
+import com.waitou.wisdom_lib.call.LoaderMedia
 import com.waitou.wisdom_lib.call.OnMediaListener
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
@@ -25,7 +25,7 @@ import com.waitou.wisdom_lib.utils.SingleMediaScanner
  * auth aboom
  * date 2019-05-24
  */
-abstract class WisdomWallFragment : Fragment(), ILoaderAlbumCall, ILoaderMediaCall {
+abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
 
     companion object {
         @JvmField

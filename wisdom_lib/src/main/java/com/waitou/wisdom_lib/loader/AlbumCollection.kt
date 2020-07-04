@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.call.ILoaderAlbumCall
+import com.waitou.wisdom_lib.call.LoaderAlbum
 import java.lang.ref.WeakReference
 
 /**
@@ -21,13 +21,13 @@ class AlbumCollection : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private lateinit var context: WeakReference<FragmentActivity>
-    private lateinit var onLoaderCallbacks: WeakReference<ILoaderAlbumCall>
+    private lateinit var onLoaderCallbacks: WeakReference<LoaderAlbum>
     private val loaderManager by lazy { context.get()?.supportLoaderManager }
 
 
-    fun onCreate(@NonNull activity: FragmentActivity, @NonNull onLoaderCallbacks: ILoaderAlbumCall) {
+    fun onCreate(@NonNull activity: FragmentActivity, @NonNull loaderAlbum: LoaderAlbum) {
         this.context = WeakReference(activity)
-        this.onLoaderCallbacks = WeakReference(onLoaderCallbacks)
+        this.onLoaderCallbacks = WeakReference(loaderAlbum)
     }
 
     fun loadAlbum() {

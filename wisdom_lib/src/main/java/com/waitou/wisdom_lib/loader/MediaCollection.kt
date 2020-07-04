@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.ILoaderMediaCall
+import com.waitou.wisdom_lib.call.LoaderMedia
 import java.lang.ref.WeakReference
 
 /**
@@ -23,13 +23,13 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private lateinit var context: WeakReference<FragmentActivity>
-    private lateinit var iLoaderMediaCall: WeakReference<ILoaderMediaCall>
+    private lateinit var loaderMedia: WeakReference<LoaderMedia>
     private val loaderManager by lazy { context.get()?.supportLoaderManager }
 
 
-    fun onCreate(@NonNull activity: FragmentActivity, @NonNull iLoaderMediaCall: ILoaderMediaCall) {
+    fun onCreate(@NonNull activity: FragmentActivity, @NonNull loaderMedia: LoaderMedia) {
         this.context = WeakReference(activity)
-        this.iLoaderMediaCall = WeakReference(iLoaderMediaCall)
+        this.loaderMedia = WeakReference(loaderMedia)
     }
 
     @JvmOverloads
@@ -61,7 +61,7 @@ class MediaCollection : LoaderManager.LoaderCallbacks<Cursor> {
                         e.printStackTrace()
                     }
                 }
-                iLoaderMediaCall.get()?.mediaResult(list)
+                loaderMedia.get()?.mediaResult(list)
                 loaderManager?.destroyLoader(ARGS_LOAD_ID)
             }
         }

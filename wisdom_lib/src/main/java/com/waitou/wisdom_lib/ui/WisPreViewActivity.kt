@@ -6,14 +6,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.ILoaderMediaCall
+import com.waitou.wisdom_lib.call.LoaderMedia
 import com.waitou.wisdom_lib.loader.MediaCollection
 
 /**
  * auth aboom
  * date 2019-06-06
  */
-abstract class WisPreViewActivity : AppCompatActivity(), ILoaderMediaCall {
+abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
 
     companion object {
 
