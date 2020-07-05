@@ -8,6 +8,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Checkable
 import com.waitou.wisdom_impl.R
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * auth aboom
@@ -58,7 +60,7 @@ open class CheckView @JvmOverloads constructor(context: Context, attrs: Attribut
         val specMode = MeasureSpec.getMode(measureSpec)
         var result = 0
         when (specMode) {
-            MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST -> result = Math.min(defSize.toInt(), specSize)
+            MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST -> result = min(defSize.toInt(), specSize)
             MeasureSpec.EXACTLY -> result = specSize
         }
         return result
@@ -75,7 +77,7 @@ open class CheckView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val padding = Math.max(Math.max(paddingLeft, paddingRight), Math.max(paddingTop, paddingBottom))
+        val padding = max(max(paddingLeft, paddingRight), max(paddingTop, paddingBottom))
         canvas.drawCircle(center, center, center - strokePaint.strokeWidth / 2 - padding, strokePaint)
         if (isChecked && checkNum > UNCHECKED) {
             canvas.drawCircle(center, center, center - strokePaint.strokeWidth - padding, bgPaint)

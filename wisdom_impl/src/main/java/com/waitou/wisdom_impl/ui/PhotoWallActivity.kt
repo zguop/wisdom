@@ -4,8 +4,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
+import android.util.TypedValue
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.AlbumsAdapter
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.wis_include_title_bar.*
  */
 class PhotoWallActivity : WisdomWallActivity() {
 
-    private val albumsAdapter by lazy { AlbumsAdapter() }
+    private val albumsAdapter = AlbumsAdapter()
     private lateinit var viewModule: PhotoWallViewModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         viewModule.selectCountLiveData.observe(this, Observer { data ->
             updateBottomTextUI(data?.size ?: 0)
         })
+        initFolderPop()
         barTitle.setOnClickListener { showPop() }
         complete.setOnClickListener { complete() }
         preview.setOnClickListener { preView() }
@@ -60,31 +63,54 @@ class PhotoWallActivity : WisdomWallActivity() {
             it[0].albumName = getString(R.string.wis_all)
             albumsAdapter.replaceData(it)
             barTitle.text = it[0].albumName
+            folderPop.setMaxItemHeight(
+                (TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    80f,
+                    resources.displayMetrics
+                ) * it.size).toInt()
+            )
         }
     }
 
     private fun updateBottomTextUI(size: Int = 0) {
         complete.isEnabled = size > 0
         preview.isEnabled = size > 0
-        complete.text = getString(R.string.wis_complete, size, WisdomConfig.getInstance().maxSelectLimit)
+        complete.text =
+            getString(R.string.wis_complete, size, WisdomConfig.getInstance().maxSelectLimit)
     }
 
     private fun showPop() {
-        folderPop.getContentView().adapter ?: let {
-            folderPop.getContentView().layoutManager = LinearLayoutManager(this)
-            folderPop.getContentView().adapter = albumsAdapter
-            albumsAdapter.function = { position ->
-                if (albumsAdapter.currentAlbumPos != position) {
-                    albumsAdapter.currentAlbumPos = position
-                    val album = albumsAdapter.albums[position]
-                    albumsAdapter.notifyDataSetChanged()
-                    barTitle.text = album.albumName
-                    loadMedia(album.albumId)
+        if (folderPop.isShowing) folderPop.dismiss() else folderPop.show()
+    }
+
+    private fun initFolderPop() {
+        folderPop.getContentView().apply {
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@PhotoWallActivity,
+                    DividerItemDecoration.VERTICAL
+                ).apply {
+                    ContextCompat.getDrawable(this@PhotoWallActivity, R.drawable.wis_floder_line)
+                        ?.let {
+                            setDrawable(it)
+                        }
                 }
-                folderPop.dismiss()
+            )
+            layoutManager = LinearLayoutManager(this@PhotoWallActivity)
+            adapter = albumsAdapter.apply {
+                function = { position ->
+                    if (albumsAdapter.currentAlbumPos != position) {
+                        albumsAdapter.currentAlbumPos = position
+                        val album = albumsAdapter.albums[position]
+                        albumsAdapter.notifyDataSetChanged()
+                        barTitle.text = album.albumName
+                        loadMedia(album.albumId)
+                    }
+                    folderPop.dismiss()
+                }
             }
         }
-        if (folderPop.isShowing) folderPop.dismiss() else folderPop.show()
     }
 
     private fun preView() {

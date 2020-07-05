@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="wis_pop_style_fade">
-        <item name="android:windowEnterAnimation">@anim/wis_fade_in</item>
-        <item name="android:windowExitAnimation">@anim/wis_fade_out</item>
-    </style>
-</resources>

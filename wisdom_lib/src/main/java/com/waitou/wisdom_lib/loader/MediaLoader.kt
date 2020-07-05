@@ -1,6 +1,5 @@
 package com.waitou.wisdom_lib.loader
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor

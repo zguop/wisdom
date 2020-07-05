@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -66,8 +67,14 @@ class PhotoPreviewActivity : WisPreViewActivity(), OnOutsidePhotoTapListener {
     private fun refreshSelectedUI(initialization: Boolean) {
         val media = medias[currentPosition]
         val selectMediaIndexOf = selectMediaIndexOf(media)
-        if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(selectMediaIndexOf)
-        complete.text = getString(R.string.wis_complete, selectMedias.size, WisdomConfig.getInstance().maxSelectLimit)
+        if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(
+            selectMediaIndexOf
+        )
+        complete.text = getString(
+            R.string.wis_complete,
+            selectMedias.size,
+            WisdomConfig.getInstance().maxSelectLimit
+        )
         barTitle.text = getString(R.string.wis_count, currentPosition + 1, medias.size)
     }
 
@@ -76,7 +83,8 @@ class PhotoPreviewActivity : WisPreViewActivity(), OnOutsidePhotoTapListener {
         return if (indexOf >= 0) indexOf + 1 else indexOf
     }
 
-    private inner class PhotoPagerAdapter internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    private inner class PhotoPagerAdapter internal constructor(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             return PhotoPreviewFragment.newInstance(medias[position])
@@ -95,18 +103,28 @@ class PhotoPreviewActivity : WisPreViewActivity(), OnOutsidePhotoTapListener {
     }
 
     override fun onOutsidePhotoTap(imageView: ImageView?) {
-        val animTop = AnimationUtils.loadAnimation(this,
-                if (isBarHide) R.anim.wis_top_in else R.anim.wis_top_out)
-        animTop.fillAfter = true
-        titleBar.startAnimation(animTop)
-        checkView.isEnabled = isBarHide
-        back.isEnabled = isBarHide
-        //可以编辑 才有底部的动画
-        if (isEditor()) {
-            val animFade = AnimationUtils.loadAnimation(this,
-                    if (isBarHide) R.anim.wis_fade_in else R.anim.wis_fade_out)
-            bottomBar.startAnimation(animFade)
-            complete.isEnabled = isBarHide
+        if (isBarHide) {
+            titleBar.animate()
+                .setInterpolator(FastOutSlowInInterpolator())
+                .translationYBy(titleBar.height.toFloat())
+                .start()
+            if (isEditor()) {
+                bottomBar.animate()
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .translationYBy(-bottomBar.height.toFloat())
+                    .start()
+            }
+        } else {
+            titleBar.animate()
+                .setInterpolator(FastOutSlowInInterpolator())
+                .translationYBy(-titleBar.height.toFloat())
+                .start()
+            if(isEditor()){
+                bottomBar.animate()
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .translationYBy(bottomBar.height.toFloat())
+                    .start()
+            }
         }
         isBarHide = !isBarHide
     }
