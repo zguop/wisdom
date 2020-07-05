@@ -29,7 +29,7 @@ class SingleMediaScanner(context: Context, private val filePath: File, function:
 
     override fun onScanCompleted(path: String, uri: Uri) {
         msc.disconnect()
-        val mediaId = ContentUris.parseId(uri).toString()
+        val mediaId = ContentUris.parseId(uri)
         val duration = CameraStrategy.getDuration(path)
         functionWeakReference.get()?.invoke(Media(mediaId, mimeType, path, filePath.length(), duration))
     }

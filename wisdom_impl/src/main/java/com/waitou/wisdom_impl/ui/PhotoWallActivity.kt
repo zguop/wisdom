@@ -105,6 +105,7 @@ class PhotoWallActivity : WisdomWallActivity() {
                         val album = albumsAdapter.albums[position]
                         albumsAdapter.notifyDataSetChanged()
                         barTitle.text = album.albumName
+                        album.albumId
                         loadMedia(album.albumId)
                     }
                     folderPop.dismiss()

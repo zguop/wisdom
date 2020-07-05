@@ -17,7 +17,7 @@ class Album(
         /**
          * 主键
          */
-        var mediaId: String,
+        var mediaId: Long,
         /**
          * 相册id
          */
@@ -46,7 +46,7 @@ class Album(
             isVideo(getMimeType(path)) -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             else -> MediaStore.Files.getContentUri("external")
         }
-        this.uri = ContentUris.withAppendedId(contentUri, mediaId.toLong())
+        this.uri = ContentUris.withAppendedId(contentUri, mediaId)
     }
 
     override fun toString(): String {
@@ -59,7 +59,7 @@ class Album(
 
         fun valueOf(cursor: Cursor): Album {
             return Album(
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),

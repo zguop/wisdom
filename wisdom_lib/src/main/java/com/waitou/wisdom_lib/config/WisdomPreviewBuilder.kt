@@ -29,7 +29,7 @@ class WisdomPreviewBuilder(private val wisdom: Wisdom) {
     }
 
     fun setPaths(path: List<String>): WisdomPreviewBuilder {
-        wisdomConfig.imgMedias = path.map { Media("", "", it, 0, 0) }
+        wisdomConfig.imgMedias = path.map { Media(0, "", it, 0, 0) }
         return this
     }
 

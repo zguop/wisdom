@@ -92,7 +92,11 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -123,6 +127,7 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
      * 加载相册
      * @param albumId 目录id 默认加载全部
      */
+    @JvmOverloads
     fun loadMedia(albumId: String = Album.ALBUM_ID_ALL) {
         currentAlbumId = albumId
         mediaCollection.loadMedia(albumId, WisdomConfig.getInstance().isCamera)
@@ -179,6 +184,7 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
      */
     fun startCrop(media: Media): Boolean {
         WisdomConfig.getInstance().cropEngine ?: return false
+        if (media.isGif() || media.isVideo()) return false
         cropStrategy.startCrop(this, media)
         return true
     }
@@ -229,7 +235,11 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
      * @param permissionsDeniedForever 集合包含了用户永久拒绝了权限
      * @param permissionsDenied 集合包含了用户拒绝了权限
      */
-    open fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
+    open fun checkPermissionOnDenied(
+        permissionsDeniedForever: Array<String>,
+        permissionsDenied: Array<String>
+    ) {
+    }
 
     /**
      * 默认勾选medias，onActivityCreated调用

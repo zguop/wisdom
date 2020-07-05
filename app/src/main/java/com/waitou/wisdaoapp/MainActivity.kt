@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var cropType = R.id.ucrop
     private var compressId = R.id.tiny
     private var resultMedia: List<Media>? = null
+    private var filterMaxFile: Int? = null
 
 
 //    private val cropEngine by lazy { UCropEngine() }
@@ -56,6 +57,8 @@ class MainActivity : AppCompatActivity() {
 
         //配置代码
         go.setOnClickListener {
+            //跳转到相册选择
+
             Wisdom.of(this@MainActivity)
                 .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
                 .imageEngine(imageEngine) //图片加载引擎
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
                 .isCamera(isCamera) //是否打开相机，
                 .setMedias(resultMedia)
+                .filterMaxFileSize(filterMaxFile)
                 .forResult(
                     0x11,
                     PhotoWallActivity::class.java
@@ -96,7 +100,6 @@ class MainActivity : AppCompatActivity() {
                 .go(PhotoPreviewActivity::class.java, 1)
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -139,6 +142,15 @@ class MainActivity : AppCompatActivity() {
         num.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 updateSelectLimit()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        filter.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                filterMaxFile = if(s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

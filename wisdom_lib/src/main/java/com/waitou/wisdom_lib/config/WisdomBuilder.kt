@@ -40,6 +40,10 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
         return this
     }
 
+    /**
+     * 文件选择数量
+     * file selector number default 1
+     */
     fun selectLimit(maxSelectLimit: Int): WisdomBuilder {
         if (maxSelectLimit < 1) {
             throw IllegalArgumentException("maxSelectLimit not less than one")
@@ -49,6 +53,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
+     * 图片加载
      * image loading engine, need to be Implemented
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
@@ -57,6 +62,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
+     * 图片裁剪
      * crop engine
      */
     fun cropEngine(cropEngine: CropEngine?): WisdomBuilder {
@@ -65,6 +71,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
+     * 图片压缩
      * image compress engine
      */
     fun compressEngine(compressEngine: CompressEngine?): WisdomBuilder {
@@ -73,10 +80,20 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
+     * 默认选中的图片
      * default selector medias
      */
     fun setMedias(medias: List<Media>?): WisdomBuilder {
         wisdomConfig.imgMedias = medias
+        return this
+    }
+
+    /**
+     * 选择文件不能超过 maxFileSize，限制文件选择 1 * 1024 * 1024 = 1M
+     * selector maxSize file
+     */
+    fun filterMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+        wisdomConfig.filterMaxFileSize = maxFileSize
         return this
     }
 

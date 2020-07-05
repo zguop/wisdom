@@ -18,7 +18,7 @@ class Media(
     /**
      * 主键
      */
-    var mediaId: String,
+    var mediaId: Long,
     /**
      * type
      */
@@ -59,14 +59,10 @@ class Media(
             else -> MediaStore.Files.getContentUri("external")
         }
         uri = try {
-            ContentUris.withAppendedId(contentUri, mediaId.toLong())
+            ContentUris.withAppendedId(contentUri, mediaId)
         } catch (e: Exception) {
             Uri.parse(path)
         }
-    }
-
-    fun isCamera(): Boolean {
-        return ITEM_ID_CAPTURE == mediaId
     }
 
     fun isImage(): Boolean {
@@ -94,15 +90,15 @@ class Media(
     }
 
     override fun toString(): String {
-        return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri)"
+        return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropPath, compressPath=$compressPath)"
     }
 
     companion object {
-        const val ITEM_ID_CAPTURE: String = "-1"
+        const val ITEM_ID_CAPTURE: Long = -1
 
         fun valueOf(cursor: Cursor): Media {
             return Media(
-                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
@@ -123,7 +119,7 @@ class Media(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(mediaId)
+        parcel.writeLong(mediaId)
         parcel.writeString(mediaType)
         parcel.writeString(path)
         parcel.writeLong(size)
@@ -137,7 +133,7 @@ class Media(
     }
 
     private constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
+        parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readLong(),
@@ -152,20 +148,14 @@ class Media(
         if (javaClass != other?.javaClass) return false
         other as Media
         if (mediaId != other.mediaId) return false
-        if (mediaType != other.mediaType) return false
         if (path != other.path) return false
-        if (size != other.size) return false
-        if (duration != other.duration) return false
         if (uri != other.uri) return false
         return true
     }
 
     override fun hashCode(): Int {
         var result = mediaId.hashCode()
-        result = 31 * result + mediaType.hashCode()
         result = 31 * result + path.hashCode()
-        result = 31 * result + size.hashCode()
-        result = 31 * result + duration.hashCode()
         result = 31 * result + uri.hashCode()
         return result
     }

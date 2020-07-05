@@ -1,71 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:animateLayoutChanges="true">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <EditText
-                android:id="@+id/num"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:hint="请输入数量"
-                android:inputType="number"
-                android:maxEms="11"
-                android:textSize="14sp" />
+            android:id="@+id/num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="请输入数量"
+            android:inputType="number"
+            android:maxEms="11"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="tip： 输入选择图片的数量"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="文件最大选择不能超过 * M"
+            android:inputType="number"
+            android:maxEms="11"
+            android:textSize="14sp" />
 
         <CheckBox
-                android:id="@+id/camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="显示隐藏相机拍照" />
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="显示隐藏相机拍照" />
 
 
         <RadioGroup
-                android:id="@+id/radio"
-                android:layout_width="match_parent"
+            android:id="@+id/radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/all"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:checked="true"
+                android:text="全部"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
 
             <RadioButton
-                    android:id="@+id/all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="全部"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="图片"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
 
             <RadioButton
-                    android:id="@+id/image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="图片"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
-
-            <RadioButton
-                    android:id="@+id/video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="视频"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
+                android:id="@+id/video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="视频"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
 
             <!--<RadioButton-->
             <!--android:mediaId="@+mediaId/rb_audio"-->
@@ -79,29 +95,29 @@
 
 
         <RadioGroup
-                android:id="@+id/radio2"
-                android:layout_width="match_parent"
+            android:id="@+id/radio2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/glide"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:checked="true"
+                android:text="glide"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
 
             <RadioButton
-                    android:id="@+id/glide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="glide"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
-
-            <RadioButton
-                    android:id="@+id/picasso"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="picasso"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
+                android:id="@+id/picasso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="picasso"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
         </RadioGroup>
 
 
@@ -116,12 +132,12 @@
 
         <RadioGroup
             android:id="@+id/radio4"
-            tools:visibility="visible"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <RadioButton
                 android:id="@+id/tiny"
@@ -144,58 +160,58 @@
 
 
         <CheckBox
-                android:id="@+id/crop"
+            android:id="@+id/crop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="是否裁剪图片"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp" />
+
+        <RadioGroup
+            android:id="@+id/radio3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/ucrop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="是否裁剪图片"
+                android:text="ucrop"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
 
-        <RadioGroup
-                android:id="@+id/radio3"
-                android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/cropper"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-            <RadioButton
-                    android:id="@+id/ucrop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ucrop"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
-
-            <RadioButton
-                    android:id="@+id/cropper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="crooper"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="14sp" />
+                android:layout_marginLeft="5dp"
+                android:text="crooper"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
         </RadioGroup>
 
 
         <Button
-                android:id="@+id/go"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="go" />
+            android:id="@+id/go"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="go" />
 
 
         <Button
-                android:id="@+id/action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="preview" />
+            android:id="@+id/action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="preview" />
 
         <Button
-                android:id="@+id/action2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="preview net" />
+            android:id="@+id/action2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="preview net" />
 
     </LinearLayout>
 

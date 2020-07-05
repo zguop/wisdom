@@ -24,6 +24,7 @@ class WisdomConfig private constructor() {
     var compressEngine: CompressEngine? = null
     var cropEngine: CropEngine? = null
     var imgMedias: List<Media>? = null
+    var filterMaxFileSize: Int? = null
 
     fun reset() {
         mimeType = ofAll()
@@ -35,6 +36,7 @@ class WisdomConfig private constructor() {
         compressEngine = null
         cropEngine = null
         imgMedias = null
+        filterMaxFileSize = null
     }
 
     companion object {

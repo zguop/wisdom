@@ -1,3 +1,6 @@
+@file:JvmName("ConfigUtils")
+@file:JvmMultifileClass
+
 package com.waitou.wisdom_lib.utils
 
 import android.content.res.Configuration
@@ -40,4 +43,8 @@ fun getScreenImageResize(): Int {
         Configuration.SCREENLAYOUT_SIZE_LARGE -> 320
         else -> 180
     }
+}
+
+fun filterMaxFileSize(): Int? {
+    return WisdomConfig.getInstance().filterMaxFileSize
 }
