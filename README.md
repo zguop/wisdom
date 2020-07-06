@@ -23,21 +23,29 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 ```groovy
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.15'
+    compile 'com.waitou:wisdom_lib:1.0.16'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.15'
+    compile 'com.waitou:wisdom_impl:1.0.16'
 }
 ```
 ### 使用
 只配置需要的api即可
 ```groovy
+
 Wisdom.of(this@MainActivity)
-     .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
-     .imageEngine(GlideEngine()) //图片加载引擎
-     .selectLimit(Integer.valueOf(num.text.toString())) //选择的最大数量 数量1为单选模式
-     .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
-     .isCamera(isCamera) //是否打开相机，
-     .forResult(0x11, PhotoWallActivity::class.java) //requestCode，界面实现Activity，需要继承于核心库activity
+        .config(ofType) //选择类型 ofAll() ofImage() ofVideo()
+        .imageEngine(imageEngine) //图片加载引擎
+        .compressEngine(compressEngine)
+        .cropEngine(cropEngine)
+        .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
+        .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
+        .isCamera(isCamera) //是否打开相机，
+        .setMedias(resultMedia)
+        .filterMaxFileSize(filterMaxFile)
+        .forResult(
+            0x11,
+            PhotoWallActivity::class.java
+        ) //requestCode，界面实现Activity，需要继承于核心库WisdomWallActivity
      
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
@@ -45,6 +53,12 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         if (requestCode == 0x11 && data != null) {
             val resultMedia = Wisdom.obtainResult(data) //获取回调数据 类型Media 包含String path， Uri uri 路径
             Log.e("aa", resultMedia.toString())
+            resultMedia.forEach { media ->
+                        Log.e("aa", " 原图地址 " + media.path)
+                        Log.e("aa", " 压缩图片地址 " + media.compressNullToPath())
+                        Log.e("aa", " 裁剪图片地址 " + media.cropNullToPath())
+                        Log.e("aa", " 压缩图片 -> 裁剪图片 -> 原图 " + media.compressOrCropNullToPath())
+                    }
         }
     }
 }
@@ -67,7 +81,14 @@ Wisdom.of(this@MainActivity)
      .go(PhotoPreviewActivity::class.java,1)//第二个参数是预览的起始位置
 
 ```
-        
+
+### 配置engine
+框架提供扩展接口，实现各自自定义功能。可参考Demo中相应engine实现、可以拷贝使用
+
+>* ImageEngine    实现图片加载 -> GlideEngine 、PicassoEngine
+>* CompressEngine 实现图片压缩 -> TinyCompressEngine
+>* CropEngine     实现图片裁剪 -> CropperEngine 、UCropEngine
+
 ### 项目截图
 
 |图|图|
