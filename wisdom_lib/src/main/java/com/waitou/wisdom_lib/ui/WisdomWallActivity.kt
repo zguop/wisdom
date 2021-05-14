@@ -13,7 +13,8 @@ import com.waitou.wisdom_lib.config.WisdomConfig
  * auth aboom
  * date 2019-05-24
  */
-abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
+abstract class WisdomWallActivity : AppCompatActivity(),
+    OnMediaListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +40,13 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
     ) {
         //当前点击的position 所有选择的数据 mediaId
         val i = WisPreViewActivity.getIntent(
-            this,
-            clazz,
-            selectMedias,
-            currentPosition,
-            albumId,
-            WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
+                this,
+                clazz,
+                selectMedias,
+                currentPosition,
+                albumId,
+                isFullImage(),
+                WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
         )
         val fragment = supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG)
         fragment?.startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)

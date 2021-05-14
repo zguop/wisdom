@@ -24,10 +24,40 @@ import com.waitou.wisdom_lib.utils.onlyVideos
  * auth aboom
  * date 2019-05-25
  */
-class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedListener {
+class PhotoWallFragment : WisdomWallFragment(),
+    MediasAdapter.OnCheckedChangedListener {
 
-    private lateinit var viewModule: PhotoWallViewModule
-    private lateinit var adapter: MediasAdapter
+    private val viewModule by lazy { ViewModelProviders.of(requireActivity())[PhotoWallViewModule::class.java] }
+    private val adapter by lazy {
+        MediasAdapter().apply {
+            checkedListener = this@PhotoWallFragment
+            cameraClick = View.OnClickListener {
+                when {
+                    onlyImages() -> startCameraImage()
+                    onlyVideos() -> startCameraVideo()
+                    else -> startCameraImage()
+                }
+            }
+            mediaClick = { media, position, _ ->
+                if (isSingleImage()) {
+                    //单选完成结束
+                    if (!startCrop(media)) {
+                        finish(listOf(media))
+                    }
+                } else {
+//                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
+                    //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
+                    startPreview(
+                            PhotoPreviewActivity::class.java,
+                            selectMedias,
+                            if (WisdomConfig.getInstance().isCamera) position - 1 else position,
+                            currentAlbumId,
+                            null
+                    )
+                }
+            }
+        }
+    }
 
     override fun albumResult(albums: List<Album>) {
         viewModule.albumLiveData.postValue(albums)
@@ -54,17 +84,16 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
 
     override fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {
         super.checkPermissionOnDenied(permissionsDeniedForever, permissionsDenied)
-        val msg =
-            if (Manifest.permission.READ_EXTERNAL_STORAGE == permissionsDenied[0]) "需要访问设备的存储权限来选择图片" else "需要访问设备的相机权限进行拍照或录像"
+        val msg = if (Manifest.permission.READ_EXTERNAL_STORAGE == permissionsDenied[0]) "需要访问设备的存储权限来选择图片" else "需要访问设备的相机权限进行拍照或录像"
         Toast.makeText(
-            activity,
-            if (permissionsDeniedForever.isNotEmpty()) "$msg，请在“系统设置”或授权对话框中允许“存储空间”权限。" else msg,
-            Toast.LENGTH_SHORT
+                activity,
+                if (permissionsDeniedForever.isNotEmpty()) "$msg，请在“系统设置”或授权对话框中允许“存储空间”权限。" else msg,
+                Toast.LENGTH_SHORT
         ).show()
     }
 
     override fun onCameraResult(media: Media) {
-        if(!startCrop(media)){
+        if (!startCrop(media)) {
             finish(listOf(media))
         }
     }
@@ -74,44 +103,15 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val recyclerView = RecyclerView(requireActivity())
-        recyclerView.layoutParams =
-            ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+        return RecyclerView(requireActivity()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
             )
-        recyclerView.layoutManager = GridLayoutManager(activity, 3)
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
-        this.adapter = MediasAdapter()
-        recyclerView.adapter = adapter
-        adapter.checkedListener = this
-        adapter.cameraClick = View.OnClickListener {
-            when {
-                onlyImages() -> startCameraImage()
-                onlyVideos() -> startCameraVideo()
-                else -> startCameraImage()
-            }
+            layoutManager = GridLayoutManager(activity, 3)
+            addItemDecoration(GridSpacingItemDecoration(3, 4, false))
+            adapter = this@PhotoWallFragment.adapter
         }
-        adapter.mediaClick = { media, position, _ ->
-            if (isSingleImage()) {
-                //单选完成结束
-                if(!startCrop(media)){
-                    finish(listOf(media))
-                }
-            } else {
-//                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
-                //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
-                startPreview(
-                    PhotoPreviewActivity::class.java,
-                    adapter.selectMedias,
-                    if (WisdomConfig.getInstance().isCamera) position - 1 else position,
-                    currentAlbumId,
-                    null
-                )
-            }
-        }
-        viewModule = ViewModelProviders.of(requireActivity())[PhotoWallViewModule::class.java]
-        return recyclerView
     }
 
     override fun onChange() {

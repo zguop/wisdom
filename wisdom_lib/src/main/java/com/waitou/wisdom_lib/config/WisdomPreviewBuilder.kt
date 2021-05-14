@@ -40,24 +40,26 @@ class WisdomPreviewBuilder(private val wisdom: Wisdom) {
             val activity = o.activity
             activity?.let {
                 val intent = WisPreViewActivity.getIntent(
-                    activity,
-                    clazz,
-                    wisdomConfig.imgMedias!!,
-                    position,
-                    "",
-                    WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
+                        activity,
+                        clazz,
+                        wisdomConfig.imgMedias!!,
+                        position,
+                        "",
+                        false,
+                        WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
                 )
                 o.startActivity(intent)
             }
         }
         if (o is Activity) {
             val intent = WisPreViewActivity.getIntent(
-                o,
-                clazz,
-                wisdomConfig.imgMedias!!,
-                position,
-                "",
-                WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
+                    o,
+                    clazz,
+                    wisdomConfig.imgMedias!!,
+                    position,
+                    "",
+                    false,
+                    WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_VISIT
             )
             o.startActivity(intent)
         }

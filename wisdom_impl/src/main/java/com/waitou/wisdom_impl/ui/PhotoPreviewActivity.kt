@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.view.CheckRadioView
 import com.waitou.wisdom_impl.view.CheckView
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
@@ -51,6 +52,12 @@ class PhotoPreviewActivity : WisPreViewActivity(),
             mediaCheckedChange(medias[currentPosition])
         }
 
+        val original = findViewById<CheckRadioView>(R.id.original)
+        original.setChecked(fullImage)
+        findViewById<View>(R.id.originalLayout).setOnClickListener {
+            fullImage = !fullImage
+            original.setChecked(fullImage)
+        }
         complete = findViewById(R.id.complete)
         complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
 

@@ -25,7 +25,9 @@ import com.waitou.wisdom_lib.utils.SingleMediaScanner
  * auth aboom
  * date 2019-05-24
  */
-abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
+abstract class WisdomWallFragment : Fragment(),
+    LoaderAlbum,
+    LoaderMedia {
 
     companion object {
         @JvmField
@@ -59,13 +61,13 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
 
     private fun checkPermissionOnStart() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             )
         } else {
             startLoading()
@@ -74,14 +76,14 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
 
     private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
         if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.CAMERA
+                    requireActivity(),
+                    Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             this.cameraPermissionGranted = cameraPermissionGranted
             requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                    arrayOf(Manifest.permission.CAMERA),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             )
         } else {
             cameraPermissionGranted?.invoke()
@@ -135,9 +137,9 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
     fun startCameraImage() {
         checkPermissionOnCamera {
             cameraStrategy.startCamera(
-                this,
-                WisdomConfig.getInstance().authorities,
-                WisdomConfig.getInstance().directory
+                    this,
+                    WisdomConfig.getInstance().authorities,
+                    WisdomConfig.getInstance().directory
             )
         }
     }
@@ -148,9 +150,9 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
     fun startCameraVideo() {
         checkPermissionOnCamera {
             cameraStrategy.startCameraVideo(
-                this,
-                WisdomConfig.getInstance().authorities,
-                WisdomConfig.getInstance().directory
+                    this,
+                    WisdomConfig.getInstance().authorities,
+                    WisdomConfig.getInstance().directory
             )
         }
     }
@@ -205,13 +207,14 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
         //预览页面回来
         if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
             val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
-            val medias =
-                data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
-            handlePreview(exit, medias)
+            val fullImage = data.getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
+            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
+            handlePreview(exit, fullImage, medias)
         }
     }
 
-    open fun handlePreview(exit: Boolean, medias: List<Media>) {
+    open fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
+        onResultMediaListener?.setFullImage(fullImage)
         if (exit) {
             onResultMediaListener?.onResultFinish(medias)
             return

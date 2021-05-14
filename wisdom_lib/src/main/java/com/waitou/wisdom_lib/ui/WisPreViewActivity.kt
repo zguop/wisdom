@@ -13,7 +13,8 @@ import com.waitou.wisdom_lib.loader.MediaCollection
  * auth aboom
  * date 2019-06-06
  */
-abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
+abstract class WisPreViewActivity : AppCompatActivity(),
+    LoaderMedia {
 
     companion object {
 
@@ -57,19 +58,27 @@ abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
          */
         internal const val EXTRA_PREVIEW_RESULT_EXIT = "extra_preview_exit"
 
+        /**
+         * 显示原图按钮
+         */
+        internal const val EXTRA_FULL_IMAGE = "extra_full_image"
+
         @JvmStatic
-        fun getIntent(context: Context,
-                      clazz: Class<out WisPreViewActivity>,
-                      selectMedias: List<Media>,
-                      currentPosition: Int,
-                      albumId: String?,
-                      moduleType:Int
+        fun getIntent(
+            context: Context,
+            clazz: Class<out WisPreViewActivity>,
+            selectMedias: List<Media>,
+            currentPosition: Int,
+            albumId: String?,
+            fullImage: Boolean,
+            moduleType: Int
         ): Intent {
             val i = Intent(context, clazz)
             i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
             i.putExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
             i.putExtra(EXTRA_PREVIEW_ALBUM_ID, albumId)
             i.putExtra(EXTRA_PREVIEW_MODULE_TYPE, moduleType)
+            i.putExtra(EXTRA_FULL_IMAGE, fullImage)
             return i
         }
     }
@@ -81,7 +90,9 @@ abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
     private var previewModule: Int = WIS_PREVIEW_MODULE_TYPE_VISIT
 
     lateinit var selectMedias: ArrayList<Media>
-    var currentPosition: Int = 0
+    protected var currentPosition: Int = 0
+    protected var fullImage: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +100,7 @@ abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
         selectMedias = intent.getParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA)
         currentPosition = intent.getIntExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
         albumId = intent.getStringExtra(EXTRA_PREVIEW_ALBUM_ID)
+        fullImage = intent.getBooleanExtra(EXTRA_FULL_IMAGE, false)
     }
 
     override fun onStart() {
@@ -123,6 +135,7 @@ abstract class WisPreViewActivity : AppCompatActivity(), LoaderMedia {
         val i = Intent()
         i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, selectMedias)
         i.putExtra(EXTRA_PREVIEW_RESULT_EXIT, exit)
+        i.putExtra(EXTRA_FULL_IMAGE, fullImage)
         setResult(Activity.RESULT_OK, i)
         //如果推出了就直接finish，否则就当做back返回
         if (exit) finish() else super.onBackPressed()

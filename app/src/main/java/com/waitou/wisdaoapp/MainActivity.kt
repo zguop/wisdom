@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         GlideEngine()
     private var compressEngine: CompressEngine? = null
     private var cropEngine: CropEngine? = null
-    private var selectLimit = 0
+    private var selectLimit = 2
     private var isCrop = false
     private var cropType = R.id.ucrop
     private var compressId = R.id.tiny
@@ -234,8 +234,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSelectLimit() {
         selectLimit = if (num.text.isNullOrEmpty()) {
-            num.setText("1")
-            1
+            num.setText("2")
+            2
         } else num.text.toString().toInt()
         crop.visibility = if (selectLimit == 1) View.VISIBLE else View.GONE
         radio3.visibility = crop.visibility

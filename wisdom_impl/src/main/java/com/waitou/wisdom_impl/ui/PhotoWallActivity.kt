@@ -89,6 +89,10 @@ class PhotoWallActivity : WisdomWallActivity() {
         return original.isChecked()
     }
 
+    override fun setFullImage(fullImage: Boolean) {
+        original.setChecked(fullImage)
+    }
+
     private fun addAlbum(data: List<Album>?) {
         data ?: return
         data[0].albumName = getString(R.string.wis_all)

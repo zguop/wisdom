@@ -31,6 +31,11 @@ interface OnMediaListener {
     fun isFullImage(): Boolean
 
     /**
+     * 同步原图状态
+     */
+    fun setFullImage(fullImage: Boolean)
+
+    /**
      * 预览页面回调
      */
     fun onPreViewResult(resultMedias: List<Media>)
