@@ -2,9 +2,15 @@
 <resources>
 
     <declare-styleable name="wis_CheckView">
-        <attr name="wis_check_color" format="color"/>
-        <attr name="wis_border_color" format="color"/>
-        <attr name="wis_check_text_color" format="color"/>
-        <attr name="wis_check_text_size" format="dimension"/>
+        <attr name="wis_check_color" format="color" />
+        <attr name="wis_border_color" format="color" />
+        <attr name="wis_check_text_color" format="color" />
+        <attr name="wis_check_text_size" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="wis_CheckRadioView">
+        <attr name="wis_selected_color" format="color" />
+        <attr name="wis_normal_color" format="color" />
+    </declare-styleable>
+
 </resources>

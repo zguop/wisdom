@@ -50,6 +50,7 @@ dependencies {
     implementation (project(':wisdom_impl')){
         exclude group :'com.android.support'
     }
+
     implementation 'com.blankj:utilcode:1.23.7'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'com.github.yalantis:ucrop:2.2.3'

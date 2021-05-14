@@ -30,7 +30,13 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         }
     }
 
-    override fun startPreview(clazz: Class<out WisPreViewActivity>, selectMedias: List<Media>, currentPosition: Int, albumId: String, bundle: Bundle?) {
+    override fun startPreview(
+        clazz: Class<out WisPreViewActivity>,
+        selectMedias: List<Media>,
+        currentPosition: Int,
+        albumId: String,
+        bundle: Bundle?
+    ) {
         //当前点击的position 所有选择的数据 mediaId
         val i = WisPreViewActivity.getIntent(
             this,
@@ -49,7 +55,7 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
     }
 
     override fun onResultFinish(resultMedias: List<Media>) {
-        compress(resultMedias) {
+        compress(resultMedias, isFullImage()) {
             val i = Intent()
             i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
             setResult(Activity.RESULT_OK, i)
@@ -57,9 +63,11 @@ abstract class WisdomWallActivity : AppCompatActivity(), OnMediaListener {
         }
     }
 
-    private fun compress(resultMedias: List<Media>, function: () -> Unit) {
-        val engine = WisdomConfig.getInstance().compressEngine
-        engine ?: function.invoke()
-        engine?.compress(this, resultMedias, function)
+    private fun compress(resultMedias: List<Media>, fullImage: Boolean, function: () -> Unit) {
+        if (fullImage || WisdomConfig.getInstance().compressEngine == null) {
+            function.invoke()
+            return
+        }
+        WisdomConfig.getInstance().compressEngine!!.compress(this, resultMedias, function)
     }
 }

@@ -8,13 +8,14 @@ import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.view.CheckView
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.utils.getScreenImageResize
 import com.waitou.wisdom_lib.utils.isSingleImage
-import kotlinx.android.synthetic.main.wis_item_camera.view.*
-import kotlinx.android.synthetic.main.wis_item_media.view.*
 
 /**
  * auth aboom
@@ -39,26 +40,18 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
-        VIEW_TYPE_CAPTURE -> {
-            val cameraViewHolder =
-                    CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false))
-            cameraViewHolder.itemView.setOnClickListener { cameraClick?.onClick(it) }
-            cameraViewHolder
+        VIEW_TYPE_CAPTURE -> CameraViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_camera, p0, false)).apply {
+            itemView.setOnClickListener { cameraClick?.onClick(it) }
         }
-        else -> {
-            val mediaViewHolder =
-                    MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false))
-            mediaViewHolder.itemView.setOnClickListener {
-                //预览界面退回，快速点击存在角标问题
-                val adapterPosition =
-                        if (mediaViewHolder.adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                        else mediaViewHolder.adapterPosition
-                mediaClick?.invoke(medias[adapterPosition], adapterPosition, it)
+        else -> MediaViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_media, p0, false)).apply {
+            itemView.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    mediaClick?.invoke(medias[adapterPosition], adapterPosition, it)
+                }
             }
-            mediaViewHolder.itemView.checkView.setOnCheckedChangeListener { _, _ ->
-                mediaCheckedChange(medias[mediaViewHolder.adapterPosition])
+            checkView.setOnCheckedChangeListener { _, _ ->
+                mediaCheckedChange(medias[adapterPosition])
             }
-            mediaViewHolder
         }
     }
 
@@ -74,24 +67,24 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return medias[position].hashCode().toLong()
     }
 
-    override fun onBindViewHolder(holde: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val media = medias[position]
-        if (holde is CameraViewHolder) {
-            holde.itemView.cameraText.text = holde.itemView.context.getString(R.string.wis_take)
-        } else {
+        if (holder is CameraViewHolder) {
+            holder.cameraText.text = holder.itemView.context.getString(R.string.wis_take)
+        } else if (holder is MediaViewHolder) {
             WisdomConfig.getInstance().imageEngine?.displayThumbnail(
-                    holde.itemView.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
+                    holder.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
             )
-            holde.itemView.checkView.setCheckedNum(selectMediaIndexOf(media))
-            holde.itemView.media.setColorFilter(
-                    if (holde.itemView.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
+            holder.checkView.setCheckedNum(selectMediaIndexOf(media))
+            holder.checkView.visibility = if (isSingleImage()) View.GONE else View.VISIBLE
+            holder.media.setColorFilter(
+                    if (holder.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
                     PorterDuff.Mode.SRC_ATOP
             )
-            holde.itemView.checkView.visibility = if (isSingleImage()) View.GONE else View.VISIBLE
-            holde.itemView.size.text = Formatter.formatShortFileSize(holde.itemView.context, media.size)
-            holde.itemView.gif.visibility = if (media.isGif()) View.VISIBLE else View.GONE
-            holde.itemView.duration.visibility = if (media.isVideo()) {
-                holde.itemView.duration.text = DateUtils.formatElapsedTime(media.duration / 1000)
+            holder.size.text = Formatter.formatShortFileSize(holder.itemView.context, media.size)
+            holder.gif.visibility = if (media.isGif()) View.VISIBLE else View.GONE
+            holder.duration.visibility = if (media.isVideo()) {
+                holder.duration.text = DateUtils.formatElapsedTime(media.duration / 1000)
                 View.VISIBLE
             } else View.GONE
         }
@@ -131,8 +124,15 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.selectMedias.addAll(medias)
         notifyDataSetChanged()
     }
+    class CameraViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cameraText: TextView = itemView.findViewById(R.id.cameraText)
+    }
 
-    private class CameraViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView)
-
-    private class MediaViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class MediaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val checkView: CheckView = itemView.findViewById(R.id.checkView)
+        val media: ImageView = itemView.findViewById(R.id.media)
+        val size: TextView = itemView.findViewById(R.id.size)
+        val gif: View = itemView.findViewById(R.id.gif)
+        val duration: TextView = itemView.findViewById(R.id.duration)
+    }
 }

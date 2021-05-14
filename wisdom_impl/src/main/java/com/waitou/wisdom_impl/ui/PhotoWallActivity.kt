@@ -7,17 +7,21 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.util.TypedValue
+import android.view.View
+import android.widget.TextView
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.AlbumsAdapter
+import com.waitou.wisdom_impl.view.CheckRadioView
+import com.waitou.wisdom_impl.view.PopView
 import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 import com.waitou.wisdom_lib.ui.WisdomWallFragment
-import kotlinx.android.synthetic.main.wis_activity_photo_wall.*
-import kotlinx.android.synthetic.main.wis_include_title_bar.*
+import kotlin.math.log
 
 /**
  * auth aboom
@@ -28,20 +32,43 @@ class PhotoWallActivity : WisdomWallActivity() {
     private val albumsAdapter = AlbumsAdapter()
     private lateinit var viewModule: PhotoWallViewModule
 
+    private lateinit var barTitle: TextView
+    private lateinit var complete: TextView
+    private lateinit var preview: View
+    private lateinit var folderPop: PopView
+    private lateinit var original: CheckRadioView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wis_activity_photo_wall)
         StatusBarUtil.setStatusBarColor(this, Color.WHITE)
+
+        barTitle = findViewById(R.id.barTitle)
+        barTitle.setOnClickListener { showPop() }
+
+        complete = findViewById(R.id.complete)
+        complete.setOnClickListener { complete() }
+
+        preview = findViewById(R.id.preview)
+        preview.setOnClickListener { preView() }
+
+        folderPop = findViewById(R.id.folderPop)
+
+
+        original = findViewById(R.id.original)
+        findViewById<View>(R.id.originalLayout).setOnClickListener {
+            original.toggle()
+        }
+
+        findViewById<View>(R.id.back).setOnClickListener { onBackPressed() }
+
+
         viewModule = ViewModelProviders.of(this)[PhotoWallViewModule::class.java]
         viewModule.albumLiveData.observe(this, Observer { addAlbum(it) })
         viewModule.selectCountLiveData.observe(this, Observer { data ->
             updateBottomTextUI(data?.size ?: 0)
         })
         initFolderPop()
-        barTitle.setOnClickListener { showPop() }
-        complete.setOnClickListener { complete() }
-        preview.setOnClickListener { preView() }
-        back.setOnClickListener { onBackPressed() }
     }
 
     override fun onCreateView(tag: String): WisdomWallFragment {
@@ -58,19 +85,22 @@ class PhotoWallActivity : WisdomWallActivity() {
         if (folderPop.isShowing) folderPop.dismiss() else super.onBackPressed()
     }
 
+    override fun isFullImage(): Boolean {
+        return original.isChecked()
+    }
+
     private fun addAlbum(data: List<Album>?) {
-        data?.let {
-            it[0].albumName = getString(R.string.wis_all)
-            albumsAdapter.replaceData(it)
-            barTitle.text = it[0].albumName
-            folderPop.setMaxItemHeight(
-                (TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    80f,
-                    resources.displayMetrics
-                ) * it.size).toInt()
-            )
-        }
+        data ?: return
+        data[0].albumName = getString(R.string.wis_all)
+        barTitle.text = data[0].albumName
+        albumsAdapter.replaceData(data)
+        folderPop.setMaxItemHeight(
+            (TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                80f,
+                resources.displayMetrics
+            ) * data.size).toInt()
+        )
     }
 
     private fun updateBottomTextUI(size: Int = 0) {

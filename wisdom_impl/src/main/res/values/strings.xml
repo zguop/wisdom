@@ -1,10 +1,12 @@
 <resources>
-    <string name="wis_preview">预览</string>
-    <string name="wis_picture">图片</string>
-    <string name="wis_video">视频</string>
+    <string name="wis_preview">Preview</string>
+    <string name="wis_picture">Image</string>
+    <string name="wis_video">Video</string>
     <string name="wis_gif">GIF</string>
-    <string name="wis_complete">完成(%1$d/%2$d)</string>
+    <string name="wis_complete">Completed(%1$d/%2$d)</string>
     <string name="wis_count">%1$d/%2$d</string>
-    <string name="wis_take">相机</string>
-    <string name="wis_all">全部</string>
+    <string name="wis_take">Camera</string>
+    <string name="wis_all">All</string>
+    <string name="wis_original">Full image</string>
+
 </resources>

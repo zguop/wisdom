@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import android.view.animation.*
 import android.widget.FrameLayout
 import com.waitou.wisdom_impl.R
-import kotlinx.android.synthetic.main.wis_pop_albums.view.*
 
 
 class PopView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), Animation.AnimationListener {
+) : FrameLayout(context, attrs, defStyleAttr),
+    Animation.AnimationListener {
 
     companion object {
         private const val DURATION = 350L
@@ -42,11 +42,17 @@ class PopView @JvmOverloads constructor(
      */
     var isShowing: Boolean = false
 
+    private val popList: RecyclerView
+    private val viewOutSide: View
+
+
     init {
         View.inflate(context, R.layout.wis_pop_albums, this@PopView)
-            .viewOutSide.setOnClickListener {
-                dismiss()
-            }
+        popList = findViewById(R.id.popList)
+        viewOutSide = findViewById<View>(R.id.viewOutSide)
+        viewOutSide.setOnClickListener {
+            dismiss()
+        }
     }
 
     fun setDisMissListener(listener: () -> Unit) {
@@ -103,10 +109,10 @@ class PopView @JvmOverloads constructor(
         isShowing = true
         visibility = VISIBLE
         popList.animation = TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0f,
-            Animation.RELATIVE_TO_SELF, 0f,
-            Animation.RELATIVE_TO_SELF, -1.0f,
-            Animation.RELATIVE_TO_SELF, 0f
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -1.0f,
+                Animation.RELATIVE_TO_SELF, 0f
         ).apply {
             duration = DURATION
             interpolator = DecelerateInterpolator()
@@ -126,10 +132,10 @@ class PopView @JvmOverloads constructor(
         }
         isShowing = false
         popList.startAnimation(TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0f,
-            Animation.RELATIVE_TO_SELF, 0f,
-            Animation.RELATIVE_TO_SELF, 0f,
-            Animation.RELATIVE_TO_SELF, -1.0f
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -1.0f
         ).apply {
             duration = DURATION
         })

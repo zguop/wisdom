@@ -74,7 +74,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val recyclerView = RecyclerView(activity!!)
+        val recyclerView = RecyclerView(requireActivity())
         recyclerView.layoutParams =
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -110,7 +110,7 @@ class PhotoWallFragment : WisdomWallFragment(), MediasAdapter.OnCheckedChangedLi
                 )
             }
         }
-        viewModule = ViewModelProviders.of(activity!!)[PhotoWallViewModule::class.java]
+        viewModule = ViewModelProviders.of(requireActivity())[PhotoWallViewModule::class.java]
         return recyclerView
     }
 

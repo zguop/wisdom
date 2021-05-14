@@ -58,37 +58,33 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
     }
 
     private fun checkPermissionOnStart() {
-        activity?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                )
-            } else {
-                startLoading()
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            )
+        } else {
+            startLoading()
         }
     }
 
     private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
-        activity?.let {
-            if (ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                this.cameraPermissionGranted = cameraPermissionGranted
-                requestPermissions(
-                    arrayOf(Manifest.permission.CAMERA),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                )
-            } else {
-                cameraPermissionGranted?.invoke()
-            }
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            this.cameraPermissionGranted = cameraPermissionGranted
+            requestPermissions(
+                arrayOf(Manifest.permission.CAMERA),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            )
+        } else {
+            cameraPermissionGranted?.invoke()
         }
     }
 
@@ -196,7 +192,7 @@ abstract class WisdomWallFragment : Fragment(), LoaderAlbum, LoaderMedia {
         }
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            SingleMediaScanner(activity!!, cameraStrategy.filePath) {
+            SingleMediaScanner(requireActivity(), cameraStrategy.filePath) {
                 onCameraResult(it)
             }
         }

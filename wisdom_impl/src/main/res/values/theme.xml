@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--选择原图按钮选中-->
+    <attr name="wisCheckRadioSelectorColor" format="color|reference"/>
+    <attr name="wisCheckRadioNormalColor" format="color|reference"/>
+
+
+
+</resources>

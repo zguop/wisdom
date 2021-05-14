@@ -7,4 +7,6 @@
     <string name="wis_count">%1$d/%2$d</string>
     <string name="wis_take">Câmara</string>
     <string name="wis_all">Total</string>
+    <string name="wis_original">Imagem original</string>
+
 </resources>

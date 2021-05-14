@@ -40,18 +40,43 @@
             android:id="@+id/preview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableEnd="@drawable/wis_svg_ic_oblique_triangle"
             android:enabled="false"
             android:gravity="center_vertical"
-            android:paddingStart="15dp"
-            android:paddingLeft="15dp"
-            android:paddingEnd="15dp"
-            android:paddingRight="15dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@string/wis_preview"
             android:textColor="@color/wis_color_text"
             android:textSize="15sp"
             tools:text="预览"
             tools:textColor="#f00" />
+
+
+        <LinearLayout
+            android:id="@+id/originalLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/preview">
+
+            <com.waitou.wisdom_impl.view.CheckRadioView
+                android:id="@+id/original"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                tools:src="@drawable/wis_svg_ic_radio_normal_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:enabled="true"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/wis_original"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/complete"
@@ -61,10 +86,8 @@
             android:enabled="false"
             android:gravity="center"
             android:minWidth="80dp"
-            android:paddingStart="15dp"
-            android:paddingLeft="15dp"
-            android:paddingEnd="15dp"
-            android:paddingRight="15dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:textColor="@color/wis_color_text"
             tools:text="完成(0/0)"
             tools:textColor="#f00" />

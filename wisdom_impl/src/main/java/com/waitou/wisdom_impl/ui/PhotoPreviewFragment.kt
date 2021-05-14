@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
+import com.github.chrisbanes.photoview.PhotoView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
-import kotlinx.android.synthetic.main.wis_fragment_preview.*
 
 /**
  * auth aboom
@@ -53,6 +53,7 @@ class PhotoPreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val image = view.findViewById<PhotoView>(R.id.image)
         image.setOnClickListener { onPhotoTapListener?.onOutsidePhotoTap(null) }
         media?.let {
             if (it.isVideo()) {
