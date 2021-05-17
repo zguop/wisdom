@@ -21,11 +21,18 @@ kotlin版本的图片视频选择器，多图片视频选择，权限适配，�
 
 ### 依赖
 ```groovy
+
+allprojects {
+  repositories {
+    mavenCentral()
+  }
+}
+
 dependencies {
     //核心库版本
-    compile 'com.waitou:wisdom_lib:1.0.16'
+    implementation 'io.github.zguop:wisdom_lib:1.0.17'
     //UI版本
-    compile 'com.waitou:wisdom_impl:1.0.16'
+    implementation 'io.github.zguop:wisdom_impl:1.0.17'
 }
 ```
 ### 使用

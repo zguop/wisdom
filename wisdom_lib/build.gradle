@@ -14,4 +14,4 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-apply from:"${rootProject.projectDir}/uploadBintrayNoJavadoc.gradle"
+apply from: rootProject.file('publishing.gradle')
