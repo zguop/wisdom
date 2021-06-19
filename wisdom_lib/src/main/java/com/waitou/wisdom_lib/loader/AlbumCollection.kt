@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.call.LoaderAlbum
+import com.waitou.wisdom_lib.interfaces.LoaderAlbum
 import java.lang.ref.WeakReference
 
 /**

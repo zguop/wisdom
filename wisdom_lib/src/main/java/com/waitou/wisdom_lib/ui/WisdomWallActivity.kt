@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.OnMediaListener
+import com.waitou.wisdom_lib.interfaces.OnMediaListener
 import com.waitou.wisdom_lib.config.WisdomConfig
 
 /**

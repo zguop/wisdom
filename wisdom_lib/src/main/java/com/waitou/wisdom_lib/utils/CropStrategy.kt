@@ -24,7 +24,6 @@ class CropStrategy {
     }
 
     fun cropResult(data: Intent?): Media {
-        WisdomConfig.getInstance().cropEngine?.onCropResult(data, media)
-        return media
+        return media.apply { WisdomConfig.getInstance().cropEngine?.onCropResult(data, this) }
     }
 }

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.LoaderMedia
+import com.waitou.wisdom_lib.interfaces.LoaderMedia
 import com.waitou.wisdom_lib.loader.MediaCollection
 
 /**
@@ -97,9 +97,9 @@ abstract class WisPreViewActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         previewModule = intent.getIntExtra(EXTRA_PREVIEW_MODULE_TYPE, previewModule)
-        selectMedias = intent.getParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA)
+        selectMedias = intent.getParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA) ?: arrayListOf()
         currentPosition = intent.getIntExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
-        albumId = intent.getStringExtra(EXTRA_PREVIEW_ALBUM_ID)
+        albumId = intent.getStringExtra(EXTRA_PREVIEW_ALBUM_ID).orEmpty()
         fullImage = intent.getBooleanExtra(EXTRA_FULL_IMAGE, false)
     }
 

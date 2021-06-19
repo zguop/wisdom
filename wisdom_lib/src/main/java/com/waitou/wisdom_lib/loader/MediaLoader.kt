@@ -7,11 +7,10 @@ import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
+import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.utils.filterMaxFileSize
-import com.waitou.wisdom_lib.utils.onlyImages
-import com.waitou.wisdom_lib.utils.onlyVideos
+import com.waitou.wisdom_lib.utils.*
 
 /**
  * auth aboom
@@ -31,12 +30,10 @@ class MediaLoader private constructor(
     override fun loadInBackground(): Cursor? {
         val cursor = super.loadInBackground()
         //设备不具备相机功能
-        if (!isCamera ||
-            !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-        ) {
+        if (!isCamera || !context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             return cursor
         }
-        //添加一个相册的item
+        //添加一个相机的item
         val mc = MatrixCursor(PROJECTION)
         mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", "capture", 0, 0))
         return MergeCursor(arrayOf(mc, cursor))
@@ -54,38 +51,15 @@ class MediaLoader private constructor(
             MediaStore.Audio.Media.DURATION
         )
 
-        /**
-         * 查询的条件type
-         */
-        private val SELECTION_ALL_ARGS = arrayOf(
-            MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
-            MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
-        )
-
         fun newInstance(context: Context, albumId: String?, isCamera: Boolean): MediaLoader {
+            val selectionSql = StringBuilder()
             val selectionArgs = mutableListOf<String>()
-
-            var selection = if (onlyImages() || onlyVideos()) {
-                "${MediaStore.Files.FileColumns.MEDIA_TYPE}=? AND ${MediaStore.MediaColumns.SIZE}>0"
-            } else {
-                "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=? OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=?) AND ${MediaStore.MediaColumns.SIZE}>0"
-            }
-
-            filterMaxFileSize()?.let {
-                selection += " AND ${MediaStore.MediaColumns.SIZE}<${it}"
-            }
-
-            when {
-                onlyImages() -> selectionArgs.add(SELECTION_ALL_ARGS[0])
-                onlyVideos() -> selectionArgs.add(SELECTION_ALL_ARGS[1])
-                else -> selectionArgs.addAll(SELECTION_ALL_ARGS)
-            }
-
+            SQLSelection.format(selectionSql, selectionArgs)
             if (Album.ALBUM_ID_ALL != albumId) {
-                selection += " AND ${MediaStore.Images.Media.BUCKET_ID}=?"
                 selectionArgs.add(albumId!!)
+                selectionSql.append(" AND ${MediaStore.Images.Media.BUCKET_ID}=?")
             }
-            return MediaLoader(context, selection, selectionArgs.toTypedArray(), isCamera)
+            return MediaLoader(context, selectionSql.toString(), selectionArgs.toTypedArray(), isCamera)
         }
     }
 }

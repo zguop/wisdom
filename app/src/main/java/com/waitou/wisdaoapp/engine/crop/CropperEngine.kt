@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import com.theartofdev.edmodo.cropper.CropImage
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.CropEngine
+import com.waitou.wisdom_lib.interfaces.CropEngine
 
 /**
  * auth aboom

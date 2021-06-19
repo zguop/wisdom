@@ -20,9 +20,9 @@ import com.waitou.wisdom_impl.ui.PhotoWallActivity
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.CompressEngine
-import com.waitou.wisdom_lib.call.CropEngine
-import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.interfaces.CompressEngine
+import com.waitou.wisdom_lib.interfaces.CropEngine
+import com.waitou.wisdom_lib.interfaces.ImageEngine
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
@@ -42,8 +42,9 @@ class MainActivity : AppCompatActivity() {
     private var cropType = R.id.ucrop
     private var compressId = R.id.tiny
     private var resultMedia: List<Media>? = null
-    private var filterMaxFile: Int? = null
-
+    private var imageFilterMaxFile: Int? = null
+    private var videoFilterMaxFile: Int? = null
+    private var mimeTypeSet: MutableSet<String>? = null
 
 //    private val cropEngine by lazy { UCropEngine() }
 //    private val cropperEngine by lazy { CropperEngine() }
@@ -66,10 +67,12 @@ class MainActivity : AppCompatActivity() {
                 .compressEngine(compressEngine)
                 .cropEngine(cropEngine)
                 .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
-                .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
+                .fileProvider("$packageName.utilcode.provider", AppUtils.getAppName()) //兼容android7.0
                 .isCamera(isCamera) //是否打开相机，
                 .setMedias(resultMedia)
-                .filterMaxFileSize(filterMaxFile)
+                .filterImageMaxFileSize(imageFilterMaxFile)
+                .filterVideoMaxFileSize(videoFilterMaxFile)
+                .mimeTypeSet(mimeTypeSet, false)
                 .forResult(
                     0x11,
                     PhotoWallActivity::class.java
@@ -149,17 +152,33 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        filter.addTextChangedListener(object :TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-                filterMaxFile = if(s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
-            }
+        filter.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                imageFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
+            }
+        })
+
+        videoFilter.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                videoFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
+            }
         })
 
         //相机
         camera.setOnCheckedChangeListener { _, isChecked ->
             isCamera = isChecked
+        }
+
+        gif.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mimeTypeSet = mutableSetOf("image/gif")
+            } else {
+                mimeTypeSet = null
+            }
         }
 
         //选择类型
@@ -234,8 +253,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSelectLimit() {
         selectLimit = if (num.text.isNullOrEmpty()) {
-            num.setText("2")
-            2
+            9
         } else num.text.toString().toInt()
         crop.visibility = if (selectLimit == 1) View.VISIBLE else View.GONE
         radio3.visibility = crop.visibility

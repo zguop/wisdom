@@ -6,10 +6,9 @@ import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
+import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
-import com.waitou.wisdom_lib.utils.filterMaxFileSize
-import com.waitou.wisdom_lib.utils.onlyImages
-import com.waitou.wisdom_lib.utils.onlyVideos
+import com.waitou.wisdom_lib.utils.*
 
 /**
  * auth aboom
@@ -25,7 +24,8 @@ class AlbumLoader private constructor(
         PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " DESC"
     ) {
 
-    override fun loadInBackground(): Cursor? {
+    //加载图片目录
+    override fun loadInBackground(): Cursor {
         val cursor = super.loadInBackground()
         //创建一张虚拟表，表字段包含 COLUMNS
         val allAlbum = MatrixCursor(COLUMNS)
@@ -35,14 +35,16 @@ class AlbumLoader private constructor(
         var id = Album.ALBUM_ID_ALL.toLong()
         //拿第一张图片当做封面图片
         var allAlbumCoverPath = ""
+        //封面类型
+        var mineType = ""
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 totalCount += cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNT))
             }
             if (cursor.moveToFirst()) {
                 id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                allAlbumCoverPath =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+                allAlbumCoverPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+                mineType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))
             }
         }
         //插入一条记录到虚拟表
@@ -52,6 +54,7 @@ class AlbumLoader private constructor(
                 Album.ALBUM_ID_ALL,
                 Album.ALBUM_NAME_ALL,
                 allAlbumCoverPath,
+                mineType,
                 totalCount.toString()
             )
         )
@@ -70,6 +73,7 @@ class AlbumLoader private constructor(
             MediaStore.Images.Media.BUCKET_ID, //相册id
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME, //相册名称
             MediaStore.Images.Media.DATA,
+            MediaStore.MediaColumns.MIME_TYPE,
             "COUNT(*) AS $COLUMN_COUNT"
         )
 
@@ -80,44 +84,17 @@ class AlbumLoader private constructor(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.MediaColumns.MIME_TYPE,
             MediaStore.Images.Media.DATA,
             COLUMN_COUNT
         )
 
-        /**
-         * 查询的类型
-         */
-        private val SELECTION_ARGS = arrayOf(
-            MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
-            MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
-        )
-
         fun newInstance(context: Context): CursorLoader {
+            val selectionSql = StringBuilder()
             val selectionArgs = mutableListOf<String>()
-
-            /**
-             * SELECT _id, bucket_id, bucket_display_name, _data, COUNT(*) AS count FROM files WHERE
-             *
-             * ((media_type=? OR media_type=?) AND _size>0 AND _size<?) GROUP BY（bucket_id) ORDER BY date_modified DESC
-             */
-            var selection = if (onlyImages() || onlyVideos()) {
-                "${MediaStore.Files.FileColumns.MEDIA_TYPE}=? AND ${MediaStore.MediaColumns.SIZE}>0"
-            } else {
-                "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=? OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=?) AND ${MediaStore.MediaColumns.SIZE}>0"
-            }
-
-            filterMaxFileSize()?.let {
-                selection += " AND ${MediaStore.MediaColumns.SIZE}<${it}"
-            }
-
-            selection += ") GROUP BY (${MediaStore.Images.Media.BUCKET_ID}"
-
-            when {
-                onlyImages() -> selectionArgs.add(SELECTION_ARGS[0])
-                onlyVideos() -> selectionArgs.add(SELECTION_ARGS[1])
-                else -> selectionArgs.addAll(SELECTION_ARGS)
-            }
-            return AlbumLoader(context, selection, selectionArgs.toTypedArray())
+            SQLSelection.format(selectionSql, selectionArgs)
+            selectionSql.append(") GROUP BY (${MediaStore.Images.Media.BUCKET_ID}")
+            return AlbumLoader(context, selectionSql.toString(), selectionArgs.toTypedArray())
         }
     }
 }

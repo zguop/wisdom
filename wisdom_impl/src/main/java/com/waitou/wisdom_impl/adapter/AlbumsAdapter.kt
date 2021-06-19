@@ -9,7 +9,6 @@ import android.widget.TextView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
-import com.waitou.wisdom_lib.config.getMimeType
 import com.waitou.wisdom_lib.config.isGif
 import com.waitou.wisdom_lib.utils.getScreenImageResize
 
@@ -41,7 +40,7 @@ class AlbumsAdapter : RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder>() {
                 album.uri,
                 screenImageResize,
                 screenImageResize,
-                isGif(getMimeType(album.path))
+                isGif(album.mineType)
         )
         holder.name.text = album.albumName
         holder.num.text = album.count.toString()

@@ -2,13 +2,14 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.Context
 import android.content.Intent
+import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import java.io.File
-import java.lang.ref.WeakReference
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -97,6 +98,24 @@ class CameraStrategy {
                 mmr.setDataSource(path)
                 return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
             } catch (e: Exception) {
+                0
+            }
+        }
+
+        fun getRotateDegree(filePath: String?): Int {
+            return try {
+                val exifInterface = ExifInterface(filePath)
+                val orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL
+                )
+                when (orientation) {
+                    ExifInterface.ORIENTATION_ROTATE_90 -> 90
+                    ExifInterface.ORIENTATION_ROTATE_180 -> 180
+                    ExifInterface.ORIENTATION_ROTATE_270 -> 270
+                    else -> 0
+                }
+            } catch (e: IOException) {
                 0
             }
         }

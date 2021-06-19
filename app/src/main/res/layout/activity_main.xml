@@ -20,26 +20,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:hint="请输入数量"
+            android:hint="输入选择图片的数量 9"
             android:inputType="number"
             android:maxEms="11"
             android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="tip： 输入选择图片的数量"
-            android:textSize="12sp" />
-
-        <EditText
-            android:id="@+id/filter"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:hint="文件最大选择不能超过 * M"
-            android:inputType="number"
-            android:maxEms="11"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="图片最大选择不能超过 * M"
+                android:inputType="number"
+                android:maxEms="11"
+                android:textSize="14sp" />
+
+
+            <EditText
+                android:id="@+id/videoFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="视频最大选择不能超过 * M"
+                android:inputType="number"
+                android:maxEms="11"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
 
         <CheckBox
             android:id="@+id/camera"
@@ -47,6 +63,8 @@
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="显示隐藏相机拍照" />
+
+
 
 
         <RadioGroup
@@ -193,6 +211,11 @@
                 android:textSize="14sp" />
         </RadioGroup>
 
+        <CheckBox
+            android:id="@+id/gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="只显示gif图片" />
 
         <Button
             android:id="@+id/go"

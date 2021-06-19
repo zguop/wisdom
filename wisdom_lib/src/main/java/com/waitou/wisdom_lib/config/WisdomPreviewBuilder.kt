@@ -4,7 +4,7 @@ import android.app.Activity
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.interfaces.ImageEngine
 import com.waitou.wisdom_lib.ui.WisPreViewActivity
 
 /**

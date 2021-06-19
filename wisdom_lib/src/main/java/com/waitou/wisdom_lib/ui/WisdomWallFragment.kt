@@ -11,9 +11,9 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.LoaderAlbum
-import com.waitou.wisdom_lib.call.LoaderMedia
-import com.waitou.wisdom_lib.call.OnMediaListener
+import com.waitou.wisdom_lib.interfaces.LoaderAlbum
+import com.waitou.wisdom_lib.interfaces.LoaderMedia
+import com.waitou.wisdom_lib.interfaces.OnMediaListener
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
@@ -61,13 +61,13 @@ abstract class WisdomWallFragment : Fragment(),
 
     private fun checkPermissionOnStart() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             )
         } else {
             startLoading()
@@ -76,14 +76,14 @@ abstract class WisdomWallFragment : Fragment(),
 
     private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
         if (ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.CAMERA
+                requireActivity(),
+                Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             this.cameraPermissionGranted = cameraPermissionGranted
             requestPermissions(
-                    arrayOf(Manifest.permission.CAMERA),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                arrayOf(Manifest.permission.CAMERA),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             )
         } else {
             cameraPermissionGranted?.invoke()
@@ -137,9 +137,9 @@ abstract class WisdomWallFragment : Fragment(),
     fun startCameraImage() {
         checkPermissionOnCamera {
             cameraStrategy.startCamera(
-                    this,
-                    WisdomConfig.getInstance().authorities,
-                    WisdomConfig.getInstance().directory
+                this,
+                WisdomConfig.getInstance().authorities,
+                WisdomConfig.getInstance().directory
             )
         }
     }
@@ -150,9 +150,9 @@ abstract class WisdomWallFragment : Fragment(),
     fun startCameraVideo() {
         checkPermissionOnCamera {
             cameraStrategy.startCameraVideo(
-                    this,
-                    WisdomConfig.getInstance().authorities,
-                    WisdomConfig.getInstance().directory
+                this,
+                WisdomConfig.getInstance().authorities,
+                WisdomConfig.getInstance().directory
             )
         }
     }
@@ -194,7 +194,7 @@ abstract class WisdomWallFragment : Fragment(),
         }
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            SingleMediaScanner(requireActivity(), cameraStrategy.filePath) {
+            SingleMediaScanner(requireContext().applicationContext, cameraStrategy.filePath) {
                 onCameraResult(it)
             }
         }
@@ -208,7 +208,7 @@ abstract class WisdomWallFragment : Fragment(),
         if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
             val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
             val fullImage = data.getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
-            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA)
+            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
             handlePreview(exit, fullImage, medias)
         }
     }

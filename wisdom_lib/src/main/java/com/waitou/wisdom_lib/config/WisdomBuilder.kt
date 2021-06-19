@@ -5,9 +5,9 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.CompressEngine
-import com.waitou.wisdom_lib.call.CropEngine
-import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.interfaces.CompressEngine
+import com.waitou.wisdom_lib.interfaces.CropEngine
+import com.waitou.wisdom_lib.interfaces.ImageEngine
 import com.waitou.wisdom_lib.ui.WisdomWallActivity
 
 /**
@@ -18,7 +18,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     private val wisdomConfig = WisdomConfig.getResetInstance()
 
     init {
-        wisdomConfig.mimeType = mimeType
+        wisdomConfig.mediaType = mimeType
     }
 
     /**
@@ -93,7 +93,44 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      * selector maxSize file
      */
     fun filterMaxFileSize(maxFileSize: Int?): WisdomBuilder {
-        wisdomConfig.filterMaxFileSize = maxFileSize
+        filterImageMaxFileSize(maxFileSize)
+        filterVideoMaxFileSize(maxFileSize)
+        return this
+    }
+
+    /**
+     * 最大选择的图片大小，超过这个大小的图片不展示 1 * 1024 * 1024 = 1M
+     * selector filterImageMaxSize file
+     */
+    fun filterImageMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+        wisdomConfig.filterImageMaxSize = maxFileSize
+        return this
+    }
+
+    /**
+     * 最大选择的视频大小，超过这个大小的视频不展示 1 * 1024 * 1024 = 1M
+     * selector filterVideoMaxSize file
+     */
+    fun filterVideoMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+        wisdomConfig.filterVideoMaxSize = maxFileSize
+        return this
+    }
+
+    /**
+     * 限定文件类型，
+     * mimeTypeSet=[image/gif,image/png] and isFilterMimeTypeSet true 列表中gif，png将不展示 false 列表中只展示gif，png图片
+     *
+     * 例：只选择gif
+     * mimeTypeSet=[image/gif]
+     * isFilterMimeTypeSet=false
+     *
+     * @param mimeTypeSet 必须符合 mineType 标准格式才有效
+     * @param isFilterMimeTypeSet default true
+     *
+     */
+    fun mimeTypeSet(mimeTypeSet: Set<String>?, isFilterMimeTypeSet: Boolean = true): WisdomBuilder {
+        wisdomConfig.mimeTypeSet = mimeTypeSet
+        wisdomConfig.isFilterMimeTypeSet = isFilterMimeTypeSet
         return this
     }
 

@@ -1,4 +1,4 @@
-package com.waitou.wisdom_lib.call
+package com.waitou.wisdom_lib.interfaces
 
 import android.net.Uri
 import android.widget.ImageView

@@ -17,8 +17,8 @@ dependencies {
     implementation rootProject.ext.dependencies['lifecycle_extensions']
     implementation rootProject.ext.dependencies["statusbarlib"]
     api 'com.github.chrisbanes:PhotoView:2.1.0'
-//    api project(':wisdom_lib')
+    api project(':wisdom_lib')
 
-    api 'io.github.zguop:wisdom_lib:1.0.17'
+//    api 'io.github.zguop:wisdom_lib:1.0.17'
 }
 apply from: rootProject.file('publishing.gradle')

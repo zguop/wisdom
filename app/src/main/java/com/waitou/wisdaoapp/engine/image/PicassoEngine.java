@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.waitou.wisdaoapp.R;
-import com.waitou.wisdom_lib.call.ImageEngine;
+import com.waitou.wisdom_lib.interfaces.ImageEngine;
 
 import org.jetbrains.annotations.NotNull;
 

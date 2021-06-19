@@ -1,4 +1,4 @@
-package com.waitou.wisdom_lib.call
+package com.waitou.wisdom_lib.interfaces
 
 import com.waitou.wisdom_lib.bean.Media
 

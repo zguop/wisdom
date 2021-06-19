@@ -7,7 +7,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.waitou.wisdaoapp.R
-import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.interfaces.ImageEngine
 
 /**
  * auth aboom

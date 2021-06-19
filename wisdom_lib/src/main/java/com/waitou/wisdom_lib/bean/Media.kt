@@ -22,7 +22,7 @@ class Media(
     /**
      * type
      */
-    var mediaType: String,
+    var mineType: String,
     /**
      * path
      */
@@ -66,15 +66,15 @@ class Media(
     }
 
     fun isImage(): Boolean {
-        return isImage(mediaType)
+        return isImage(mineType)
     }
 
     fun isVideo(): Boolean {
-        return isVideo(mediaType)
+        return isVideo(mineType)
     }
 
     fun isGif(): Boolean {
-        return isGif(mediaType)
+        return isGif(mineType)
     }
 
     fun compressNullToPath(): String {
@@ -90,7 +90,7 @@ class Media(
     }
 
     override fun toString(): String {
-        return "Media(mediaId='$mediaId', mediaType='$mediaType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropPath, compressPath=$compressPath)"
+        return "Media(mediaId='$mediaId', mediaType='$mineType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropPath, compressPath=$compressPath)"
     }
 
     companion object {
@@ -120,7 +120,7 @@ class Media(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(mediaId)
-        parcel.writeString(mediaType)
+        parcel.writeString(mineType)
         parcel.writeString(path)
         parcel.writeLong(size)
         parcel.writeLong(duration)

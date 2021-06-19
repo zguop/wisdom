@@ -64,7 +64,7 @@ class PhotoPreviewFragment : Fragment() {
                 videoPlay.setOnClickListener { _ ->
                     try {
                         val intent = Intent(Intent.ACTION_VIEW)
-                        intent.setDataAndType(it.uri, it.mediaType)
+                        intent.setDataAndType(it.uri, it.mineType)
                         startActivity(intent)
                     } catch (e: Exception) {
                         e.printStackTrace()

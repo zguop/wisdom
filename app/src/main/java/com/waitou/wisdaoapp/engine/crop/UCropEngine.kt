@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import com.blankj.utilcode.util.Utils
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.CropEngine
+import com.waitou.wisdom_lib.interfaces.CropEngine
 import com.waitou.wisdom_lib.utils.CameraStrategy
 import com.yalantis.ucrop.UCrop
 

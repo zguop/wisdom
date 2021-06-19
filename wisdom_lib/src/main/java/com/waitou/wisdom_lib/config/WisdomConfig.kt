@@ -1,9 +1,9 @@
 package com.waitou.wisdom_lib.config
 
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.call.CompressEngine
-import com.waitou.wisdom_lib.call.CropEngine
-import com.waitou.wisdom_lib.call.ImageEngine
+import com.waitou.wisdom_lib.interfaces.CompressEngine
+import com.waitou.wisdom_lib.interfaces.CropEngine
+import com.waitou.wisdom_lib.interfaces.ImageEngine
 
 /**
  * auth aboom
@@ -15,7 +15,7 @@ import com.waitou.wisdom_lib.call.ImageEngine
  */
 class WisdomConfig private constructor() {
 
-    var mimeType = ofAll()
+    var mediaType = ofAll()
     var isCamera = true
     var authorities = ""
     var directory: String? = null
@@ -24,10 +24,13 @@ class WisdomConfig private constructor() {
     var compressEngine: CompressEngine? = null
     var cropEngine: CropEngine? = null
     var imgMedias: List<Media>? = null
-    var filterMaxFileSize: Int? = null
+    var filterImageMaxSize: Int? = null //最大选择的图片大小，超过该大小的图片不展示
+    var filterVideoMaxSize: Int? = null //最大选择的视频大小，超过该大小的视频不展示
+    var mimeTypeSet: Set<String>? = null //限定文件类型 'image/gif','image/png'
+    var isFilterMimeTypeSet = true // mimeTypeSet 过滤
 
     fun reset() {
-        mimeType = ofAll()
+        mediaType = ofAll()
         isCamera = true
         authorities = ""
         directory = null
@@ -36,7 +39,10 @@ class WisdomConfig private constructor() {
         compressEngine = null
         cropEngine = null
         imgMedias = null
-        filterMaxFileSize = null
+        filterImageMaxSize = null
+        filterVideoMaxSize = null
+        mimeTypeSet = null
+        isFilterMimeTypeSet = true
     }
 
     companion object {

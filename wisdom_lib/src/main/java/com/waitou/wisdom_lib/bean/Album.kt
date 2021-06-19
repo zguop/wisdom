@@ -4,7 +4,6 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import com.waitou.wisdom_lib.config.getMimeType
 import com.waitou.wisdom_lib.config.isImage
 import com.waitou.wisdom_lib.config.isVideo
 import com.waitou.wisdom_lib.loader.AlbumLoader
@@ -14,26 +13,31 @@ import com.waitou.wisdom_lib.loader.AlbumLoader
  * date 2019-05-25
  */
 class Album(
-        /**
-         * 主键
-         */
-        var mediaId: Long,
-        /**
-         * 相册id
-         */
-        var albumId: String,
-        /**
-         * 相册名称
-         */
-        var albumName: String,
-        /**
-         * 相册图片路径
-         */
-        var path: String,
-        /**
-         * 相册有多少张图
-         */
-        var count: Int) {
+    /**
+     * 主键
+     */
+    var mediaId: Long,
+    /**
+     * 相册id
+     */
+    var albumId: String,
+    /**
+     * 相册名称
+     */
+    var albumName: String,
+    /**
+     * 相册图片路径
+     */
+    var path: String,
+    /**
+     * 相册图片类型
+     */
+    var mineType: String,
+    /**
+     * 相册有多少张图
+     */
+    var count: Int
+) {
 
     /**
      * uri
@@ -42,8 +46,8 @@ class Album(
 
     init {
         val contentUri = when {
-            isImage(getMimeType(path)) -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            isVideo(getMimeType(path)) -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            isImage(mineType) -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            isVideo(mineType) -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             else -> MediaStore.Files.getContentUri("external")
         }
         this.uri = ContentUris.withAppendedId(contentUri, mediaId)
@@ -59,11 +63,12 @@ class Album(
 
         fun valueOf(cursor: Cursor): Album {
             return Album(
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(AlbumLoader.COLUMN_COUNT))
+                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(AlbumLoader.COLUMN_COUNT))
             )
         }
     }

@@ -33,7 +33,7 @@ class Wisdom private constructor(sojourn: Any) {
 
         @JvmStatic
         fun obtainResult(data: Intent): List<Media> {
-            return data.getParcelableArrayListExtra(EXTRA_RESULT_SELECTION)
+            return data.getParcelableArrayListExtra<Media>(EXTRA_RESULT_SELECTION).orEmpty()
         }
 
         @JvmStatic

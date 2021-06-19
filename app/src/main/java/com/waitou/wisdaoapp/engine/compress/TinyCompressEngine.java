@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.waitou.wisdom_lib.bean.Media;
-import com.waitou.wisdom_lib.call.CompressEngine;
+import com.waitou.wisdom_lib.interfaces.CompressEngine;
 import com.zxy.tiny.Tiny;
 import com.zxy.tiny.callback.FileBatchCallback;
 
