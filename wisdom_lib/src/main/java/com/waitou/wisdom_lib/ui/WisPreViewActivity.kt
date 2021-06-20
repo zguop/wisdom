@@ -84,7 +84,7 @@ abstract class WisPreViewActivity : AppCompatActivity(),
     }
 
 
-    private val mediaCollection by lazy { MediaCollection() }
+    private val mediaCollection by lazy { MediaCollection(activity = this,loaderMedia = this) }
 
     private lateinit var albumId: String
     private var previewModule: Int = WIS_PREVIEW_MODULE_TYPE_VISIT
@@ -110,7 +110,6 @@ abstract class WisPreViewActivity : AppCompatActivity(),
 
     open fun startLoading() {
         if (albumId.isNotEmpty()) {
-            mediaCollection.onCreate(this, this)
             mediaCollection.loadMedia(albumId)
         } else {
             mediaResult(selectMedias.toList())

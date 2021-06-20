@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
+import android.provider.MediaStore.Images.ImageColumns.BUCKET_ID
 import android.support.v4.content.CursorLoader
 import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
@@ -69,10 +70,10 @@ class AlbumLoader private constructor(
          * 查询表的字段
          */
         private val PROJECTION = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_ID, //相册id
+            MediaStore.Files.FileColumns._ID,
+            MediaStore.Images.Media.BUCKET_ID,//相册id
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME, //相册名称
-            MediaStore.Images.Media.DATA,
+            MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.MIME_TYPE,
             "COUNT(*) AS $COLUMN_COUNT"
         )
@@ -81,11 +82,11 @@ class AlbumLoader private constructor(
          * 虚拟表字段结构
          */
         private val COLUMNS = arrayOf(
-            MediaStore.Images.Media._ID,
+            MediaStore.Files.FileColumns._ID,
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
-            MediaStore.Images.Media.DATA,
+            MediaStore.MediaColumns.DATA,
             COLUMN_COUNT
         )
 

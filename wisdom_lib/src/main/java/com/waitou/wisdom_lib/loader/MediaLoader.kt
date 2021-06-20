@@ -44,7 +44,7 @@ class MediaLoader private constructor(
          * 查询media的字段
          */
         private val PROJECTION = arrayOf(
-            MediaStore.Images.Media._ID,
+            MediaStore.Files.FileColumns._ID,
             MediaStore.Images.Media.MIME_TYPE,
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.SIZE,

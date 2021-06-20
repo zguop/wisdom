@@ -2,13 +2,18 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -73,8 +78,8 @@ class CameraStrategy {
             if (!directory.isNullOrEmpty()) {
                 storageDir = File(storageDir, directory)
             }
-            if (!storageDir.exists()) {
-                storageDir.mkdirs()
+            if (!storageDir?.exists()!!) {
+                storageDir?.mkdirs()
             }
             return File(storageDir, getFileName(formatStr))
         }
@@ -96,13 +101,13 @@ class CameraStrategy {
             return try {
                 val mmr = MediaMetadataRetriever()
                 mmr.setDataSource(path)
-                return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+                return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
             } catch (e: Exception) {
                 0
             }
         }
 
-        fun getRotateDegree(filePath: String?): Int {
+        fun getRotateDegree(filePath: String): Int {
             return try {
                 val exifInterface = ExifInterface(filePath)
                 val orientation = exifInterface.getAttributeInt(
@@ -117,6 +122,28 @@ class CameraStrategy {
                 }
             } catch (e: IOException) {
                 0
+            }
+        }
+
+        fun rotateImage(filePath: String) {
+            val degree = getRotateDegree(filePath)
+            if (degree > 0) {
+                val options = BitmapFactory.Options()
+                options.inSampleSize = 2
+                options.inJustDecodeBounds = false
+
+                val src = BitmapFactory.decodeFile(filePath, options)
+
+                val matrix = Matrix()
+                matrix.postRotate(degree.toFloat())
+                val ref = Bitmap.createBitmap(src, 0, 0, src.width, src.height, matrix, true)
+
+                BufferedOutputStream(FileOutputStream(filePath)).use {
+                    ref.compress(Bitmap.CompressFormat.JPEG, 80, it)
+                    it.flush()
+                }
+                src?.recycle()
+                ref?.recycle()
             }
         }
     }

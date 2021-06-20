@@ -27,37 +27,14 @@ import com.waitou.wisdom_lib.utils.onlyVideos
 class PhotoWallFragment : WisdomWallFragment(),
     MediasAdapter.OnCheckedChangedListener {
 
-    private val viewModule by lazy { ViewModelProviders.of(requireActivity())[PhotoWallViewModule::class.java] }
-    private val adapter by lazy {
-        MediasAdapter().apply {
-            checkedListener = this@PhotoWallFragment
-            cameraClick = View.OnClickListener {
-                when {
-                    onlyImages() -> startCameraImage()
-                    onlyVideos() -> startCameraVideo()
-                    else -> startCameraImage()
-                }
-            }
-            mediaClick = { media, position, _ ->
-                if (isSingleImage()) {
-                    //单选完成结束
-                    if (!startCrop(media)) {
-                        finish(listOf(media))
-                    }
-                } else {
-//                val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
-                    //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
-                    startPreview(
-                            PhotoPreviewActivity::class.java,
-                            selectMedias,
-                            if (WisdomConfig.getInstance().isCamera) position - 1 else position,
-                            currentAlbumId,
-                            null
-                    )
-                }
-            }
+    companion object {
+        fun newInstance(): WisdomWallFragment {
+            return PhotoWallFragment()
         }
     }
+
+    private val viewModule by lazy { ViewModelProviders.of(requireActivity())[PhotoWallViewModule::class.java] }
+    private val adapter = MediasAdapter()
 
     override fun albumResult(albums: List<Album>) {
         viewModule.albumLiveData.postValue(albums)
@@ -76,14 +53,7 @@ class PhotoWallFragment : WisdomWallFragment(),
         loadMedia()
     }
 
-    companion object {
-        fun newInstance(): WisdomWallFragment {
-            return PhotoWallFragment()
-        }
-    }
-
     override fun checkPermissionOnDenied(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {
-        super.checkPermissionOnDenied(permissionsDeniedForever, permissionsDenied)
         val msg = if (Manifest.permission.READ_EXTERNAL_STORAGE == permissionsDenied[0]) "需要访问设备的存储权限来选择图片" else "需要访问设备的相机权限进行拍照或录像"
         Toast.makeText(
                 activity,
@@ -110,7 +80,33 @@ class PhotoWallFragment : WisdomWallFragment(),
             )
             layoutManager = GridLayoutManager(activity, 3)
             addItemDecoration(GridSpacingItemDecoration(3, 4, false))
-            adapter = this@PhotoWallFragment.adapter
+            adapter = this@PhotoWallFragment.adapter.apply {
+                checkedListener = this@PhotoWallFragment
+                cameraClick = View.OnClickListener {
+                    when {
+                        onlyImages() -> startCameraImage()
+                        onlyVideos() -> startCameraVideo()
+                        else -> startCameraImage()
+                    }
+                }
+                mediaClick = { media, position, _ ->
+                    if (isSingleImage()) {
+                        //单选完成结束
+                        if (!startCrop(media)) {
+                            finish(listOf(media))
+                        }
+                    } else {
+                        //val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
+                        //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
+                        startPreview(
+                            PhotoPreviewActivity::class.java,
+                            selectMedias,
+                            if (WisdomConfig.getInstance().isCamera) position - 1 else position,
+                            null
+                        )
+                    }
+                }
+            }
         }
     }
 

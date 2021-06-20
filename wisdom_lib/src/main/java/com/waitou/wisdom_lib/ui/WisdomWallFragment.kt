@@ -35,35 +35,27 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     var onResultMediaListener: OnMediaListener? = null
-    lateinit var currentAlbumId: String
+    private var currentAlbumId: String = Album.ALBUM_ID_ALL
 
-    private val albumCollection by lazy { AlbumCollection() }
-    private val mediaCollection by lazy { MediaCollection() }
+    private val albumCollection by lazy { AlbumCollection(requireActivity(), this) }
+    private val mediaCollection by lazy { MediaCollection(requireActivity(), this) }
     private val cameraStrategy by lazy { CameraStrategy() }
     private val cropStrategy by lazy { CropStrategy() }
 
     private var cameraPermissionGranted: (() -> Unit)? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.let {
-            albumCollection.onCreate(it, this)
-            mediaCollection.onCreate(it, this)
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //权限检查
         checkPermissionOnStart()
+        //回调默认勾选的media
         beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
     }
 
     private fun checkPermissionOnStart() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -75,11 +67,7 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             this.cameraPermissionGranted = cameraPermissionGranted
             requestPermissions(
                 arrayOf(Manifest.permission.CAMERA),
@@ -90,11 +78,7 @@ abstract class WisdomWallFragment : Fragment(),
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -171,10 +155,9 @@ abstract class WisdomWallFragment : Fragment(),
         clazz: Class<out WisPreViewActivity>,
         selectMedia: List<Media>,
         currentPosition: Int = 0,
-        albumId: String,
         bundle: Bundle? = null
     ) {
-        onResultMediaListener?.startPreview(clazz, selectMedia, currentPosition, albumId, bundle)
+        onResultMediaListener?.startPreview(clazz, selectMedia, currentPosition, currentAlbumId, bundle)
     }
 
     /**
@@ -213,7 +196,7 @@ abstract class WisdomWallFragment : Fragment(),
         }
     }
 
-    open fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
+    private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
         onResultMediaListener?.setFullImage(fullImage)
         if (exit) {
             onResultMediaListener?.onResultFinish(medias)
