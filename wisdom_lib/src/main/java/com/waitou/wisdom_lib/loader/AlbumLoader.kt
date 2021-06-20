@@ -34,8 +34,6 @@ class AlbumLoader private constructor(
         var totalCount = 0
         //第一张图片的id
         var id = Album.ALBUM_ID_ALL.toLong()
-        //拿第一张图片当做封面图片
-        var allAlbumCoverPath = ""
         //封面类型
         var mineType = ""
         if (cursor != null) {
@@ -44,7 +42,6 @@ class AlbumLoader private constructor(
             }
             if (cursor.moveToFirst()) {
                 id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                allAlbumCoverPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
                 mineType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))
             }
         }
@@ -54,7 +51,6 @@ class AlbumLoader private constructor(
                 id,
                 Album.ALBUM_ID_ALL,
                 Album.ALBUM_NAME_ALL,
-                allAlbumCoverPath,
                 mineType,
                 totalCount.toString()
             )
@@ -73,7 +69,6 @@ class AlbumLoader private constructor(
             MediaStore.Files.FileColumns._ID,
             MediaStore.Images.Media.BUCKET_ID,//相册id
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME, //相册名称
-            MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.MIME_TYPE,
             "COUNT(*) AS $COLUMN_COUNT"
         )
@@ -86,7 +81,6 @@ class AlbumLoader private constructor(
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
-            MediaStore.MediaColumns.DATA,
             COLUMN_COUNT
         )
 

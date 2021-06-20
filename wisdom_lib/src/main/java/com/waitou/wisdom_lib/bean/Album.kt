@@ -25,10 +25,7 @@ class Album(
      * 相册名称
      */
     var albumName: String,
-    /**
-     * 相册图片路径
-     */
-    var path: String,
+
     /**
      * 相册图片类型
      */
@@ -54,7 +51,7 @@ class Album(
     }
 
     override fun toString(): String {
-        return "Album(mediaId='$mediaId', albumId='$albumId', albumName='$albumName', path='$path', count=$count, uri=$uri)"
+        return "Album(mediaId='$mediaId', albumId='$albumId', albumName='$albumName', count=$count, uri=$uri)"
     }
 
     companion object {
@@ -66,7 +63,6 @@ class Album(
                 cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
-                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(AlbumLoader.COLUMN_COUNT))
             )
