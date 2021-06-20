@@ -40,8 +40,8 @@ class AlbumCollection(activity: FragmentActivity, loaderAlbum: LoaderAlbum) : Lo
             val list = mutableListOf<Album>()
             while (it.moveToNext()) {
                 try {
-                    val photoFolder = Album.valueOf(it)
-                    list.add(photoFolder)
+                    val album = Album.valueOf(it)
+                    list.add(album)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

@@ -15,15 +15,15 @@ import java.lang.ref.WeakReference
  */
 class MediaCollection(activity: FragmentActivity, loaderMedia: LoaderMedia) : LoaderManager.LoaderCallbacks<Cursor> {
 
-    private val loaderReference = WeakReference(loaderMedia)
-    private val loaderManager = LoaderManager.getInstance(activity)
-    private val context = activity.applicationContext
-
     companion object {
         private const val ARGS_ALBUM_ID = "album_id"
         private const val ARGS_CAMERA = "camera"
         private const val ARGS_LOAD_ID = 2
     }
+
+    private val loaderReference = WeakReference(loaderMedia)
+    private val loaderManager = LoaderManager.getInstance(activity)
+    private val context = activity.applicationContext
 
     @JvmOverloads
     fun loadMedia(albumId: String, isCamera: Boolean = false) {
@@ -40,21 +40,52 @@ class MediaCollection(activity: FragmentActivity, loaderMedia: LoaderMedia) : Lo
     }
 
     override fun onLoadFinished(p0: Loader<Cursor>, cursor: Cursor?) {
-        cursor?.let {
-            if (!it.isBeforeFirst) {
-                return
-            }
-            val list = mutableListOf<Media>()
-            while (it.moveToNext()) {
-                try {
+        try {
+            cursor?.let {
+                if (!it.isBeforeFirst) {
+                    return
+                }
+                val list = mutableListOf<Media>()
+                while (it.moveToNext()) {
                     val media = Media.valueOf(cursor)
                     list.add(media)
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
+
+//                if (albumId == Album.ALBUM_ID_ALL) {
+//                    val albumCount = hashMapOf<String, Int>()
+//                    val albumList = mutableListOf<Album>()
+//                    if (it.moveToFirst()) {
+//                        do {
+//                            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+//                            if (id != Media.ITEM_ID_CAPTURE) {
+//                                val bucketId = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.BUCKET_ID))
+//                                val count = albumCount[bucketId]
+//                                if (count == null) {
+//                                    albumCount[bucketId] = 1
+//                                    albumList.add(Album.valueOf(it))
+//                                } else {
+//                                    albumCount[bucketId] = count + 1
+//                                }
+//                            }
+//                        } while (it.moveToNext())
+//
+//                        var totalCount = 0
+//                        albumList.forEach { album ->
+//                            album.count = albumCount[album.albumId] ?: 0
+//                            totalCount += album.count
+//                        }
+//
+//                        val album = albumList[0]
+//                        albumList.add(0, Album(album.mediaId, Album.ALBUM_ID_ALL, Album.ALBUM_NAME_ALL, album.mineType, totalCount))
+//
+//                        loaderReference.get()?.albumResult(albumList)
+//                    }
+//                }
+                loaderReference.get()?.mediaResult(list)
+                loaderManager.destroyLoader(ARGS_LOAD_ID)
             }
-            loaderReference.get()?.mediaResult(list)
-            loaderManager.destroyLoader(ARGS_LOAD_ID)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

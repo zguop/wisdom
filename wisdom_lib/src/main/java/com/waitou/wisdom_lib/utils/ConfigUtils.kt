@@ -5,13 +5,9 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.res.Configuration
 import android.content.res.Resources
-import com.waitou.wisdom_lib.R
+import android.os.Build
 import com.waitou.wisdom_lib.config.*
 
-/**
- * auth aboom
- * date 2019-06-03
- */
 
 /**
  * is a radio
@@ -45,6 +41,13 @@ fun getScreenImageResize(): Int {
         else -> 180
     }
 }
+
+fun isAndroidQ(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+}
+
+
+
 
 fun isFilterMimeTypeSet() = WisdomConfig.getInstance().isFilterMimeTypeSet
 inline fun hasMineTypeSet(block: (Set<String>) -> Unit) = WisdomConfig.getInstance().mimeTypeSet?.let(block)

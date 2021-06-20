@@ -7,10 +7,8 @@ import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
-import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.utils.*
 
 /**
  * auth aboom
@@ -23,8 +21,12 @@ class MediaLoader private constructor(
     private val isCamera: Boolean
 ) :
     CursorLoader(
-        context, MediaStore.Files.getContentUri("external"),
-        PROJECTION, selection, selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " DESC"
+        context,
+        MediaStore.Files.getContentUri("external"),
+        PROJECTION,
+        selection,
+        selectionArgs,
+        MediaStore.Images.Media.DATE_MODIFIED + " DESC"
     ) {
 
     override fun loadInBackground(): Cursor? {
@@ -35,7 +37,7 @@ class MediaLoader private constructor(
         }
         //添加一个相机的item
         val mc = MatrixCursor(PROJECTION)
-        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", "capture", 0, 0))
+        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", "", "", "capture", 0, 0))
         return MergeCursor(arrayOf(mc, cursor))
     }
 
@@ -44,11 +46,11 @@ class MediaLoader private constructor(
          * 查询media的字段
          */
         private val PROJECTION = arrayOf(
-            MediaStore.Files.FileColumns._ID,
-            MediaStore.Images.Media.MIME_TYPE,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Audio.Media.DURATION
+            MediaStore.MediaColumns._ID,
+            MediaStore.MediaColumns.MIME_TYPE,
+            MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns.SIZE,
+            MediaStore.MediaColumns.DURATION
         )
 
         fun newInstance(context: Context, albumId: String?, isCamera: Boolean): MediaLoader {
@@ -57,7 +59,7 @@ class MediaLoader private constructor(
             SQLSelection.format(selectionSql, selectionArgs)
             if (Album.ALBUM_ID_ALL != albumId) {
                 selectionArgs.add(albumId!!)
-                selectionSql.append(" AND ${MediaStore.Images.Media.BUCKET_ID}=?")
+                selectionSql.append(" AND ${MediaStore.MediaColumns.BUCKET_ID}=?")
             }
             return MediaLoader(context, selectionSql.toString(), selectionArgs.toTypedArray(), isCamera)
         }
