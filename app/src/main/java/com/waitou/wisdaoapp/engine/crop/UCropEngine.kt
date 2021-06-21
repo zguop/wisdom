@@ -17,7 +17,7 @@ import com.yalantis.ucrop.UCrop
 class UCropEngine : CropEngine {
 
     override fun onStartCrop(sojourn: Fragment, media: Media): Int {
-        val file = CameraStrategy.getImageFileExistsAndCreate(Utils.getApp(), "IMAGE_%s.jpg", "image")
+        val file = CameraStrategy.createImageFile(Utils.getApp(), "IMAGE_%s.jpg", "image")
         Log.e("aa", "UCropEngine onStartCrop uri = ${media.uri} destUri = $file")
         UCrop.of(media.uri, Uri.fromFile(file)).start(sojourn.requireActivity(), sojourn)
         return UCrop.REQUEST_CROP

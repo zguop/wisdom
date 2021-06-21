@@ -58,11 +58,7 @@ class Media(
             isVideo() -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             else -> MediaStore.Files.getContentUri("external")
         }
-        uri = try {
-            ContentUris.withAppendedId(contentUri, mediaId)
-        } catch (e: Exception) {
-            Uri.parse(path)
-        }
+        uri = ContentUris.withAppendedId(contentUri, mediaId)
     }
 
     fun isImage(): Boolean {
@@ -102,7 +98,7 @@ class Media(
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
+                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
             )
         }
 

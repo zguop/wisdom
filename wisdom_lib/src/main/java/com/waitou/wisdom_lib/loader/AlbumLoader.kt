@@ -6,10 +6,8 @@ import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
-import android.util.Log
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.utils.isAndroidQ
-import kotlin.math.log
 
 /**
  * auth aboom
@@ -26,7 +24,7 @@ class AlbumLoader private constructor(
         if (isAndroidQ()) PROJECTION_Q else PROJECTION,
         selection,
         selectionArgs,
-        MediaStore.Images.Media.DATE_MODIFIED + " DESC"
+        MediaStore.MediaColumns.DATE_MODIFIED + " DESC"
     ) {
 
     //加载图片目录
@@ -110,15 +108,15 @@ class AlbumLoader private constructor(
     }
 
     companion object {
-        const val COLUMN_COUNT = "count"
+        internal const val COLUMN_COUNT = "count"
 
         /**
          * 查询表的字段
          */
         private val PROJECTION = arrayOf(
             MediaStore.Files.FileColumns._ID,
-            MediaStore.MediaColumns.BUCKET_ID,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
             "COUNT(*) AS $COLUMN_COUNT"
         )
@@ -128,8 +126,8 @@ class AlbumLoader private constructor(
          */
         private val PROJECTION_Q = arrayOf(
             MediaStore.Files.FileColumns._ID,
-            MediaStore.MediaColumns.BUCKET_ID,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE
         )
 
@@ -138,8 +136,8 @@ class AlbumLoader private constructor(
          */
         private val COLUMNS = arrayOf(
             MediaStore.Files.FileColumns._ID,
-            MediaStore.MediaColumns.BUCKET_ID,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
             COLUMN_COUNT
         )
@@ -150,7 +148,7 @@ class AlbumLoader private constructor(
             val selectionArgs = mutableListOf<String>()
             SQLSelection.format(selectionSql, selectionArgs)
             if (!isAndroidQ()) {
-                selectionSql.append(") GROUP BY (${MediaStore.MediaColumns.BUCKET_ID}")
+                selectionSql.append(") GROUP BY (${MediaStore.Images.Media.BUCKET_ID}")
             }
             return AlbumLoader(context, selectionSql.toString(), selectionArgs.toTypedArray())
         }

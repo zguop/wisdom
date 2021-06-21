@@ -230,11 +230,6 @@
             android:layout_height="wrap_content"
             android:text="preview" />
 
-        <Button
-            android:id="@+id/action2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="preview net" />
 
     </LinearLayout>
 

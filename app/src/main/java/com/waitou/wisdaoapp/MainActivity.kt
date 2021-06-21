@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private var isCamera = true
     private var ofType = ofAll()
-    private var imageEngine: ImageEngine =
-        GlideEngine()
+    private var imageEngine: ImageEngine = GlideEngine()
     private var compressEngine: CompressEngine? = null
     private var cropEngine: CropEngine? = null
     private var selectLimit = 2
@@ -45,9 +44,6 @@ class MainActivity : AppCompatActivity() {
     private var imageFilterMaxFile: Int? = null
     private var videoFilterMaxFile: Int? = null
     private var mimeTypeSet: MutableSet<String>? = null
-
-//    private val cropEngine by lazy { UCropEngine() }
-//    private val cropperEngine by lazy { CropperEngine() }
 
     private lateinit var adapter: MainAdapter
 
@@ -88,21 +84,6 @@ class MainActivity : AppCompatActivity() {
                     .go(PhotoPreviewActivity::class.java)
             }
         }
-
-        action2.setOnClickListener {
-            Wisdom.of(this@MainActivity)
-                .preview()
-                .imageEngine(imageEngine)
-                .setPaths(
-                    listOf(
-                        "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=255586071,2019273368&fm=26&gp=0.jpg",
-                        "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2028868596,3857587342&fm=26&gp=0.jpg",
-                        "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3147757822,2248639000&fm=26&gp=0.jpg",
-                        "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=248541496,3500754578&fm=26&gp=0.jpg"
-                    )
-                )
-                .go(PhotoPreviewActivity::class.java, 1)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,10 +99,16 @@ class MainActivity : AppCompatActivity() {
             resultMedia = Wisdom.obtainResult(data) //获取回调数据
             resultMedia?.also {
                 it.forEach { media ->
+                    Log.e("aa", " ===================================== ")
+                    Log.e("aa", " 原图uri " + media.uri)
                     Log.e("aa", " 原图地址 " + media.path)
-                    Log.e("aa", " 压缩图片地址 " + media.compressNullToPath())
-                    Log.e("aa", " 裁剪图片地址 " + media.cropNullToPath())
-                    Log.e("aa", " 获取图片 " + media.compressOrCropNullToPath())
+                    Log.e("aa", " 压缩地址 " + media.compressNullToPath())
+                    Log.e("aa", " 裁剪地址 " + media.cropNullToPath())
+                    Log.e("aa", " 拿到结果 " + media.compressOrCropNullToPath())
+                    Log.e("aa", " 大小 " + media.size)
+                    Log.e("aa", " mimeType " + media.mineType)
+                    Log.e("aa", " duration " + media.duration)
+                    Log.e("aa", " ===================================== ")
                 }
                 this.adapter.addData(it.map { media ->
                     PathBean(

@@ -28,11 +28,6 @@ class WisdomPreviewBuilder(private val wisdom: Wisdom) {
         return this
     }
 
-    fun setPaths(path: List<String>): WisdomPreviewBuilder {
-        wisdomConfig.imgMedias = path.map { Media(0, "", it, 0, 0) }
-        return this
-    }
-
     fun go(clazz: Class<out WisPreViewActivity>, position: Int = 0) {
         requireNotNull(wisdomConfig.imgMedias) { "imgMedias is empty?" }
         val o = wisdom.sojournReference.get()

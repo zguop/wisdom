@@ -2,10 +2,13 @@ package com.waitou.wisdom_lib.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.View
@@ -15,11 +18,11 @@ import com.waitou.wisdom_lib.interfaces.LoaderAlbum
 import com.waitou.wisdom_lib.interfaces.LoaderMedia
 import com.waitou.wisdom_lib.interfaces.OnMediaListener
 import com.waitou.wisdom_lib.config.WisdomConfig
+import com.waitou.wisdom_lib.config.isVideo
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
-import com.waitou.wisdom_lib.utils.CameraStrategy
-import com.waitou.wisdom_lib.utils.CropStrategy
-import com.waitou.wisdom_lib.utils.SingleMediaScanner
+import com.waitou.wisdom_lib.utils.*
+import java.io.File
 
 /**
  * auth aboom
@@ -98,6 +101,65 @@ abstract class WisdomWallFragment : Fragment(),
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (Activity.RESULT_OK != resultCode) {
+            return
+        }
+        // the camera callback
+        if (CameraStrategy.CAMERA_REQUEST == requestCode) {
+            if (isAndroidQ()) {
+                handleCamera(cameraStrategy.fileUri)
+            } else {
+                SingleMediaScanner(requireContext(), cameraStrategy.filePath) { uri, path ->
+                    handleCamera(uri, path)
+                }
+            }
+        }
+        // the crop callback
+        WisdomConfig.getInstance().cropEngine?.let {
+            if (cropStrategy.startCropRequest == requestCode) {
+                onCropResult(cropStrategy.cropResult(data))
+            }
+        }
+        //预览页面回来
+        if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
+            val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
+            val fullImage = data.getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
+            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
+            handlePreview(exit, fullImage, medias)
+        }
+    }
+
+    private fun handleCamera(uri: Uri, path: String? = null) {
+        val mediaId = ContentUris.parseId(uri)
+        val contentResolver = requireContext().applicationContext.contentResolver
+        val mimeType = contentResolver.getType(uri).orEmpty().ifEmpty { "image/jpeg" }
+        val duration = if (isVideo(mimeType)) getDuration(requireContext(), uri) else 0
+        val filePath = path ?: contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)?.use {
+            it.moveToFirst()
+            it.getString(it.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+        }.orEmpty()
+        val size = File(filePath).length()
+        val media = Media(mediaId, mimeType, filePath, size, duration)
+        onCameraResult(media)
+    }
+
+    private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
+        onResultMediaListener?.setFullImage(fullImage)
+        if (exit) {
+            onResultMediaListener?.onResultFinish(medias)
+        } else {
+            onPreviewResult(medias)
+            onResultMediaListener?.onPreViewResult(medias)
+        }
+    }
+
+
+    /**
+     * **************************下面是必须对外的方法**************************
+     */
+
     /**
      * 加载目录
      */
@@ -168,42 +230,6 @@ abstract class WisdomWallFragment : Fragment(),
         if (media.isGif() || media.isVideo()) return false
         cropStrategy.startCrop(this, media)
         return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (Activity.RESULT_OK != resultCode) {
-            return
-        }
-        // the camera callback
-        if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            SingleMediaScanner(requireContext().applicationContext, cameraStrategy.filePath) {
-                onCameraResult(it)
-            }
-        }
-        // the crop callback
-        WisdomConfig.getInstance().cropEngine?.let {
-            if (cropStrategy.startCropRequest == requestCode) {
-                onCropResult(cropStrategy.cropResult(data))
-            }
-        }
-        //预览页面回来
-        if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
-            val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
-            val fullImage = data.getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
-            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
-            handlePreview(exit, fullImage, medias)
-        }
-    }
-
-    private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
-        onResultMediaListener?.setFullImage(fullImage)
-        if (exit) {
-            onResultMediaListener?.onResultFinish(medias)
-            return
-        }
-        onPreviewResult(medias)
-        onResultMediaListener?.onPreViewResult(medias)
     }
 
     /**

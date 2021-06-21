@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.LoaderMedia
 import java.lang.ref.WeakReference
@@ -29,7 +30,7 @@ class MediaCollection(activity: FragmentActivity, loaderMedia: LoaderMedia) : Lo
     fun loadMedia(albumId: String, isCamera: Boolean = false) {
         val bundle = Bundle()
         bundle.putString(ARGS_ALBUM_ID, albumId)
-        bundle.putBoolean(ARGS_CAMERA, isCamera)
+        bundle.putBoolean(ARGS_CAMERA, isCamera && albumId == Album.ALBUM_ID_ALL)
         loaderManager.initLoader(ARGS_LOAD_ID, bundle, this)
     }
 
@@ -50,37 +51,6 @@ class MediaCollection(activity: FragmentActivity, loaderMedia: LoaderMedia) : Lo
                     val media = Media.valueOf(cursor)
                     list.add(media)
                 }
-
-//                if (albumId == Album.ALBUM_ID_ALL) {
-//                    val albumCount = hashMapOf<String, Int>()
-//                    val albumList = mutableListOf<Album>()
-//                    if (it.moveToFirst()) {
-//                        do {
-//                            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
-//                            if (id != Media.ITEM_ID_CAPTURE) {
-//                                val bucketId = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.BUCKET_ID))
-//                                val count = albumCount[bucketId]
-//                                if (count == null) {
-//                                    albumCount[bucketId] = 1
-//                                    albumList.add(Album.valueOf(it))
-//                                } else {
-//                                    albumCount[bucketId] = count + 1
-//                                }
-//                            }
-//                        } while (it.moveToNext())
-//
-//                        var totalCount = 0
-//                        albumList.forEach { album ->
-//                            album.count = albumCount[album.albumId] ?: 0
-//                            totalCount += album.count
-//                        }
-//
-//                        val album = albumList[0]
-//                        albumList.add(0, Album(album.mediaId, Album.ALBUM_ID_ALL, Album.ALBUM_NAME_ALL, album.mineType, totalCount))
-//
-//                        loaderReference.get()?.albumResult(albumList)
-//                    }
-//                }
                 loaderReference.get()?.mediaResult(list)
                 loaderManager.destroyLoader(ARGS_LOAD_ID)
             }
