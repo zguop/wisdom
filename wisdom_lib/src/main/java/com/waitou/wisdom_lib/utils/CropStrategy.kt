@@ -17,10 +17,7 @@ class CropStrategy {
 
     fun startCrop(fragment: Fragment, media: Media) {
         this.media = media
-        this.startCropRequest = WisdomConfig.getInstance().cropEngine?.onStartCrop(
-            fragment,
-            media
-        )
+        this.startCropRequest = WisdomConfig.getInstance().cropEngine?.onStartCrop(fragment, media)
     }
 
     fun cropResult(data: Intent?): Media {

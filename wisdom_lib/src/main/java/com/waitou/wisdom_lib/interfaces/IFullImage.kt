@@ -1,9 +1,5 @@
 package com.waitou.wisdom_lib.interfaces
 
-import android.os.Bundle
-import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.ui.WisPreViewActivity
-
 /**
  * auth aboom
  * date 2019-06-01

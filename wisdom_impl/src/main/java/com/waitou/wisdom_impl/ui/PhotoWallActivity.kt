@@ -66,13 +66,10 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     override fun onCreateFragment(tag: String): WisdomWallFragment {
-        var fragment = supportFragmentManager.findFragmentByTag(tag)
-        if (fragment !is WisdomWallFragment) {
-            fragment = PhotoWallFragment.newInstance()
-            supportFragmentManager.beginTransaction().replace(R.id.contentLayout, fragment, tag)
+        return PhotoWallFragment.newInstance().apply {
+            supportFragmentManager.beginTransaction().replace(R.id.contentLayout, this, tag)
                 .commitAllowingStateLoss()
         }
-        return fragment
     }
 
     override fun onBackPressed() {
@@ -121,7 +118,7 @@ class PhotoWallActivity : WisdomWallActivity() {
                         albumsAdapter.notifyDataSetChanged()
                         val album = albumsAdapter.albums[position]
                         barTitle.text = album.albumName
-                        getFragment().loadMedia(album.albumId)
+                        wisdomFragment().loadMedia(album.albumId)
                     }
                     folderPop.dismiss()
                 }
@@ -131,13 +128,14 @@ class PhotoWallActivity : WisdomWallActivity() {
 
     private fun preView() {
         val value = viewModule.selectCountLiveData.value
-        getFragment().startPreview(PhotoPreviewActivity::class.java, value.orEmpty())
+        wisdomFragment().startPreview(PhotoPreviewActivity::class.java, value.orEmpty())
     }
 
     private fun complete() {
         val value = viewModule.selectCountLiveData.value.orEmpty()
-        if (isSingleImage()) {
+        if (isSingleImage() && wisdomFragment().startCrop(value[0])) {
+            return
         }
-        getFragment().resultFinish(value)
+        wisdomFragment().resultFinish(value)
     }
 }

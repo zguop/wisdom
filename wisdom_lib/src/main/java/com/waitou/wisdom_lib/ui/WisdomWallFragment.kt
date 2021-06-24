@@ -2,6 +2,7 @@ package com.waitou.wisdom_lib.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -35,15 +36,20 @@ abstract class WisdomWallFragment : Fragment(),
         val TAG: String = WisdomWallFragment::class.java.name + hashCode()
     }
 
-    private var currentAlbumId: String = Album.ALBUM_ID_ALL
-
     private val backDispatcher by lazy { requireActivity().onBackPressedDispatcher }
     private val albumCollection by lazy { AlbumCollection(requireActivity(), this) }
     private val mediaCollection by lazy { MediaCollection(requireActivity(), this) }
     private val cameraStrategy by lazy { CameraStrategy() }
     private val cropStrategy by lazy { CropStrategy() }
 
+    private var currentAlbumId: String = Album.ALBUM_ID_ALL
     private var cameraPermissionGranted: (() -> Unit)? = null
+    private var iFullImage: IFullImage? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        iFullImage = context as? IFullImage
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -108,7 +114,7 @@ abstract class WisdomWallFragment : Fragment(),
             if (isAndroidQ()) {
                 handleCamera(cameraStrategy.fileUri)
             } else {
-                SingleMediaScanner(requireContext(), cameraStrategy.filePath) { uri, path ->
+                SingleMediaScanner(requireContext(), cameraStrategy.filePath) { uri, _ ->
                     handleCamera(uri)
                 }
             }
@@ -136,20 +142,10 @@ abstract class WisdomWallFragment : Fragment(),
         if (media != null) {
             onCameraResult(media)
         }
-//        val mediaId = ContentUris.parseId(uri)
-//        val mimeType = contentResolver.getType(uri).orEmpty().ifEmpty { "image/jpeg" }
-//        val duration = if (isVideo(mimeType)) getDuration(requireContext(), uri) else 0
-//        val filePath = path ?: contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)?.use {
-//            it.moveToFirst()
-//            it.getString(it.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-//        }.orEmpty()
-//        val size = File(filePath).length()
-//        val media = Media(mediaId, mimeType, filePath, size, duration)
-
     }
 
     private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
-        (requireActivity() as IFullImage).setFullImage(fullImage)
+        iFullImage?.setFullImage(fullImage)
         if (exit) {
             resultFinish(medias)
         } else {
@@ -241,13 +237,12 @@ abstract class WisdomWallFragment : Fragment(),
      * 配置compressEngine进行图片压缩
      */
     fun compress(resultMedias: List<Media>, function: () -> Unit) {
-        if ((requireActivity() as IFullImage).isFullImage() || WisdomConfig.getInstance().compressEngine == null) {
+        if (iFullImage?.isFullImage() == true || WisdomConfig.getInstance().compressEngine == null) {
             function.invoke()
             return
         }
         WisdomConfig.getInstance().compressEngine!!.compress(requireContext(), resultMedias, function)
     }
-
 
     /**
      * 关闭 回调数据 link {WisdomWallActivity onResultFinish}

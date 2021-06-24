@@ -18,7 +18,7 @@ abstract class WisdomWallActivity : AppCompatActivity(),
 
     abstract fun onCreateFragment(tag: String): WisdomWallFragment
 
-    fun getFragment(): WisdomWallFragment {
+    fun wisdomFragment(): WisdomWallFragment {
         return supportFragmentManager.findFragmentByTag(WisdomWallFragment.TAG) as WisdomWallFragment
     }
 }
