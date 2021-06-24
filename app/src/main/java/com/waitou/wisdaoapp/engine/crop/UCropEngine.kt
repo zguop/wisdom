@@ -2,8 +2,8 @@ package com.waitou.wisdaoapp.engine.crop
 
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.app.Fragment
 import android.util.Log
+import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.Utils
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.CropEngine

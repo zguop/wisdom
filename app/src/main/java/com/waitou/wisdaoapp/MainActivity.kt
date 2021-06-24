@@ -3,12 +3,12 @@ package com.waitou.wisdaoapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.*
 import com.waitou.wisdaoapp.engine.compress.TinyCompressEngine
 import com.waitou.wisdaoapp.engine.crop.CropperEngine
@@ -20,12 +20,12 @@ import com.waitou.wisdom_impl.ui.PhotoWallActivity
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
-import com.waitou.wisdom_lib.interfaces.CompressEngine
 import com.waitou.wisdom_lib.interfaces.CropEngine
 import com.waitou.wisdom_lib.interfaces.ImageEngine
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
+import com.waitou.wisdom_lib.interfaces.CompressEngine
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

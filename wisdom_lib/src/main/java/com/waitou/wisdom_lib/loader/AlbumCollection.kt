@@ -2,10 +2,9 @@ package com.waitou.wisdom_lib.loader
 
 import android.database.Cursor
 import android.os.Bundle
-import android.support.annotation.NonNull
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.interfaces.LoaderAlbum
 import java.lang.ref.WeakReference

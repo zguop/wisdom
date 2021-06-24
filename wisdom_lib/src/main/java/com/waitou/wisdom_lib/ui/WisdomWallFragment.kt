@@ -2,27 +2,25 @@ package com.waitou.wisdom_lib.ui
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.LoaderAlbum
 import com.waitou.wisdom_lib.interfaces.LoaderMedia
-import com.waitou.wisdom_lib.interfaces.OnMediaListener
+import com.waitou.wisdom_lib.interfaces.IFullImage
 import com.waitou.wisdom_lib.config.WisdomConfig
-import com.waitou.wisdom_lib.config.isVideo
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
+import com.waitou.wisdom_lib.loader.MediaLoader
 import com.waitou.wisdom_lib.utils.*
-import java.io.File
 
 /**
  * auth aboom
@@ -37,16 +35,15 @@ abstract class WisdomWallFragment : Fragment(),
         val TAG: String = WisdomWallFragment::class.java.name + hashCode()
     }
 
-    var onResultMediaListener: OnMediaListener? = null
     private var currentAlbumId: String = Album.ALBUM_ID_ALL
 
+    private val backDispatcher by lazy { requireActivity().onBackPressedDispatcher }
     private val albumCollection by lazy { AlbumCollection(requireActivity(), this) }
     private val mediaCollection by lazy { MediaCollection(requireActivity(), this) }
     private val cameraStrategy by lazy { CameraStrategy() }
     private val cropStrategy by lazy { CropStrategy() }
 
     private var cameraPermissionGranted: (() -> Unit)? = null
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,9 +90,9 @@ abstract class WisdomWallFragment : Fragment(),
                 }
             } else {
                 if (shouldShowRequestPermissionRationale(permissions[0])) {
-                    checkPermissionOnDenied(emptyArray(), permissions)
+                    onCheckPermissionResult(emptyArray(), permissions)
                 } else {
-                    checkPermissionOnDenied(permissions, permissions)
+                    onCheckPermissionResult(permissions, permissions)
                 }
             }
         }
@@ -112,7 +109,7 @@ abstract class WisdomWallFragment : Fragment(),
                 handleCamera(cameraStrategy.fileUri)
             } else {
                 SingleMediaScanner(requireContext(), cameraStrategy.filePath) { uri, path ->
-                    handleCamera(uri, path)
+                    handleCamera(uri)
                 }
             }
         }
@@ -131,27 +128,32 @@ abstract class WisdomWallFragment : Fragment(),
         }
     }
 
-    private fun handleCamera(uri: Uri, path: String? = null) {
-        val mediaId = ContentUris.parseId(uri)
-        val contentResolver = requireContext().applicationContext.contentResolver
-        val mimeType = contentResolver.getType(uri).orEmpty().ifEmpty { "image/jpeg" }
-        val duration = if (isVideo(mimeType)) getDuration(requireContext(), uri) else 0
-        val filePath = path ?: contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)?.use {
+    private fun handleCamera(uri: Uri) {
+        val media = requireContext().applicationContext.contentResolver.query(uri, MediaLoader.PROJECTION, null, null, null)?.use {
             it.moveToFirst()
-            it.getString(it.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-        }.orEmpty()
-        val size = File(filePath).length()
-        val media = Media(mediaId, mimeType, filePath, size, duration)
-        onCameraResult(media)
+            Media.valueOf(it)
+        }
+        if (media != null) {
+            onCameraResult(media)
+        }
+//        val mediaId = ContentUris.parseId(uri)
+//        val mimeType = contentResolver.getType(uri).orEmpty().ifEmpty { "image/jpeg" }
+//        val duration = if (isVideo(mimeType)) getDuration(requireContext(), uri) else 0
+//        val filePath = path ?: contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)?.use {
+//            it.moveToFirst()
+//            it.getString(it.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+//        }.orEmpty()
+//        val size = File(filePath).length()
+//        val media = Media(mediaId, mimeType, filePath, size, duration)
+
     }
 
     private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
-        onResultMediaListener?.setFullImage(fullImage)
+        (requireActivity() as IFullImage).setFullImage(fullImage)
         if (exit) {
-            onResultMediaListener?.onResultFinish(medias)
+            resultFinish(medias)
         } else {
             onPreviewResult(medias)
-            onResultMediaListener?.onPreViewResult(medias)
         }
     }
 
@@ -204,13 +206,6 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     /**
-     * 关闭 回调数据 link {WisdomWallActivity onResultFinish}
-     */
-    fun finish(resultMedias: List<Media>) {
-        onResultMediaListener?.onResultFinish(resultMedias)
-    }
-
-    /**
      * 跳转到预览页面 复写onPreviewResult 处理预览回调数据
      */
     fun startPreview(
@@ -219,7 +214,17 @@ abstract class WisdomWallFragment : Fragment(),
         currentPosition: Int = 0,
         bundle: Bundle? = null
     ) {
-        onResultMediaListener?.startPreview(clazz, selectMedia, currentPosition, currentAlbumId, bundle)
+        //当前点击的position 所有选择的数据 mediaId
+        val i = WisPreViewActivity.getIntent(
+            requireContext(),
+            clazz,
+            selectMedia,
+            currentPosition,
+            currentAlbumId,
+            (requireActivity() as IFullImage).isFullImage(),
+            WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
+        )
+        startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)
     }
 
     /**
@@ -233,26 +238,46 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     /**
+     * 配置compressEngine进行图片压缩
+     */
+    fun compress(resultMedias: List<Media>, function: () -> Unit) {
+        if ((requireActivity() as IFullImage).isFullImage() || WisdomConfig.getInstance().compressEngine == null) {
+            function.invoke()
+            return
+        }
+        WisdomConfig.getInstance().compressEngine!!.compress(requireContext(), resultMedias, function)
+    }
+
+
+    /**
+     * 关闭 回调数据 link {WisdomWallActivity onResultFinish}
+     */
+    fun resultFinish(resultMedias: List<Media>) {
+        compress(resultMedias) {
+            val i = Intent()
+            i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
+            requireActivity().setResult(Activity.RESULT_OK, i)
+            backDispatcher.onBackPressed()
+        }
+    }
+
+    /**
      * **************************下面是必须实现和可复写的方法**************************
      */
 
     abstract fun startLoading()
 
     /**
+     * 默认勾选medias，onActivityCreated调用
+     */
+    open fun beforeSelectorMedias(imgMedias: List<Media>?) {}
+
+    /**
      * 权限拒绝了回调，包括读写，相机打开权限
      * @param permissionsDeniedForever 集合包含了用户永久拒绝了权限
      * @param permissionsDenied 集合包含了用户拒绝了权限
      */
-    open fun checkPermissionOnDenied(
-        permissionsDeniedForever: Array<String>,
-        permissionsDenied: Array<String>
-    ) {
-    }
-
-    /**
-     * 默认勾选medias，onActivityCreated调用
-     */
-    open fun beforeSelectorMedias(imgMedias: List<Media>?) {}
+    open fun onCheckPermissionResult(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
 
     /**
      * 相机拍照或者录像后回调，包装成一个media

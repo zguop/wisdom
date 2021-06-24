@@ -2,9 +2,9 @@ package com.waitou.wisdom_lib.loader
 
 import android.database.Cursor
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.LoaderMedia

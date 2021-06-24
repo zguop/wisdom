@@ -1,20 +1,17 @@
 package com.waitou.wisdom_impl.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
-import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.viewpager.widget.ViewPager
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.view.CheckRadioView
 import com.waitou.wisdom_impl.view.CheckView
-import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.ui.WisPreViewActivity
@@ -23,8 +20,7 @@ import com.waitou.wisdom_lib.ui.WisPreViewActivity
  * auth aboom
  * date 2019-06-06
  */
-class PhotoPreviewActivity : WisPreViewActivity(),
-    OnOutsidePhotoTapListener {
+class PhotoPreviewActivity : WisPreViewActivity() {
 
     private lateinit var medias: List<Media>
     private var isBarHide = false
@@ -41,26 +37,7 @@ class PhotoPreviewActivity : WisPreViewActivity(),
         setContentView(R.layout.wis_activity_preview)
         StatusBarUtil.transparencyBar(this, false)
 
-        titleBar = findViewById(R.id.titleBar)
-        bottomBar = findViewById(R.id.bottomBar)
-        pager = findViewById(R.id.pager)
-        checkView = findViewById(R.id.checkView)
-        barTitle = findViewById(R.id.barTitle)
-
-        pager.addOnPageChangeListener(pageChange)
-        findViewById<View>(R.id.back).setOnClickListener { onBackPressed() }
-        checkView.setOnCheckedChangeListener { _, _ ->
-            mediaCheckedChange(medias[currentPosition])
-        }
-
-        val original = findViewById<CheckRadioView>(R.id.original)
-        original.setChecked(fullImage)
-        findViewById<View>(R.id.originalLayout).setOnClickListener {
-            fullImage = !fullImage
-            original.setChecked(fullImage)
-        }
-        complete = findViewById(R.id.complete)
-        complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
+        initViewsOrListener()
 
         //不可以编辑隐藏编辑按钮
         if (!isEditor()) {
@@ -69,10 +46,38 @@ class PhotoPreviewActivity : WisPreViewActivity(),
         }
     }
 
+    private fun initViewsOrListener() {
+        titleBar = findViewById(R.id.titleBar)
+        bottomBar = findViewById(R.id.bottomBar)
+        pager = findViewById(R.id.pager)
+        checkView = findViewById(R.id.checkView)
+        barTitle = findViewById(R.id.barTitle)
+        complete = findViewById(R.id.complete)
+
+        val original = findViewById<CheckRadioView>(R.id.original)
+        complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
+
+        original.setChecked(fullImage)
+        findViewById<View>(R.id.originalLayout).setOnClickListener {
+            fullImage = !fullImage
+            original.setChecked(fullImage)
+        }
+        findViewById<View>(R.id.back).setOnClickListener { onBackPressed() }
+        pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(p0: Int) {
+                currentPosition = p0
+                refreshSelectedUI(true)
+            }
+        })
+        checkView.setOnCheckedChangeListener { _, _ ->
+            mediaCheckedChange(medias[currentPosition])
+        }
+    }
+
     override fun mediaResult(medias: List<Media>) {
         this.medias = medias
         pager.adapter = PhotoPagerAdapter(supportFragmentManager)
-        pager.currentItem = currentPosition
+        pager.setCurrentItem(currentPosition, false)
         refreshSelectedUI(true)
     }
 
@@ -92,13 +97,11 @@ class PhotoPreviewActivity : WisPreViewActivity(),
     private fun refreshSelectedUI(initialization: Boolean) {
         val media = medias[currentPosition]
         val selectMediaIndexOf = selectMediaIndexOf(media)
-        if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(
-                selectMediaIndexOf
-        )
+        if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(selectMediaIndexOf)
         complete.text = getString(
-                R.string.wis_complete,
-                selectMedias.size,
-                WisdomConfig.getInstance().maxSelectLimit
+            R.string.wis_complete,
+            selectMedias.size,
+            WisdomConfig.getInstance().maxSelectLimit
         )
         barTitle.text = getString(R.string.wis_count, currentPosition + 1, medias.size)
     }
@@ -108,8 +111,7 @@ class PhotoPreviewActivity : WisPreViewActivity(),
         return if (indexOf >= 0) indexOf + 1 else indexOf
     }
 
-    private inner class PhotoPagerAdapter(fm: FragmentManager) :
-        FragmentStatePagerAdapter(fm) {
+    private inner class PhotoPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             return PhotoPreviewFragment.newInstance(medias[position])
@@ -120,14 +122,7 @@ class PhotoPreviewActivity : WisPreViewActivity(),
         }
     }
 
-    private val pageChange = object : ViewPager.SimpleOnPageChangeListener() {
-        override fun onPageSelected(p0: Int) {
-            currentPosition = p0
-            refreshSelectedUI(true)
-        }
-    }
-
-    override fun onOutsidePhotoTap(imageView: ImageView?) {
+    fun onOutsidePhotoTap() {
         if (isBarHide) {
             titleBar.animate()
                 .setInterpolator(FastOutSlowInInterpolator())

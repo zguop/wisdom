@@ -1,7 +1,7 @@
 package com.waitou.wisdom_lib.config
 
 import android.app.Activity
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.ImageEngine

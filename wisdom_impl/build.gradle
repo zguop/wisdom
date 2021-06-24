@@ -11,14 +11,14 @@ android {
     resourcePrefix 'wis_'
 }
 dependencies {
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation rootProject.ext.dependencies['appcompat-v7']
-    implementation rootProject.ext.dependencies['recyclerview']
-    implementation rootProject.ext.dependencies['lifecycle_extensions']
-    implementation rootProject.ext.dependencies["statusbarlib"]
-    api 'com.github.chrisbanes:PhotoView:2.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'com.to.aboomy:statusbar_lib:1.2.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     api project(':wisdom_lib')
-
-//    api 'io.github.zguop:wisdom_lib:1.0.17'
+//    api 'io.github.zguop:wisdom_lib:1.0.18'
 }
 apply from: rootProject.file('publishing.gradle')

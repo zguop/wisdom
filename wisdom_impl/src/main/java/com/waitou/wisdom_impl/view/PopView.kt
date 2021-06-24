@@ -1,13 +1,12 @@
 package com.waitou.wisdom_impl.view
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.waitou.wisdom_impl.R
 
 
@@ -18,7 +17,7 @@ class PopView @JvmOverloads constructor(
 
     companion object {
         private const val DURATION = 350L
-        private const val DEFAULT_DIS = 0.65f
+        private const val DEFAULT_DIS = 0.55f
     }
 
     private var dismissListener: OnDismissListener? = null

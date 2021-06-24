@@ -2,8 +2,8 @@ package com.waitou.wisdom_impl.view
 
 import android.content.res.Resources
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 open class GridSpacingItemDecoration(private val spanCount: Int, spacing: Int, private val includeEdge: Boolean) : RecyclerView.ItemDecoration() {
     private val spacing: Int = (spacing * Resources.getSystem().displayMetrics.density + 0.5f).toInt()

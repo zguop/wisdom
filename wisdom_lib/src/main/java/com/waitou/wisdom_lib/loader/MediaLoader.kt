@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.provider.MediaStore
-import android.support.v4.content.CursorLoader
+import androidx.loader.content.CursorLoader
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.utils.CameraStrategy
@@ -46,7 +46,7 @@ class MediaLoader private constructor(
         /**
          * 查询media的字段
          */
-        private val PROJECTION = arrayOf(
+        internal val PROJECTION = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.MIME_TYPE,
             MediaStore.MediaColumns.DATA,

@@ -1,7 +1,7 @@
 package com.waitou.wisdom_impl.viewmodule
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.bean.Media
 
@@ -12,7 +12,5 @@ import com.waitou.wisdom_lib.bean.Media
 class PhotoWallViewModule : ViewModel() {
 
     val albumLiveData = MutableLiveData<List<Album>>()
-
     val selectCountLiveData = MutableLiveData<List<Media>>()
-
 }

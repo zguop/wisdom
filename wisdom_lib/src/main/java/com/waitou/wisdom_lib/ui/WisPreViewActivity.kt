@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.interfaces.LoaderMedia
 import com.waitou.wisdom_lib.loader.MediaCollection
@@ -17,50 +17,31 @@ abstract class WisPreViewActivity : AppCompatActivity(),
     LoaderMedia {
 
     companion object {
-
-        /**
-         * 预览模式，可以编辑勾选
-         */
+        //预览模式，可以编辑勾选
         internal const val WIS_PREVIEW_MODULE_TYPE_EDIT = 0x01
 
-        /**
-         * 预览模式，不可以编辑
-         */
+        //预览模式，不可以编辑
         internal const val WIS_PREVIEW_MODULE_TYPE_VISIT = 0x02
 
-        /**
-         * the this requestCode
-         */
+        //the this requestCode
         internal const val WIS_PREVIEW_REQUEST_CODE = 0x12
 
-        /**
-         * 进入到预览页面所要带的数据
-         */
+        //进入到预览页面所要带的数据
         internal const val EXTRA_PREVIEW_SELECT_MEDIA = "extra_preview_select_media"
 
-        /**
-         * 浏览的起始位置
-         */
+        //浏览的起始位置
         internal const val EXTRA_PREVIEW_CURRENT_POSITION = "extra_preview_current_position"
 
-        /**
-         * 预览相册的当前id
-         */
+        //预览相册的当前id
         internal const val EXTRA_PREVIEW_ALBUM_ID = "extra_preview_albumId"
 
-        /**
-         * 预览模式 {WIS_PREVIEW_MODULE_TYPE_EDIT or WIS_PREVIEW_MODULE_TYPE_VISIT}
-         */
+        // 预览模式 {WIS_PREVIEW_MODULE_TYPE_EDIT or WIS_PREVIEW_MODULE_TYPE_VISIT}
         internal const val EXTRA_PREVIEW_MODULE_TYPE = "extra_preview_module_type"
 
-        /**
-         * 返回上一页或者退出相册
-         */
+        //返回上一页或者退出相册
         internal const val EXTRA_PREVIEW_RESULT_EXIT = "extra_preview_exit"
 
-        /**
-         * 显示原图按钮
-         */
+        //显示原图按钮
         internal const val EXTRA_FULL_IMAGE = "extra_full_image"
 
         @JvmStatic
@@ -73,23 +54,23 @@ abstract class WisPreViewActivity : AppCompatActivity(),
             fullImage: Boolean,
             moduleType: Int
         ): Intent {
-            val i = Intent(context, clazz)
-            i.putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
-            i.putExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
-            i.putExtra(EXTRA_PREVIEW_ALBUM_ID, albumId)
-            i.putExtra(EXTRA_PREVIEW_MODULE_TYPE, moduleType)
-            i.putExtra(EXTRA_FULL_IMAGE, fullImage)
-            return i
+            return Intent(context, clazz).apply {
+                putParcelableArrayListExtra(EXTRA_PREVIEW_SELECT_MEDIA, ArrayList(selectMedias))
+                putExtra(EXTRA_PREVIEW_CURRENT_POSITION, currentPosition)
+                putExtra(EXTRA_PREVIEW_ALBUM_ID, albumId)
+                putExtra(EXTRA_PREVIEW_MODULE_TYPE, moduleType)
+                putExtra(EXTRA_FULL_IMAGE, fullImage)
+            }
         }
     }
 
-
-    private val mediaCollection by lazy { MediaCollection(activity = this,loaderMedia = this) }
+    private val mediaCollection by lazy { MediaCollection(activity = this, loaderMedia = this) }
 
     private lateinit var albumId: String
+    lateinit var selectMedias: ArrayList<Media>
+
     private var previewModule: Int = WIS_PREVIEW_MODULE_TYPE_VISIT
 
-    lateinit var selectMedias: ArrayList<Media>
     protected var currentPosition: Int = 0
     protected var fullImage: Boolean = false
 
@@ -129,6 +110,7 @@ abstract class WisPreViewActivity : AppCompatActivity(),
 
     /**
      * 离开此页
+     * @param exit true 退出选择 false 关闭选择页面
      */
     fun onResultFinish(exit: Boolean) {
         val i = Intent()
@@ -136,7 +118,6 @@ abstract class WisPreViewActivity : AppCompatActivity(),
         i.putExtra(EXTRA_PREVIEW_RESULT_EXIT, exit)
         i.putExtra(EXTRA_FULL_IMAGE, fullImage)
         setResult(Activity.RESULT_OK, i)
-        //如果推出了就直接finish，否则就当做back返回
-        if (exit) finish() else super.onBackPressed()
+        finish()
     }
 }

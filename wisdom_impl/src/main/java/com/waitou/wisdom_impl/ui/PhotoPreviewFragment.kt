@@ -1,17 +1,16 @@
 package com.waitou.wisdom_impl.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
+import androidx.fragment.app.Fragment
 import com.github.chrisbanes.photoview.PhotoView
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.utils.tdp
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 
@@ -24,28 +23,15 @@ class PhotoPreviewFragment : Fragment() {
     companion object {
         private const val EXTRA_DATA = "extra_data"
         fun newInstance(media: Media): PhotoPreviewFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(EXTRA_DATA, media)
-            val fragment = PhotoPreviewFragment()
-            fragment.arguments = bundle
-            return fragment
+            return PhotoPreviewFragment().apply {
+                val bundle = Bundle()
+                bundle.putParcelable(EXTRA_DATA, media)
+                arguments = bundle
+            }
         }
     }
 
-    private var onPhotoTapListener: OnOutsidePhotoTapListener? = null
-    private var media: Media? = null
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is OnOutsidePhotoTapListener) {
-            onPhotoTapListener = context
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        media = arguments?.getParcelable(EXTRA_DATA)
-    }
+    private val media by lazy { arguments?.getParcelable<Media>(EXTRA_DATA) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.wis_fragment_preview, container, false)
@@ -54,13 +40,12 @@ class PhotoPreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val image = view.findViewById<PhotoView>(R.id.image)
-        image.setOnClickListener { onPhotoTapListener?.onOutsidePhotoTap(null) }
+        image.setOnClickListener { (requireActivity() as PhotoPreviewActivity).onOutsidePhotoTap() }
         media?.let {
             if (it.isVideo()) {
                 val videoPlay = View(activity)
                 videoPlay.setBackgroundResource(R.drawable.wis_svg_ic_video_play)
-                val density = (resources.displayMetrics.density * 60).toInt()
-                (view as ViewGroup).addView(videoPlay, FrameLayout.LayoutParams(density, density, Gravity.CENTER))
+                (view as ViewGroup).addView(videoPlay, FrameLayout.LayoutParams(60.tdp(requireContext()), 60.tdp(requireContext()), Gravity.CENTER))
                 videoPlay.setOnClickListener { _ ->
                     try {
                         val intent = Intent(Intent.ACTION_VIEW)
@@ -71,7 +56,6 @@ class PhotoPreviewFragment : Fragment() {
                     }
                 }
             }
-            //测试来看 这个比例目前清晰度没什么问题
             WisdomConfig.getInstance().imageEngine?.displayPreviewImage(image, it.uri, 480, 800, it.isGif())
         }
     }

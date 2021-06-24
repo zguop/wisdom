@@ -1,11 +1,11 @@
 package com.waitou.wisdom_impl.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_lib.bean.Album
 import com.waitou.wisdom_lib.config.WisdomConfig
@@ -20,13 +20,11 @@ class AlbumsAdapter : RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder>() {
 
     val albums = mutableListOf<Album>()
     var currentAlbumPos: Int = 0
-    var function: ((Int) -> Unit)? = null
+    var itemClick: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): AlbumsViewHolder {
-        return AlbumsViewHolder(
-                LayoutInflater.from(p0.context).inflate(R.layout.wis_item_albums, p0, false)
-        ).apply {
-            itemView.setOnClickListener { function?.invoke(adapterPosition) }
+        return AlbumsViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.wis_item_albums, p0, false)).apply {
+            itemView.setOnClickListener { itemClick?.invoke(absoluteAdapterPosition) }
         }
     }
 
@@ -36,11 +34,11 @@ class AlbumsAdapter : RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder>() {
         val album = albums[position]
         val screenImageResize = getScreenImageResize()
         WisdomConfig.getInstance().imageEngine?.displayAlbum(
-                holder.img,
-                album.uri,
-                screenImageResize,
-                screenImageResize,
-                isGif(album.mineType)
+            holder.img,
+            album.uri,
+            screenImageResize,
+            screenImageResize,
+            isGif(album.mineType)
         )
         holder.name.text = album.albumName
         holder.num.text = album.count.toString()
