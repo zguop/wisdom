@@ -6,9 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
@@ -22,6 +23,7 @@ import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
 import com.waitou.wisdom_lib.loader.MediaLoader
 import com.waitou.wisdom_lib.utils.*
+import java.util.*
 
 /**
  * auth aboom
@@ -46,6 +48,22 @@ abstract class WisdomWallFragment : Fragment(),
     private var cameraPermissionGranted: (() -> Unit)? = null
     private var iFullImage: IFullImage? = null
 
+    private val storagePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
+            startLoading()
+        } else {
+            onStoragePermissionDenied(!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        }
+    }
+
+    private val cameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
+            cameraPermissionGranted?.invoke()
+        } else {
+            onCameraPermissionDenied(!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA))
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         iFullImage = context as? IFullImage
@@ -54,54 +72,15 @@ abstract class WisdomWallFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //权限检查
-        checkPermissionOnStart()
+        requestStartPermissionLaunch()
         //回调默认勾选的media
         beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
     }
 
-    private fun checkPermissionOnStart() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            )
-        } else {
-            startLoading()
-        }
-    }
 
-    private fun checkPermissionOnCamera(cameraPermissionGranted: (() -> Unit)?) {
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            this.cameraPermissionGranted = cameraPermissionGranted
-            requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            )
-        } else {
-            cameraPermissionGranted?.invoke()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    startLoading()
-                }
-                if (permissions.contains(Manifest.permission.CAMERA)) {
-                    checkPermissionOnCamera(cameraPermissionGranted)
-                }
-            } else {
-                if (shouldShowRequestPermissionRationale(permissions[0])) {
-                    onCheckPermissionResult(emptyArray(), permissions)
-                } else {
-                    onCheckPermissionResult(permissions, permissions)
-                }
-            }
-        }
+    private fun checkPermissionOnCamera(cameraPermission: (() -> Unit)?) {
+        cameraPermissionGranted = cameraPermission
+        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -157,6 +136,13 @@ abstract class WisdomWallFragment : Fragment(),
     /**
      * **************************下面是必须对外的方法**************************
      */
+
+    /**
+     * 申请存储权限，默认会被调用
+     */
+    fun requestStartPermissionLaunch() {
+        storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
 
     /**
      * 加载目录
@@ -268,13 +254,6 @@ abstract class WisdomWallFragment : Fragment(),
     open fun beforeSelectorMedias(imgMedias: List<Media>?) {}
 
     /**
-     * 权限拒绝了回调，包括读写，相机打开权限
-     * @param permissionsDeniedForever 集合包含了用户永久拒绝了权限
-     * @param permissionsDenied 集合包含了用户拒绝了权限
-     */
-    open fun onCheckPermissionResult(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {}
-
-    /**
      * 相机拍照或者录像后回调，包装成一个media
      */
     open fun onCameraResult(media: Media) {}
@@ -288,4 +267,16 @@ abstract class WisdomWallFragment : Fragment(),
      * 预览页面回调，在预览页面做了的事情，将数据源回调更新
      */
     open fun onPreviewResult(medias: List<Media>) {}
+
+    /**
+     * 拒绝了存储权限回调
+     * @param isDeniedForever 用户永久拒绝了权限
+     */
+    open fun onStoragePermissionDenied(isDeniedForever: Boolean) {}
+
+    /**
+     * 拒绝了相机权限回调
+     * @param isDeniedForever 用户永久拒绝了权限
+     */
+    open fun onCameraPermissionDenied(isDeniedForever: Boolean) {}
 }

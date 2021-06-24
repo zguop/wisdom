@@ -1,17 +1,12 @@
 <resources>
-    <string name="wis_preview">Preview</string>
+    <string name="wis_preview">Visualizar</string>
     <string name="wis_picture">Image</string>
     <string name="wis_video">Video</string>
     <string name="wis_gif">GIF</string>
-    <string name="wis_complete">Completed(%1$d/%2$d)</string>
+    <string name="wis_complete">Finish(%1$d/%2$d)</string>
     <string name="wis_count">%1$d/%2$d</string>
     <string name="wis_take">Camera</string>
     <string name="wis_all">All</string>
     <string name="wis_original">Full image</string>
     <string name="wis_storage_permission_denied">需要读取手机存储权限，请前往设置中开启</string>
-    <string name="wis_camera_permission_denied">需要访问设备的相机权限进行拍照或录像，请前往设置中开启</string>
-    <string name="wis_to_setting">去设置</string>
-    <string name="wis_cancel">取消</string>
-    <string name="wis_awarded">授予</string>
-
 </resources>

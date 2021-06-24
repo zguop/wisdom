@@ -8,4 +8,10 @@
     <string name="wis_take">相机</string>
     <string name="wis_all">全部</string>
     <string name="wis_original">原图</string>
+    <string name="wis_storage_permission_denied">需要读取手机存储权限，请前往设置中开启</string>
+    <string name="wis_camera_permission_denied">需要访问设备的相机权限进行拍照或录像，请前往设置中开启</string>
+    <string name="wis_to_setting">去设置</string>
+    <string name="wis_cancel">取消</string>
+    <string name="wis_awarded">授予</string>
+
 </resources>

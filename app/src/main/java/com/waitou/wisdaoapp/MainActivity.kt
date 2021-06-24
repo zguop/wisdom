@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         //配置代码
         go.setOnClickListener {
             //跳转到相册选择
-
             //有裁剪 压缩， 先裁剪，裁剪的图再压缩
             Wisdom.of(this@MainActivity)
                 .config(ofType) //选择类型 ofAll() ofImage() ofVideo()

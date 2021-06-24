@@ -1,15 +1,16 @@
 package com.waitou.wisdom_impl.ui
 
-import android.Manifest
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.MediasAdapter
+import com.waitou.wisdom_impl.utils.launchAppDetailsSettings
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
@@ -34,6 +35,7 @@ class PhotoWallFragment : WisdomWallFragment() {
 
     private val viewModule by lazy { ViewModelProvider(requireActivity())[PhotoWallViewModule::class.java] }
     private val adapter = MediasAdapter()
+    private var toStorageSetting = false
 
     override fun albumResult(albums: List<Album>) {
         viewModule.albumLiveData.value = albums
@@ -82,13 +84,44 @@ class PhotoWallFragment : WisdomWallFragment() {
         }
     }
 
-    override fun onCheckPermissionResult(permissionsDeniedForever: Array<String>, permissionsDenied: Array<String>) {
-        val msg = if (Manifest.permission.READ_EXTERNAL_STORAGE == permissionsDenied[0]) "需要访问设备的存储权限来选择图片" else "需要访问设备的相机权限进行拍照或录像"
-        Toast.makeText(
-            activity,
-            if (permissionsDeniedForever.isNotEmpty()) "$msg，请在“系统设置”或授权对话框中允许“存储空间”权限。" else msg,
-            Toast.LENGTH_SHORT
-        ).show()
+    override fun onResume() {
+        super.onResume()
+        if (toStorageSetting) {
+            toStorageSetting = false
+            requestStartPermissionLaunch()
+        }
+    }
+
+    override fun onCameraPermissionDenied(isDeniedForever: Boolean) {
+        if (isDeniedForever) {
+            AlertDialog.Builder(requireContext())
+                .setMessage(R.string.wis_camera_permission_denied)
+                .setPositiveButton(R.string.wis_to_setting) { _, _ ->
+                    launchAppDetailsSettings(requireContext())
+                }
+                .setNegativeButton(R.string.wis_cancel, null)
+                .create()
+                .show()
+        }
+    }
+
+    override fun onStoragePermissionDenied(isDeniedForever: Boolean) {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.wis_storage_permission_denied)
+            .setPositiveButton(if (isDeniedForever) R.string.wis_to_setting else R.string.wis_awarded) { _, _ ->
+                if (isDeniedForever) {
+                    toStorageSetting = true
+                    launchAppDetailsSettings(requireContext())
+                } else {
+                    requestStartPermissionLaunch()
+                }
+            }
+            .setNegativeButton(R.string.wis_cancel) { _, _ ->
+                requireActivity().finish()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
     }
 
     override fun onCameraResult(media: Media) {

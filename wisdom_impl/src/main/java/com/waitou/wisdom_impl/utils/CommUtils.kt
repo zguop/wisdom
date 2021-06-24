@@ -4,6 +4,9 @@
 package com.waitou.wisdom_impl.utils
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.util.TypedValue
 
 /**
@@ -12,4 +15,12 @@ import android.util.TypedValue
  */
 fun Int.tdp(context: Context): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics).toInt()
+}
+
+
+fun launchAppDetailsSettings(context: Context) {
+    context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.parse("package:${context.packageName}")
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    })
 }
