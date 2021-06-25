@@ -54,21 +54,13 @@ class PopView @JvmOverloads constructor(
         }
     }
 
-    fun setDisMissListener(listener: () -> Unit) {
-        this.dismissListener = object : OnDismissListener {
-            override fun onDismiss() {
-                listener.invoke()
-            }
-        }
-    }
-
     fun setDisMissListener(listener: OnDismissListener) {
         this.dismissListener = listener
     }
 
     /**
-     * 设置最大高度的比例 screenHeight * heightPercent
-     * @param heightPercent default 0.75
+     * 设置最大高度的比例
+     * @param heightPercent default 0.6
      */
     fun setMaxDis(heightPercent: Float) {
         this.heightPercent = heightPercent

@@ -144,8 +144,15 @@ class PhotoWallFragment : WisdomWallFragment() {
         }
     }
 
-    override fun onPreviewResult(medias: List<Media>) {
-        adapter.replaceSelectMedias(medias)
-        viewModule.selectCountLiveData.value = adapter.selectMedias
+    override fun onPreviewResult(medias: List<Media>, exit: Boolean) {
+        if(exit){
+            if(isSingleImage() && startCrop(medias[0])){
+                return
+            }
+            resultFinish(medias)
+        }else{
+            adapter.replaceSelectMedias(medias)
+            viewModule.selectCountLiveData.value = adapter.selectMedias
+        }
     }
 }

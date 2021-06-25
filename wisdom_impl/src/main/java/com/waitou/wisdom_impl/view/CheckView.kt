@@ -70,10 +70,10 @@ class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val padding = max(max(paddingLeft, paddingRight), max(paddingTop, paddingBottom))
         val outerRadius = center - strokePaint.strokeWidth / 2 - padding
         val innerRadius = center - strokePaint.strokeWidth - padding
-        val gradientRadius: Float = outerRadius + shadowWidth
+        val gradientRadius = outerRadius + shadowWidth
 
         if (shadowPaint == null) {
-            val stop0: Float = (innerRadius - strokePaint.strokeWidth - padding) / gradientRadius
+            val stop0 = (innerRadius - strokePaint.strokeWidth - padding) / gradientRadius
             val stop1 = innerRadius / gradientRadius
             val stop2 = outerRadius / gradientRadius
             val stop3 = 1.0f

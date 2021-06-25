@@ -67,7 +67,7 @@ abstract class WisdomWallFragment : Fragment(),
                 val fullImage = getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
                 val medias = getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
                 iFullImage?.setFullImage(fullImage)
-                if (exit) resultFinish(medias) else onPreviewResult(medias)
+                onPreviewResult(medias, exit)
             }
         }
     }
@@ -223,7 +223,7 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     /**
-     * 关闭 回调数据 link {WisdomWallActivity onResultFinish}
+     * 关闭回调数据，如配置了compressEngine，则会进行压缩后返回结果
      */
     fun resultFinish(resultMedias: List<Media>) {
         compress(resultMedias) {
@@ -256,9 +256,10 @@ abstract class WisdomWallFragment : Fragment(),
     open fun onCropResult(media: Media) {}
 
     /**
-     * 预览页面回调，在预览页面做了的事情，将数据源回调更新
+     * 预览页面回调，在预览页面做了的事情
+     * @param exit true 点击了完成，选择结束
      */
-    open fun onPreviewResult(medias: List<Media>) {}
+    open fun onPreviewResult(medias: List<Media>, exit: Boolean) {}
 
     /**
      * 拒绝了存储权限回调

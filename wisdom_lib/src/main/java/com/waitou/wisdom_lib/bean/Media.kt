@@ -16,7 +16,7 @@ import com.waitou.wisdom_lib.config.isVideo
  */
 class Media(
     /**
-     * 主键
+     * id
      */
     var mediaId: Long,
     /**
