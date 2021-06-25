@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.to.aboomy.statusbar_lib.StatusBarUtil
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.AlbumsAdapter
-import com.waitou.wisdom_impl.utils.tdp
+import com.waitou.wisdom_impl.utils.dp2pxI
 import com.waitou.wisdom_impl.view.CheckRadioView
 import com.waitou.wisdom_impl.view.PopView
 import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
@@ -88,7 +88,7 @@ class PhotoWallActivity : WisdomWallActivity() {
         data[0].albumName = getString(R.string.wis_all)
         barTitle.text = data[0].albumName
         albumsAdapter.replaceData(data)
-        folderPop.setMaxItemHeight(80.tdp(this) * data.size)
+        folderPop.setMaxItemHeight(80.dp2pxI() * data.size)
     }
 
     private fun updateBottomTextUI(size: Int = 0) {

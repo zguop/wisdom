@@ -4,13 +4,10 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Album
@@ -64,6 +61,18 @@ abstract class WisdomWallFragment : Fragment(),
         }
     }
 
+    private val previewActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            it.data!!.run {
+                val exit = getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
+                val fullImage = getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
+                val medias = getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
+                iFullImage?.setFullImage(fullImage)
+                if (exit) resultFinish(medias) else onPreviewResult(medias)
+            }
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         iFullImage = context as? IFullImage
@@ -76,7 +85,6 @@ abstract class WisdomWallFragment : Fragment(),
         //回调默认勾选的media
         beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
     }
-
 
     private fun checkPermissionOnCamera(cameraPermission: (() -> Unit)?) {
         cameraPermissionGranted = cameraPermission
@@ -104,13 +112,6 @@ abstract class WisdomWallFragment : Fragment(),
                 onCropResult(cropStrategy.cropResult(data))
             }
         }
-        //预览页面回来
-        if (WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE == requestCode) {
-            val exit = data!!.getBooleanExtra(WisPreViewActivity.EXTRA_PREVIEW_RESULT_EXIT, false)
-            val fullImage = data.getBooleanExtra(WisPreViewActivity.EXTRA_FULL_IMAGE, false)
-            val medias = data.getParcelableArrayListExtra<Media>(WisPreViewActivity.EXTRA_PREVIEW_SELECT_MEDIA).orEmpty()
-            handlePreview(exit, fullImage, medias)
-        }
     }
 
     private fun handleCamera(uri: Uri) {
@@ -122,16 +123,6 @@ abstract class WisdomWallFragment : Fragment(),
             onCameraResult(media)
         }
     }
-
-    private fun handlePreview(exit: Boolean, fullImage: Boolean, medias: List<Media>) {
-        iFullImage?.setFullImage(fullImage)
-        if (exit) {
-            resultFinish(medias)
-        } else {
-            onPreviewResult(medias)
-        }
-    }
-
 
     /**
      * **************************下面是必须对外的方法**************************
@@ -194,9 +185,7 @@ abstract class WisdomWallFragment : Fragment(),
         clazz: Class<out WisPreViewActivity>,
         selectMedia: List<Media>,
         currentPosition: Int = 0,
-        bundle: Bundle? = null
     ) {
-        //当前点击的position 所有选择的数据 mediaId
         val i = WisPreViewActivity.getIntent(
             requireContext(),
             clazz,
@@ -206,7 +195,7 @@ abstract class WisdomWallFragment : Fragment(),
             (requireActivity() as IFullImage).isFullImage(),
             WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
         )
-        startActivityForResult(i, WisPreViewActivity.WIS_PREVIEW_REQUEST_CODE, bundle)
+        previewActivityLauncher.launch(i)
     }
 
     /**

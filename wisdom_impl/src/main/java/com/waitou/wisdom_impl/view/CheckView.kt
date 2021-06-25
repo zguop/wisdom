@@ -3,22 +3,22 @@ package com.waitou.wisdom_impl.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Checkable
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.utils.dp2pxF
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * auth aboom
  * date 2019-06-02
  */
 @SuppressLint("CustomViewStyleable")
-class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr), Checkable {
-
-    private val density = context.resources.displayMetrics.density
+class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr),
+    Checkable {
 
     private val strokePaint = Paint().apply {
         isAntiAlias = true
@@ -31,61 +31,75 @@ class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         style = Paint.Style.FILL
     }
 
-    private val textPaint = Paint().apply {
+    private val textPaint = TextPaint().apply {
         isAntiAlias = true
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
+    private var shadowPaint: Paint? = null
+
     private var checkNum = UNCHECKED
     private var isChecked: Boolean = false
-    private var center: Float = 0f
-
+    private var size: Float = 0f
+    private var shadowWidth: Float = 0f
     private var listener: OnCheckedChangeListener? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.wis_CheckView)
         val ta = context.theme.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+        size = a.getDimension(R.styleable.wis_CheckView_wis_size, 48.dp2pxF())
+        shadowWidth = a.getDimension(R.styleable.wis_CheckView_wis_shadow_width, 6.dp2pxF())
         bgPaint.color = a.getColor(R.styleable.wis_CheckView_wis_check_color, ta.getColor(0, Color.parseColor("#FB4846")))
-        strokePaint.color = a.getColor(R.styleable.wis_CheckView_wis_border_color, Color.WHITE)
-        textPaint.textSize = a.getDimension(R.styleable.wis_CheckView_wis_check_text_size, 14 * density)
+        strokePaint.color = a.getColor(R.styleable.wis_CheckView_wis_stroke_color, Color.WHITE)
+        strokePaint.strokeWidth = a.getDimension(R.styleable.wis_CheckView_wis_stroke_width, 3.dp2pxF())
+        textPaint.textSize = a.getDimension(R.styleable.wis_CheckView_wis_check_text_size, 14.dp2pxF())
         textPaint.color = a.getColor(R.styleable.wis_CheckView_wis_check_text_color, Color.WHITE)
         a.recycle()
         ta.recycle()
         setOnClickListener { toggle() }
     }
 
-    private fun measureSize(measureSpec: Int): Int {
-        val defSize = density * 48
-        val specSize = MeasureSpec.getSize(measureSpec)
-        val specMode = MeasureSpec.getMode(measureSpec)
-        var result = 0
-        when (specMode) {
-            MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST -> result = min(defSize.toInt(), specSize)
-            MeasureSpec.EXACTLY -> result = specSize
-        }
-        return result
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(measureSize(widthMeasureSpec), measureSize(heightMeasureSpec))
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        center = measuredWidth / 2.0f
-        strokePaint.strokeWidth = center / 10.0f
+        val sizeSpec = MeasureSpec.makeMeasureSpec(size.toInt(), MeasureSpec.EXACTLY)
+        super.onMeasure(sizeSpec, sizeSpec)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        val center = size / 2
         val padding = max(max(paddingLeft, paddingRight), max(paddingTop, paddingBottom))
-        canvas.drawCircle(center, center, center - strokePaint.strokeWidth / 2 - padding, strokePaint)
+        val outerRadius = center - strokePaint.strokeWidth / 2 - padding
+        val innerRadius = center - strokePaint.strokeWidth - padding
+        val gradientRadius: Float = outerRadius + shadowWidth
+
+        if (shadowPaint == null) {
+            val stop0: Float = (innerRadius - strokePaint.strokeWidth - padding) / gradientRadius
+            val stop1 = innerRadius / gradientRadius
+            val stop2 = outerRadius / gradientRadius
+            val stop3 = 1.0f
+            shadowPaint = Paint().apply {
+                isAntiAlias = true
+                shader = RadialGradient(
+                    center,
+                    center,
+                    gradientRadius,
+                    intArrayOf(Color.parseColor("#00000000"), Color.parseColor("#0D000000"),
+                        Color.parseColor("#0D000000"), Color.parseColor("#00000000")),
+                    floatArrayOf(stop0, stop1, stop2, stop3),
+                    Shader.TileMode.CLAMP
+                )
+            }
+        }
+        canvas.drawCircle(center, center, gradientRadius, shadowPaint!!)
+        canvas.drawCircle(center, center, outerRadius, strokePaint)
         if (isChecked && checkNum > UNCHECKED) {
-            canvas.drawCircle(center, center, center - strokePaint.strokeWidth - padding, bgPaint)
+            canvas.drawCircle(center, center, innerRadius, bgPaint)
             val text = checkNum.toString()
             val baseX = (width - textPaint.measureText(text)) / 2
             val baseY = (height - textPaint.descent() - textPaint.ascent()) / 2
             canvas.drawText(text, baseX, baseY, textPaint)
         }
+        alpha = if (isEnabled) 1.0f else 0.5f
     }
 
     override fun toggle() {

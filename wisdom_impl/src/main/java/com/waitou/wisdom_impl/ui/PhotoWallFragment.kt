@@ -71,13 +71,11 @@ class PhotoWallFragment : WisdomWallFragment() {
                     }
                 }
                 mediaClick = { position ->
-                    //val make = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, view, "preview")
                     //没有相机的时候position的值是正确的，预览页面不存在相机的位置，有相机需要-1才对
                     startPreview(
                         PhotoPreviewActivity::class.java,
                         selectMedias,
                         if (WisdomConfig.getInstance().isCamera) position - 1 else position,
-                        null
                     )
                 }
             }

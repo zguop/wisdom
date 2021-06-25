@@ -2,8 +2,11 @@
 <resources>
 
     <declare-styleable name="wis_CheckView">
+        <attr name="wis_size" format="dimension" />
+        <attr name="wis_shadow_width" format="dimension"/>
         <attr name="wis_check_color" format="color" />
-        <attr name="wis_border_color" format="color" />
+        <attr name="wis_stroke_color" format="color" />
+        <attr name="wis_stroke_width" format="dimension" />
         <attr name="wis_check_text_color" format="color" />
         <attr name="wis_check_text_size" format="dimension" />
     </declare-styleable>

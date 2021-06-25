@@ -3,9 +3,10 @@ package com.waitou.wisdom_impl.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import com.waitou.wisdom_impl.R
 
 @SuppressLint("CustomViewStyleable", "ResourceType")
@@ -52,11 +53,11 @@ class CheckRadioView @JvmOverloads constructor(
         if (enable) {
             isSelected = true
             setImageResource(R.drawable.wis_svg_ic_radio_selected_color)
-            drawable.setColorFilter(selectedColor, PorterDuff.Mode.SRC_IN)
+            drawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(selectedColor, BlendModeCompat.SRC_IN)
         } else {
             isSelected = false
             setImageResource(R.drawable.wis_svg_ic_radio_normal_color)
-            drawable.setColorFilter(unColor, PorterDuff.Mode.SRC_IN)
+            drawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(unColor, BlendModeCompat.SRC_IN)
         }
     }
 }

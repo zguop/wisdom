@@ -23,9 +23,6 @@ abstract class WisPreViewActivity : AppCompatActivity(),
         //预览模式，不可以编辑
         internal const val WIS_PREVIEW_MODULE_TYPE_VISIT = 0x02
 
-        //the this requestCode
-        internal const val WIS_PREVIEW_REQUEST_CODE = 0x12
-
         //进入到预览页面所要带的数据
         internal const val EXTRA_PREVIEW_SELECT_MEDIA = "extra_preview_select_media"
 

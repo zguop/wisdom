@@ -17,7 +17,7 @@ class PopView @JvmOverloads constructor(
 
     companion object {
         private const val DURATION = 350L
-        private const val DEFAULT_DIS = 0.55f
+        private const val DEFAULT_DIS = 0.6f
     }
 
     private var dismissListener: OnDismissListener? = null
@@ -48,7 +48,7 @@ class PopView @JvmOverloads constructor(
     init {
         View.inflate(context, R.layout.wis_pop_albums, this@PopView)
         popList = findViewById(R.id.popList)
-        viewOutSide = findViewById<View>(R.id.viewOutSide)
+        viewOutSide = findViewById(R.id.viewOutSide)
         viewOutSide.setOnClickListener {
             dismiss()
         }

@@ -10,7 +10,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.github.chrisbanes.photoview.PhotoView
 import com.waitou.wisdom_impl.R
-import com.waitou.wisdom_impl.utils.tdp
+import com.waitou.wisdom_impl.utils.dp2pxI
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
 
@@ -45,7 +45,7 @@ class PhotoPreviewFragment : Fragment() {
             if (it.isVideo()) {
                 val videoPlay = View(activity)
                 videoPlay.setBackgroundResource(R.drawable.wis_svg_ic_video_play)
-                (view as ViewGroup).addView(videoPlay, FrameLayout.LayoutParams(60.tdp(requireContext()), 60.tdp(requireContext()), Gravity.CENTER))
+                (view as ViewGroup).addView(videoPlay, FrameLayout.LayoutParams(60.dp2pxI(), 60.dp2pxI(), Gravity.CENTER))
                 videoPlay.setOnClickListener { _ ->
                     try {
                         val intent = Intent(Intent.ACTION_VIEW)

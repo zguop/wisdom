@@ -1,7 +1,6 @@
 package com.waitou.wisdom_impl.adapter
 
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.text.format.DateUtils
 import android.text.format.Formatter
 import android.view.LayoutInflater
@@ -9,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.view.CheckView
@@ -75,16 +76,17 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
             )
             holder.checkView.setCheckedNum(selectMediaIndexOf(media))
-            holder.media.setColorFilter(
-                if (holder.checkView.isChecked) Color.argb(80, 0, 0, 0) else Color.TRANSPARENT,
-                PorterDuff.Mode.SRC_ATOP
-            )
+            holder.checkView.isEnabled = !(selectMedias.size >= WisdomConfig.getInstance().maxSelectLimit && !holder.checkView.isChecked)
+            holder.media.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(if (holder.checkView.isChecked)
+                Color.argb(80, 0, 0, 0) else Color.TRANSPARENT, BlendModeCompat.SRC_ATOP)
+
             holder.size.text = Formatter.formatShortFileSize(holder.itemView.context, media.size)
             holder.gif.visibility = if (media.isGif()) View.VISIBLE else View.GONE
             holder.duration.visibility = if (media.isVideo()) {
                 holder.duration.text = DateUtils.formatElapsedTime(media.duration / 1000)
                 View.VISIBLE
             } else View.GONE
+
         }
     }
 

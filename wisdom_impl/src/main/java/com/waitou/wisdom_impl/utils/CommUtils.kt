@@ -5,18 +5,21 @@ package com.waitou.wisdom_impl.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.provider.Settings
-import android.util.TypedValue
 
 /**
  * auth aboom
  * date 2021/6/23
  */
-fun Int.tdp(context: Context): Int {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics).toInt()
+fun Int.dp2pxI(): Int {
+    return dp2pxF().toInt()
 }
 
+fun Int.dp2pxF(): Float {
+    return this * Resources.getSystem().displayMetrics.density + 0.5f
+}
 
 fun launchAppDetailsSettings(context: Context) {
     context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {

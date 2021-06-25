@@ -2,7 +2,8 @@
 <com.waitou.wisdom_impl.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/media"
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:padding="10dp"
+        app:wis_size="48dp"
         tools:visibility="visible" />
 
     <View

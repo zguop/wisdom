@@ -42,7 +42,7 @@ class AlbumsAdapter : RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder>() {
         )
         holder.name.text = album.albumName
         holder.num.text = album.count.toString()
-        holder.check.visibility = if (holder.adapterPosition == currentAlbumPos) View.VISIBLE else View.GONE
+        holder.check.visibility = if (holder.absoluteAdapterPosition == currentAlbumPos) View.VISIBLE else View.GONE
     }
 
     fun replaceData(medias: List<Album>) {

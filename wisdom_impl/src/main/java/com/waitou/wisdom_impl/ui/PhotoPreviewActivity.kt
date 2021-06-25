@@ -98,6 +98,7 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         val media = medias[currentPosition]
         val selectMediaIndexOf = selectMediaIndexOf(media)
         if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(selectMediaIndexOf)
+        checkView.isEnabled = !(selectMedias.size >= WisdomConfig.getInstance().maxSelectLimit && !checkView.isChecked)
         complete.text = getString(
             R.string.wis_complete,
             selectMedias.size,
