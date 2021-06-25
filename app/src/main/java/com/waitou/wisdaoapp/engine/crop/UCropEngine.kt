@@ -26,8 +26,8 @@ class UCropEngine : CropEngine {
     override fun onCropResult(data: Intent?, media: Media) {
         data?.let {
             val output = UCrop.getOutput(it)
-            media.cropPath = output?.path
-            Log.e("aa", "UCropEngine onCropResult uri = ${media.cropPath} ")
+            media.cropUri = output
+            Log.e("aa", "UCropEngine onCropResult uri = ${media.cropUri} ")
         }
     }
 }

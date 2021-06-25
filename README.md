@@ -48,7 +48,9 @@ Wisdom.of(this@MainActivity)
         .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
         .isCamera(isCamera) //是否打开相机，
         .setMedias(resultMedia)
-        .filterMaxFileSize(filterMaxFile)
+        .filterImageMaxFileSize(imageFilterMaxFile)
+        .filterVideoMaxFileSize(videoFilterMaxFile)
+        .mimeTypeSet(mimeTypeSet, false)
         .forResult(
             0x11,
             PhotoWallActivity::class.java

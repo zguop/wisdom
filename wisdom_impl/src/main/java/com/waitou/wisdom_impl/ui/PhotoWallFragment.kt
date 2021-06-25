@@ -75,7 +75,7 @@ class PhotoWallFragment : WisdomWallFragment() {
                     startPreview(
                         PhotoPreviewActivity::class.java,
                         selectMedias,
-                        if (WisdomConfig.getInstance().isCamera) position - 1 else position,
+                        currentPosition = if (WisdomConfig.getInstance().isCamera) position - 1 else position,
                     )
                 }
             }

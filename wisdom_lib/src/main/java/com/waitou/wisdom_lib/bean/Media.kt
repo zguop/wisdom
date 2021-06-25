@@ -45,12 +45,12 @@ class Media(
     /**
      * CropEngine crop
      */
-    var cropPath: String? = null
+    var cropUri: Uri? = null
 
     /**
      * CompressEngine compress
      */
-    var compressPath: String? = null
+    var compressUri: Uri? = null
 
     init {
         val contentUri = when {
@@ -74,19 +74,31 @@ class Media(
     }
 
     fun compressNullToPath(): String {
-        return compressPath ?: path
+        return compressUri?.path ?: path
     }
 
     fun cropNullToPath(): String {
-        return cropPath ?: path
+        return cropUri?.path ?: path
     }
 
     fun compressOrCropNullToPath(): String {
-        return compressPath ?: cropPath ?: path
+        return compressUri?.path ?: cropUri?.path ?: path
+    }
+
+    fun compressNullToUri(): Uri {
+        return compressUri ?: uri
+    }
+
+    fun cropNullToUri(): Uri {
+        return cropUri ?: uri
+    }
+
+    fun compressOrCropNullToUri(): Uri {
+        return compressUri ?: cropUri ?: uri
     }
 
     override fun toString(): String {
-        return "Media(mediaId='$mediaId', mediaType='$mineType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropPath, compressPath=$compressPath)"
+        return "Media(mediaId='$mediaId', mediaType='$mineType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropUri, compressPath=$compressUri)"
     }
 
     companion object {
@@ -120,8 +132,8 @@ class Media(
         parcel.writeString(path)
         parcel.writeLong(size)
         parcel.writeLong(duration)
-        parcel.writeString(cropPath)
-        parcel.writeString(compressPath)
+        parcel.writeParcelable(cropUri, 0)
+        parcel.writeParcelable(compressUri, 0)
     }
 
     override fun describeContents(): Int {
@@ -135,8 +147,8 @@ class Media(
         parcel.readLong(),
         parcel.readLong()
     ) {
-        cropPath = parcel.readString()
-        compressPath = parcel.readString()
+        cropUri = parcel.readParcelable(Uri::class.java.classLoader)
+        compressUri = parcel.readParcelable(Uri::class.java.classLoader)
     }
 
     override fun equals(other: Any?): Boolean {

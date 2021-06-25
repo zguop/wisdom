@@ -1,15 +1,17 @@
 package com.waitou.wisdaoapp;
 
+import android.net.Uri;
+
 /**
  * auth aboom
  * date 2020/5/9
  */
 public class PathBean {
-    public String path;
+    public Uri uri;
     public String size;
 
-    public PathBean(String path, String size) {
-        this.path = path;
+    public PathBean(Uri uri, String size) {
+        this.uri = uri;
         this.size = size;
     }
 }

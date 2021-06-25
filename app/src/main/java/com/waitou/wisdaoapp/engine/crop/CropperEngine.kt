@@ -25,6 +25,6 @@ class CropperEngine : CropEngine {
         Log.e("aa", "CropperEngine onCropResult uri = $uri")
         val originalUri = activityResult.originalUri
         Log.e("aa", "CropperEngine onCropResult originalUri = $originalUri")
-        media.cropPath = uri.path
+        media.cropUri = uri
     }
 }

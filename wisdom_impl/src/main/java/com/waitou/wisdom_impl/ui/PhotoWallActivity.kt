@@ -127,8 +127,8 @@ class PhotoWallActivity : WisdomWallActivity() {
     }
 
     private fun preView() {
-        val value = viewModule.selectCountLiveData.value
-        wisdomFragment().startPreview(PhotoPreviewActivity::class.java, value.orEmpty())
+        val value = viewModule.selectCountLiveData.value.orEmpty()
+        wisdomFragment().startPreview(PhotoPreviewActivity::class.java, value , "")
     }
 
     private fun complete() {

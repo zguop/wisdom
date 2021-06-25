@@ -26,9 +26,10 @@ class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         val media = datas[p1]
         Glide.with(p0.itemView.image)
-                .load(media.path)
+                .load(media.uri)
                 .apply(
                         RequestOptions()
+                            .placeholder(R.drawable.place_holder)
                                 .override(240, 240)
                 )
                 .into(p0.itemView.image)

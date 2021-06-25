@@ -2,6 +2,7 @@ package com.waitou.wisdaoapp.engine.compress;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.waitou.wisdom_lib.bean.Media;
@@ -11,6 +12,7 @@ import com.zxy.tiny.callback.FileBatchCallback;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 import kotlin.Unit;
@@ -26,9 +28,9 @@ public class TinyCompressEngine implements CompressEngine {
     public void compress(@NotNull Context context, @NotNull final List<Media> medias, @NotNull final Function0<Unit> function) {
         Tiny.FileCompressOptions compressOptions = new Tiny.FileCompressOptions();
         compressOptions.config = Bitmap.Config.ARGB_8888;
-        String[] fileArray = new String[medias.size()];
+        Uri[] fileArray = new Uri[medias.size()];
         for (int i = 0; i < medias.size(); i++) {
-            fileArray[i] = medias.get(i).cropNullToPath();
+            fileArray[i] = medias.get(i).cropNullToUri();
         }
         LogUtils.e("开始压缩...");
         Tiny.getInstance().source(fileArray)
@@ -41,7 +43,7 @@ public class TinyCompressEngine implements CompressEngine {
                             for (int i = 0; i < outfiles.length; i++) {
                                 Media media = medias.get(i);
                                 if (!media.isGif()) {
-                                    media.setCompressPath(outfiles[i]);
+                                    media.setCompressUri(Uri.fromFile(new File(outfiles[i])));
                                 }
                             }
                         }

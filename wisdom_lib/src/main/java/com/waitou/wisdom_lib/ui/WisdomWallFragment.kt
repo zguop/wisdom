@@ -186,6 +186,7 @@ abstract class WisdomWallFragment : Fragment(),
     fun startPreview(
         clazz: Class<out WisPreViewActivity>,
         selectMedia: List<Media>,
+        albumId: String = currentAlbumId,
         currentPosition: Int = 0,
     ) {
         val i = WisPreViewActivity.getIntent(
@@ -193,7 +194,7 @@ abstract class WisdomWallFragment : Fragment(),
             clazz,
             selectMedia,
             currentPosition,
-            currentAlbumId,
+            albumId,
             (requireActivity() as IFullImage).isFullImage(),
             WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
         )

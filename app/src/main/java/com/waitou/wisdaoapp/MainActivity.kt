@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 .compressEngine(compressEngine)
                 .cropEngine(cropEngine)
                 .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
-                .fileProvider("$packageName.utilcode.provider", AppUtils.getAppName()) //兼容android7.0
+                .fileProvider("$packageName.utilcode.provider", AppUtils.getAppName())
                 .isCamera(isCamera) //是否打开相机，
                 .setMedias(resultMedia)
                 .filterImageMaxFileSize(imageFilterMaxFile)
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                     0x11,
                     PhotoWallActivity::class.java
                 ) //requestCode，界面实现Activity，需要继承于核心库WisdomWallActivity
+
         }
 
         action.setOnClickListener {
@@ -99,19 +100,22 @@ class MainActivity : AppCompatActivity() {
             resultMedia?.also {
                 it.forEach { media ->
                     Log.e("aa", " ===================================== ")
-                    Log.e("aa", " 原图uri " + media.uri)
-                    Log.e("aa", " 原图地址 " + media.path)
-                    Log.e("aa", " 压缩地址 " + media.compressNullToPath())
-                    Log.e("aa", " 裁剪地址 " + media.cropNullToPath())
-                    Log.e("aa", " 拿到结果 " + media.compressOrCropNullToPath())
-                    Log.e("aa", " 大小 " + media.size)
-                    Log.e("aa", " mimeType " + media.mineType)
-                    Log.e("aa", " duration " + media.duration)
+                    Log.e("aa", " uri=" + media.uri)
+                    Log.e("aa", " path=" + media.path)
+                    Log.e("aa", " compressNullToPath=" + media.compressNullToPath())
+                    Log.e("aa", " cropNullToPath=" + media.cropNullToPath())
+                    Log.e("aa", " compressOrCropNullToPath=" + media.compressOrCropNullToPath())
+                    Log.e("aa", " compressNullToUri=" + media.compressNullToUri())
+                    Log.e("aa", " cropNullToUri=" + media.cropNullToUri())
+                    Log.e("aa", " compressOrCropNullToUri=" + media.compressOrCropNullToUri())
+                    Log.e("aa", " size=" + media.size)
+                    Log.e("aa", " mimeType=" + media.mineType)
+                    Log.e("aa", " duration=" + media.duration)
                     Log.e("aa", " ===================================== ")
                 }
                 this.adapter.addData(it.map { media ->
                     PathBean(
-                        media.compressOrCropNullToPath(),
+                        media.compressOrCropNullToUri(),
                         FileUtils.getFileSize(media.compressOrCropNullToPath())
                     )
                 })

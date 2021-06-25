@@ -47,7 +47,7 @@ abstract class WisPreViewActivity : AppCompatActivity(),
             clazz: Class<out WisPreViewActivity>,
             selectMedias: List<Media>,
             currentPosition: Int,
-            albumId: String?,
+            albumId: String,
             fullImage: Boolean,
             moduleType: Int
         ): Intent {
@@ -62,15 +62,12 @@ abstract class WisPreViewActivity : AppCompatActivity(),
     }
 
     private val mediaCollection by lazy { MediaCollection(activity = this, loaderMedia = this) }
-
-    private lateinit var albumId: String
-    lateinit var selectMedias: ArrayList<Media>
-
+    private var albumId: String = ""
     private var previewModule: Int = WIS_PREVIEW_MODULE_TYPE_VISIT
 
+    protected lateinit var selectMedias: ArrayList<Media>
     protected var currentPosition: Int = 0
     protected var fullImage: Boolean = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
