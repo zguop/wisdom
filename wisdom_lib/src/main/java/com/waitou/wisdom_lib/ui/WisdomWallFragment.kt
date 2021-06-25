@@ -20,7 +20,6 @@ import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
 import com.waitou.wisdom_lib.loader.MediaLoader
 import com.waitou.wisdom_lib.utils.*
-import java.util.*
 
 /**
  * auth aboom
@@ -86,11 +85,6 @@ abstract class WisdomWallFragment : Fragment(),
         beforeSelectorMedias(WisdomConfig.getInstance().imgMedias)
     }
 
-    private fun checkPermissionOnCamera(cameraPermission: (() -> Unit)?) {
-        cameraPermissionGranted = cameraPermission
-        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (Activity.RESULT_OK != resultCode) {
@@ -136,6 +130,14 @@ abstract class WisdomWallFragment : Fragment(),
     }
 
     /**
+     * 申请相机权限，默认会被调用
+     */
+    fun requestCameraPermissionLaunch(cameraPermission: (() -> Unit)? = cameraPermissionGranted) {
+        cameraPermissionGranted = cameraPermission
+        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+    }
+
+    /**
      * 加载目录
      */
     fun loadAlbum() {
@@ -156,7 +158,7 @@ abstract class WisdomWallFragment : Fragment(),
      * 打开相机拍照 复写onCameraResult方法接收相机回调
      */
     fun startCameraImage() {
-        checkPermissionOnCamera {
+        requestCameraPermissionLaunch {
             cameraStrategy.startCamera(
                 this,
                 WisdomConfig.getInstance().authorities,
@@ -169,7 +171,7 @@ abstract class WisdomWallFragment : Fragment(),
      * 打开相机录像，复写onCameraResult方法接收相机回调
      */
     fun startCameraVideo() {
-        checkPermissionOnCamera {
+        requestCameraPermissionLaunch {
             cameraStrategy.startCameraVideo(
                 this,
                 WisdomConfig.getInstance().authorities,

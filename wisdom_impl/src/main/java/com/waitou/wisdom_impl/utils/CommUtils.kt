@@ -5,6 +5,7 @@ package com.waitou.wisdom_impl.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.Uri
 import android.provider.Settings

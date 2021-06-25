@@ -91,16 +91,18 @@ class PhotoWallFragment : WisdomWallFragment() {
     }
 
     override fun onCameraPermissionDenied(isDeniedForever: Boolean) {
-        if (isDeniedForever) {
-            AlertDialog.Builder(requireContext())
-                .setMessage(R.string.wis_camera_permission_denied)
-                .setPositiveButton(R.string.wis_to_setting) { _, _ ->
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.wis_camera_permission_denied)
+            .setPositiveButton(if (isDeniedForever) R.string.wis_to_setting else R.string.wis_awarded) { _, _ ->
+                if (isDeniedForever) {
                     launchAppDetailsSettings(requireContext())
+                } else {
+                    requestCameraPermissionLaunch()
                 }
-                .setNegativeButton(R.string.wis_cancel, null)
-                .create()
-                .show()
-        }
+            }
+            .setNegativeButton(R.string.wis_cancel, null)
+            .create()
+            .show()
     }
 
     override fun onStoragePermissionDenied(isDeniedForever: Boolean) {
