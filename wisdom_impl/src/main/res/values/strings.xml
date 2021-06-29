@@ -8,10 +8,10 @@
     <string name="wis_take">Camera</string>
     <string name="wis_all">All</string>
     <string name="wis_original">Full image</string>
-    <string name="wis_storage_permission_denied">Need to read the phone storage permission, please go to the settings to open</string>
-    <string name="wis_camera_permission_denied">Need to access the device\'s camera permission to take pictures or video, please go to the settings to enable</string>
+    <string name="wis_storage_permission_denied">Please open storage permission in settings</string>
+    <string name="wis_camera_permission_denied">Please open camera permission in settings to take photos or videos</string>
     <string name="wis_to_setting">To set</string>
     <string name="wis_cancel">Cancel</string>
-    <string name="wis_awarded">Grant</string>
+    <string name="wis_awarded">Authorize</string>
 
 </resources>

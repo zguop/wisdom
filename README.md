@@ -30,9 +30,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.17'
+    implementation 'io.github.zguop:wisdom_lib:1.0.19'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.17'
+    implementation 'io.github.zguop:wisdom_impl:1.0.19'
 }
 ```
 ### 使用
@@ -107,10 +107,11 @@ Wisdom.of(this@MainActivity)
 
 ### 更新
 
-    时间：20210622（1.0.17）
+    时间：20210622（1.0.19）
     内容：1.适配AndroidX；
          2.支持AndroidQ；
          3.增强文件筛选功能：最大图片限制，最大视频限制，文件类型筛选
+         4.整体优化
 
     时间：20200705（1.0.16）
     内容：新增图片裁剪接口，扩展图片裁剪功能，自定义实现CropEngine，demo集成UCrop和Cropper裁剪框架，具体在Demo中查看。
