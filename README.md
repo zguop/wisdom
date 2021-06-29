@@ -2,22 +2,23 @@
 
 ### 项目介绍
 
-kotlin版本的图片视频选择器，多图片视频选择，权限适配，项目支持UI界面完全自定义，包含 wisdom_lib 和 默认UI实现的wisdom_impl，两者完全隔离。如果不满意当前实现的UI，可以依赖于wisdom_lib，实现一套符合项目需要的图片选择库。一款更加灵活的多媒体选择工具。
+Android 图片选择器，图片\视频选择，支持UI界面完全自定义，一款更加灵活的多媒体选择工具。
 
-### wisdom_lib 数据层
-- 抽象数据层，隐藏实现细节，基于它完全可以按设计图进行实现UI（轻量）
-- 无其它三方依赖
-- 支持图片，视频选择
+### wisdom_lib 核心
+- 支持图片，视频查询
 - 支持多数量选择 
 - 支持打开拍照，录像
-- 支持自定义图片加载框架
+- 支持自定义图片加载
 - 支持自定义图片压缩
-- 支持gif图片
+- 支持自定义图片裁剪
+- 支持文件过滤，加载指定格式图片
+- 适配AndroidQ
+- 充分自由定制
 
 ### wisdom_impl UI层
-- 默认的UI实现
-- 基于wisdom_lib,实现了所有功能
-- 如风格不一致，可以基于UI层进行修改
+- 默认的UI风格
+- 实现wisdom_lib所有功能
+- 可以基于UI层进行修改
 
 ### 依赖
 ```groovy
@@ -80,15 +81,6 @@ Wisdom.of(this@MainActivity)
      .setMedias(List<Media>)
      .go(PhotoPreviewActivity::class.java)
 
-Wisdom.of(this@MainActivity)
-     .preview()
-     .imageEngine(imageEngine)
-     .setPaths(listOf("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=255586071,2019273368&fm=26&gp=0.jpg",
-                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2028868596,3857587342&fm=26&gp=0.jpg",
-                    "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3147757822,2248639000&fm=26&gp=0.jpg",
-                    "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=248541496,3500754578&fm=26&gp=0.jpg"))
-     .go(PhotoPreviewActivity::class.java,1)//第二个参数是预览的起始位置
-
 ```
 
 ### 配置engine
@@ -109,7 +101,7 @@ Wisdom.of(this@MainActivity)
 
     时间：20210622（1.0.19）
     内容：1.适配AndroidX；
-         2.支持AndroidQ；
+         2.适配AndroidQ；
          3.增强文件筛选功能：最大图片限制，最大视频限制，文件类型筛选
          4.整体优化
 
