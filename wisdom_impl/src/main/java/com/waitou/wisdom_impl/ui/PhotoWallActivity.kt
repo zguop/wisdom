@@ -61,7 +61,10 @@ class PhotoWallActivity : WisdomWallActivity() {
         barTitle.setOnClickListener { showPop() }
         complete.setOnClickListener { complete() }
         preview.setOnClickListener { preView() }
-        findViewById<View>(R.id.originalLayout).setOnClickListener { original.toggle() }
+
+        val originalLayout =findViewById<View>(R.id.originalLayout)
+        originalLayout.visibility = if (WisdomConfig.getInstance().hasFullImage) View.VISIBLE else View.GONE
+        originalLayout.setOnClickListener { original.toggle() }
         findViewById<View>(R.id.back).setOnClickListener { onBackPressed() }
     }
 

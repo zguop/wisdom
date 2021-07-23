@@ -31,9 +31,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.19'
+    implementation 'io.github.zguop:wisdom_lib:1.0.20'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.19'
+    implementation 'io.github.zguop:wisdom_impl:1.0.20'
 }
 ```
 ### 使用
@@ -98,6 +98,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+
+    时间：20210721（1.0.20)
+    内容：增加原图按钮是否显示的方法
 
     时间：20210622（1.0.19）
     内容：1.适配AndroidX；

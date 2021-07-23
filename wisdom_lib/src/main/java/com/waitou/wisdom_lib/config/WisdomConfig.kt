@@ -28,6 +28,7 @@ class WisdomConfig private constructor() {
     var filterVideoMaxSize: Int? = null //最大选择的视频大小，超过该大小的视频不展示
     var mimeTypeSet: Set<String>? = null //限定文件类型 'image/gif','image/png'
     var isFilterMimeTypeSet = true // mimeTypeSet 过滤
+    var hasFullImage = true
 
     fun reset() {
         mediaType = ofAll()
@@ -43,6 +44,7 @@ class WisdomConfig private constructor() {
         filterVideoMaxSize = null
         mimeTypeSet = null
         isFilterMimeTypeSet = true
+        hasFullImage = true
     }
 
     companion object {

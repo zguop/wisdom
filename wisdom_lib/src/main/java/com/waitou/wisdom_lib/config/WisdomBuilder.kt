@@ -135,6 +135,15 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
+     * 原图按钮
+     * has full image button
+     */
+    fun hasFullImage(hasFullImage: Boolean): WisdomBuilder {
+        wisdomConfig.hasFullImage = hasFullImage
+        return this
+    }
+
+    /**
      * start to select media and wait for result.
      */
     fun forResult(requestCode: Int, clazz: Class<out WisdomWallActivity>) {

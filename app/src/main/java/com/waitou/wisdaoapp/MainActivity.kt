@@ -26,6 +26,7 @@ import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
 import com.waitou.wisdom_lib.interfaces.CompressEngine
+import com.zxy.tiny.core.CompressEngine
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 .fileProvider("$packageName.utilcode.provider", AppUtils.getAppName())
                 .isCamera(isCamera) //是否打开相机，
                 .setMedias(resultMedia)
+                .hasFullImage(true)
                 .filterImageMaxFileSize(imageFilterMaxFile)
                 .filterVideoMaxFileSize(videoFilterMaxFile)
                 .mimeTypeSet(mimeTypeSet, false)

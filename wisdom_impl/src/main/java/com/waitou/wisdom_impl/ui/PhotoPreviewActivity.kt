@@ -58,7 +58,11 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
 
         original.setChecked(fullImage)
-        findViewById<View>(R.id.originalLayout).setOnClickListener {
+
+
+        val originalLayout = findViewById<View>(R.id.originalLayout)
+        originalLayout.visibility = if (WisdomConfig.getInstance().hasFullImage) View.VISIBLE else View.GONE
+        originalLayout.setOnClickListener {
             fullImage = !fullImage
             original.setChecked(fullImage)
         }
