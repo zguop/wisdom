@@ -31,9 +31,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.20'
+    implementation 'io.github.zguop:wisdom_lib:1.0.21'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.20'
+    implementation 'io.github.zguop:wisdom_impl:1.0.21'
 }
 ```
 ### 使用
@@ -47,6 +47,7 @@ Wisdom.of(this@MainActivity)
         .cropEngine(cropEngine)
         .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
         .fileProvider("$packageName.utilcode.provider", "image") //兼容android7.0
+        .cameraEngine(cameraEngine) //自定义相机
         .isCamera(isCamera) //是否打开相机，
         .setMedias(resultMedia)
         .filterImageMaxFileSize(imageFilterMaxFile)
@@ -64,10 +65,18 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
             val resultMedia = Wisdom.obtainResult(data) //获取回调数据 类型Media 包含String path， Uri uri 路径
             Log.e("aa", resultMedia.toString())
             resultMedia.forEach { media ->
-                        Log.e("aa", " 原图地址 " + media.path)
-                        Log.e("aa", " 压缩图片地址 " + media.compressNullToPath())
-                        Log.e("aa", " 裁剪图片地址 " + media.cropNullToPath())
-                        Log.e("aa", " 压缩图片 -> 裁剪图片 -> 原图 " + media.compressOrCropNullToPath())
+                        Log.e("aa", " ===================================== ")
+                        Log.e("aa", " uri=" + media.uri)
+                        Log.e("aa", " path=" + media.path)
+                        Log.e("aa", " cropUri=" + media.cropUri)
+                        Log.e("aa", " compressUri=" + media.compressUri)
+                        Log.e("aa", " size=" + media.size)
+                        Log.e("aa", " width=" + media.width)
+                        Log.e("aa", " height=" + media.height)
+                        Log.e("aa", " orientation=" + media.orientation)
+                        Log.e("aa", " mimeType=" + media.mineType)
+                        Log.e("aa", " duration=" + media.duration)
+                        Log.e("aa", " ===================================== ")
                     }
         }
     }
@@ -98,6 +107,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20220331(1.0.21)
+    内容：1.新增width,height,orientations属性
+         2.新增CameraEngine扩展自定义相机
 
     时间：20210721（1.0.20)
     内容：增加原图按钮是否显示的方法
