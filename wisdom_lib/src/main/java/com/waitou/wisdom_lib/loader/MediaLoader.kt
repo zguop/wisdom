@@ -38,19 +38,25 @@ class MediaLoader private constructor(
         }
         //添加一个相机的item
         val mc = MatrixCursor(PROJECTION)
-        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", CameraStrategy.CONST_CAPTURE, 0, 0))
+        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", CameraStrategy.CONST_CAPTURE, 0, 0, 0, 0, 0))
         return MergeCursor(arrayOf(mc, cursor))
     }
 
     companion object {
+
+        internal var ORIENTATION = "orientation"
+
         /**
          * 查询media的字段
          */
-        internal val PROJECTION = arrayOf(
+        private val PROJECTION = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.MIME_TYPE,
             MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.SIZE,
+            MediaStore.MediaColumns.WIDTH,
+            MediaStore.MediaColumns.HEIGHT,
+            ORIENTATION,
             MediaStore.Audio.Media.DURATION
         )
 

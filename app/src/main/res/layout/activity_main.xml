@@ -64,8 +64,11 @@
             android:checked="true"
             android:text="显示隐藏相机拍照" />
 
-
-
+        <CheckBox
+            android:id="@+id/customCameraEngine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义Camera(参考engine使用)" />
 
         <RadioGroup
             android:id="@+id/radio"
@@ -229,6 +232,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="preview" />
+
+        <Button
+            android:id="@+id/externalStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MANAGE_EXTERNAL_STORAGE" />
 
 
     </LinearLayout>

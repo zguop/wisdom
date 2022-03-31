@@ -4,8 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
+import android.os.*
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -18,7 +17,6 @@ import com.waitou.wisdom_lib.interfaces.IFullImage
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.loader.AlbumCollection
 import com.waitou.wisdom_lib.loader.MediaCollection
-import com.waitou.wisdom_lib.loader.MediaLoader
 import com.waitou.wisdom_lib.utils.*
 
 /**
@@ -40,9 +38,10 @@ abstract class WisdomWallFragment : Fragment(),
     private val cameraStrategy by lazy { CameraStrategy() }
     private val cropStrategy by lazy { CropStrategy() }
 
-    private var currentAlbumId: String = Album.ALBUM_ID_ALL
-    private var cameraPermissionGranted: (() -> Unit)? = null
     private var iFullImage: IFullImage? = null
+    private var cameraPermissionGranted: (() -> Unit)? = null
+
+    protected var currentAlbumId: String = Album.ALBUM_ID_ALL
 
     private val storagePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
@@ -92,29 +91,19 @@ abstract class WisdomWallFragment : Fragment(),
         }
         // the camera callback
         if (CameraStrategy.CAMERA_REQUEST == requestCode) {
-            if (isAndroidQ()) {
-                handleCamera(cameraStrategy.fileUri)
-            } else {
-                SingleMediaScanner(requireContext(), cameraStrategy.filePath) { uri, _ ->
-                    handleCamera(uri)
+            cameraStrategy.cameraResult(requireContext(), data) {
+                if (it != null) {
+                    activity?.runOnUiThread {
+                        onCameraResult(it)
+                    }
                 }
             }
         }
-        // the crop callback
-        WisdomConfig.getInstance().cropEngine?.let {
-            if (cropStrategy.startCropRequest == requestCode) {
+        if (CropStrategy.CROP_REQUEST == requestCode) {
+            // the crop callback
+            WisdomConfig.getInstance().cropEngine?.let {
                 onCropResult(cropStrategy.cropResult(data))
             }
-        }
-    }
-
-    private fun handleCamera(uri: Uri) {
-        val media = requireContext().applicationContext.contentResolver.query(uri, MediaLoader.PROJECTION, null, null, null)?.use {
-            it.moveToFirst()
-            Media.valueOf(it)
-        }
-        if (media != null) {
-            onCameraResult(media)
         }
     }
 
@@ -126,7 +115,11 @@ abstract class WisdomWallFragment : Fragment(),
      * 申请存储权限，默认会被调用
      */
     fun requestStartPermissionLaunch() {
-        storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (isAndroidR() && Environment.isExternalStorageManager()) {
+            startLoading()
+        } else {
+            storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
     }
 
     /**
@@ -159,11 +152,7 @@ abstract class WisdomWallFragment : Fragment(),
      */
     fun startCameraImage() {
         requestCameraPermissionLaunch {
-            cameraStrategy.startCamera(
-                this,
-                WisdomConfig.getInstance().authorities,
-                WisdomConfig.getInstance().directory
-            )
+            cameraStrategy.startCameraImage(this)
         }
     }
 
@@ -172,12 +161,18 @@ abstract class WisdomWallFragment : Fragment(),
      */
     fun startCameraVideo() {
         requestCameraPermissionLaunch {
-            cameraStrategy.startCameraVideo(
-                this,
-                WisdomConfig.getInstance().authorities,
-                WisdomConfig.getInstance().directory
-            )
+            cameraStrategy.startCameraVideo(this)
         }
+    }
+
+    /**
+     * 配置了cropEngine进行裁剪
+     */
+    fun startCrop(media: Media): Boolean {
+        WisdomConfig.getInstance().cropEngine ?: return false
+        if (media.isGif() || media.isVideo()) return false
+        cropStrategy.startCrop(this, media)
+        return true
     }
 
     /**
@@ -199,16 +194,6 @@ abstract class WisdomWallFragment : Fragment(),
             WisPreViewActivity.WIS_PREVIEW_MODULE_TYPE_EDIT
         )
         previewActivityLauncher.launch(i)
-    }
-
-    /**
-     * 配置了cropEngine进行裁剪
-     */
-    fun startCrop(media: Media): Boolean {
-        WisdomConfig.getInstance().cropEngine ?: return false
-        if (media.isGif() || media.isVideo()) return false
-        cropStrategy.startCrop(this, media)
-        return true
     }
 
     /**

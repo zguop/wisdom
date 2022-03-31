@@ -1,6 +1,7 @@
 package com.waitou.wisdom_lib.interfaces
 
 import android.content.Intent
+import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.waitou.wisdom_lib.bean.Media
 
@@ -14,10 +15,8 @@ interface CropEngine {
      * 开始裁剪
      *
      * @param sojourn Jump and crop through fragment
-     * @param media get media.uri or media.path
-     * @return requestCode
      */
-    fun onStartCrop(sojourn: Fragment, media: Media): Int
+    fun onStartCrop(sojourn: Fragment, uri: Uri, requestCode: Int)
 
     /**
      * 裁剪结束
@@ -25,5 +24,5 @@ interface CropEngine {
      * @param data Intent data
      * @param media Assign value to cropPath
      */
-    fun onCropResult(data: Intent?, media: Media)
+    fun onCropResult(data: Intent?): Uri?
 }

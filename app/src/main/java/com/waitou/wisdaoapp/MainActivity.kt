@@ -3,6 +3,8 @@ package com.waitou.wisdaoapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.*
+import com.waitou.wisdaoapp.engine.camera.CustomCameraEngine
 import com.waitou.wisdaoapp.engine.compress.TinyCompressEngine
 import com.waitou.wisdaoapp.engine.crop.CropperEngine
 import com.waitou.wisdaoapp.engine.crop.UCropEngine
@@ -17,6 +20,7 @@ import com.waitou.wisdaoapp.engine.image.GlideEngine
 import com.waitou.wisdaoapp.engine.image.PicassoEngine
 import com.waitou.wisdom_impl.ui.PhotoPreviewActivity
 import com.waitou.wisdom_impl.ui.PhotoWallActivity
+import com.waitou.wisdom_impl.utils.formatSize
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
@@ -25,9 +29,10 @@ import com.waitou.wisdom_lib.interfaces.ImageEngine
 import com.waitou.wisdom_lib.config.ofAll
 import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
+import com.waitou.wisdom_lib.interfaces.CameraEngine
 import com.waitou.wisdom_lib.interfaces.CompressEngine
-import com.zxy.tiny.core.CompressEngine
 import kotlinx.android.synthetic.main.activity_main.*
+import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,13 +42,14 @@ class MainActivity : AppCompatActivity() {
     private var imageEngine: ImageEngine = GlideEngine()
     private var compressEngine: CompressEngine? = null
     private var cropEngine: CropEngine? = null
+    private var cameraEngine : CameraEngine?= null
     private var selectLimit = 2
     private var isCrop = false
     private var cropType = R.id.ucrop
     private var compressId = R.id.tiny
     private var resultMedia: List<Media>? = null
-    private var imageFilterMaxFile: Int? = null
-    private var videoFilterMaxFile: Int? = null
+    private var imageFilterMaxFile: Long? = null
+    private var videoFilterMaxFile: Long? = null
     private var mimeTypeSet: MutableSet<String>? = null
 
     private lateinit var adapter: MainAdapter
@@ -52,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
-
+//        UriUtils.uri2File()
         //配置代码
         go.setOnClickListener {
             //跳转到相册选择
@@ -65,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                 .selectLimit(selectLimit) //选择的最大数量 数量1为单选模式
                 .fileProvider("$packageName.utilcode.provider", AppUtils.getAppName())
                 .isCamera(isCamera) //是否打开相机，
+                .cameraEngine(cameraEngine)
                 .setMedias(resultMedia)
                 .hasFullImage(true)
                 .filterImageMaxFileSize(imageFilterMaxFile)
@@ -86,6 +93,12 @@ class MainActivity : AppCompatActivity() {
                     .go(PhotoPreviewActivity::class.java)
             }
         }
+
+        externalStorage.setOnClickListener {
+            val intent = Intent()
+            intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+            startActivity(intent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         if (data == null) {
             return
         }
+
         //相册回调
         if (requestCode == 0x11) {
             resultMedia = Wisdom.obtainResult(data) //获取回调数据
@@ -104,21 +118,28 @@ class MainActivity : AppCompatActivity() {
                     Log.e("aa", " ===================================== ")
                     Log.e("aa", " uri=" + media.uri)
                     Log.e("aa", " path=" + media.path)
-                    Log.e("aa", " compressNullToPath=" + media.compressNullToPath())
-                    Log.e("aa", " cropNullToPath=" + media.cropNullToPath())
-                    Log.e("aa", " compressOrCropNullToPath=" + media.compressOrCropNullToPath())
-                    Log.e("aa", " compressNullToUri=" + media.compressNullToUri())
-                    Log.e("aa", " cropNullToUri=" + media.cropNullToUri())
-                    Log.e("aa", " compressOrCropNullToUri=" + media.compressOrCropNullToUri())
+                    Log.e("aa", " cropUri=" + media.cropUri)
+                    Log.e("aa", " compressUri=" + media.compressUri)
                     Log.e("aa", " size=" + media.size)
+                    Log.e("aa", " width=" + media.width)
+                    Log.e("aa", " height=" + media.height)
+                    Log.e("aa", " orientation=" + media.orientation)
                     Log.e("aa", " mimeType=" + media.mineType)
                     Log.e("aa", " duration=" + media.duration)
                     Log.e("aa", " ===================================== ")
                 }
+
+
+
+
                 this.adapter.addData(it.map { media ->
+
+                    val closeable = Utils.getApp().contentResolver.openFileDescriptor(media.compressOrCropNullToUri(), "r")
+                    val parcelFileDescriptor = closeable as ParcelFileDescriptor
+                    val l = parcelFileDescriptor.statSize
                     PathBean(
                         media.compressOrCropNullToUri(),
-                        FileUtils.getFileSize(media.compressOrCropNullToPath())
+                        l.formatSize()
                     )
                 })
             }
@@ -148,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                imageFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
+                imageFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toLong() * 1024 * 1024
             }
         })
 
@@ -156,13 +177,22 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                videoFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toInt() * 1024 * 1024
+                videoFilterMaxFile = if (s.isNullOrEmpty()) null else s.toString().toLong() * 1024 * 1024
             }
         })
 
         //相机
         camera.setOnCheckedChangeListener { _, isChecked ->
             isCamera = isChecked
+            customCameraEngine.visibility = if(isCamera) View.VISIBLE else View.GONE
+        }
+
+        customCameraEngine.setOnCheckedChangeListener { _, isChecked ->
+            cameraEngine = if(isChecked){
+                CustomCameraEngine()
+            }else{
+                null
+            }
         }
 
         gif.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -221,11 +251,10 @@ class MainActivity : AppCompatActivity() {
             compressEngine = null
             return
         }
-        if (R.id.tiny == compressId) {
-            compressEngine =
-                TinyCompressEngine()
+        compressEngine = if (R.id.tiny == compressId) {
+            TinyCompressEngine()
         } else {
-            compressEngine = null
+            null
         }
     }
 
@@ -234,12 +263,14 @@ class MainActivity : AppCompatActivity() {
         radio3.visibility = if (isCrop) View.VISIBLE else View.GONE
         radio3.check(cropType)
 
-        if (isCrop) {
-            cropEngine = if (cropType == R.id.ucrop) {
+        cropEngine = if (isCrop) {
+            if (cropType == R.id.ucrop) {
                 UCropEngine()
             } else {
                 CropperEngine()
             }
+        } else {
+            null
         }
     }
 

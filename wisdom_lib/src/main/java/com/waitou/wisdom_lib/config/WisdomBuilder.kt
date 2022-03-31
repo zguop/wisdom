@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.waitou.wisdom_lib.Wisdom
 import com.waitou.wisdom_lib.bean.Media
+import com.waitou.wisdom_lib.interfaces.CameraEngine
 import com.waitou.wisdom_lib.interfaces.CompressEngine
 import com.waitou.wisdom_lib.interfaces.CropEngine
 import com.waitou.wisdom_lib.interfaces.ImageEngine
@@ -53,7 +54,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
-     * 图片加载
+     * 资源加载
      * image loading engine, need to be Implemented
      */
     fun imageEngine(iImageEngine: ImageEngine): WisdomBuilder {
@@ -62,7 +63,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
-     * 图片裁剪
+     * 裁剪
      * crop engine
      */
     fun cropEngine(cropEngine: CropEngine?): WisdomBuilder {
@@ -71,11 +72,20 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
     }
 
     /**
-     * 图片压缩
+     * 压缩
      * image compress engine
      */
     fun compressEngine(compressEngine: CompressEngine?): WisdomBuilder {
         wisdomConfig.compressEngine = compressEngine
+        return this
+    }
+
+    /**
+     * 相机
+     * custom camera engine
+     */
+    fun cameraEngine(cameraEngine: CameraEngine?): WisdomBuilder {
+        wisdomConfig.cameraEngine = cameraEngine
         return this
     }
 
@@ -92,7 +102,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      * 选择文件不能超过 maxFileSize，限制文件选择 1 * 1024 * 1024 = 1M
      * selector maxSize file
      */
-    fun filterMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+    fun filterMaxFileSize(maxFileSize: Long?): WisdomBuilder {
         filterImageMaxFileSize(maxFileSize)
         filterVideoMaxFileSize(maxFileSize)
         return this
@@ -102,7 +112,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      * 最大选择的图片大小，超过这个大小的图片不展示 1 * 1024 * 1024 = 1M
      * selector filterImageMaxSize file
      */
-    fun filterImageMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+    fun filterImageMaxFileSize(maxFileSize: Long?): WisdomBuilder {
         wisdomConfig.filterImageMaxSize = maxFileSize
         return this
     }
@@ -111,7 +121,7 @@ class WisdomBuilder(private val wisdom: Wisdom, mimeType: Int) {
      * 最大选择的视频大小，超过这个大小的视频不展示 1 * 1024 * 1024 = 1M
      * selector filterVideoMaxSize file
      */
-    fun filterVideoMaxFileSize(maxFileSize: Int?): WisdomBuilder {
+    fun filterVideoMaxFileSize(maxFileSize: Long?): WisdomBuilder {
         wisdomConfig.filterVideoMaxSize = maxFileSize
         return this
     }

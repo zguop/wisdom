@@ -2,6 +2,7 @@ package com.waitou.wisdom_impl.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.waitou.wisdom_lib.ui.WisdomWallFragment
 import com.waitou.wisdom_lib.utils.isSingleImage
 import com.waitou.wisdom_lib.utils.onlyImages
 import com.waitou.wisdom_lib.utils.onlyVideos
+import kotlin.math.log
 
 /**
  * auth aboom
@@ -58,7 +60,7 @@ class PhotoWallFragment : WisdomWallFragment() {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             layoutManager = GridLayoutManager(activity, 3)
-            addItemDecoration(GridSpacingItemDecoration(3, 2, false))
+            addItemDecoration(GridSpacingItemDecoration(3, 1, false))
             adapter = this@PhotoWallFragment.adapter.apply {
                 checkedListener = {
                     viewModule.selectCountLiveData.value = this@PhotoWallFragment.adapter.selectMedias
@@ -125,8 +127,12 @@ class PhotoWallFragment : WisdomWallFragment() {
     }
 
     override fun onCameraResult(media: Media) {
-        if (!startCrop(media)) {
-            resultFinish(listOf(media))
+        if (currentAlbumId == Album.ALBUM_ID_ALL) {
+            if (adapter.medias.find { media == it } == null) {
+                adapter.medias.add(1, media)
+                adapter.notifyItemInserted(1)
+            }
+            adapter.mediaCheckedChange(media, 1)
         }
     }
 
@@ -145,12 +151,12 @@ class PhotoWallFragment : WisdomWallFragment() {
     }
 
     override fun onPreviewResult(medias: List<Media>, exit: Boolean) {
-        if(exit){
-            if(isSingleImage() && startCrop(medias[0])){
+        if (exit) {
+            if (isSingleImage() && startCrop(medias[0])) {
                 return
             }
             resultFinish(medias)
-        }else{
+        } else {
             adapter.replaceSelectMedias(medias)
             viewModule.selectCountLiveData.value = adapter.selectMedias
         }

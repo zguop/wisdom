@@ -6,9 +6,12 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.MediaStore
+import android.util.Log
 import com.waitou.wisdom_lib.config.isGif
 import com.waitou.wisdom_lib.config.isImage
 import com.waitou.wisdom_lib.config.isVideo
+import com.waitou.wisdom_lib.loader.MediaLoader
+import java.lang.IllegalArgumentException
 
 /**
  * auth aboom
@@ -32,7 +35,13 @@ class Media(
      */
     var size: Long,
     /**
-     * video in ms
+     * image or video
+     */
+    var width: Int,
+    var height: Int,
+    var orientation: Int,
+    /**
+     * video duration
      */
     var duration: Long
 ) : Parcelable {
@@ -73,18 +82,6 @@ class Media(
         return isGif(mineType)
     }
 
-    fun compressNullToPath(): String {
-        return compressUri?.path ?: path
-    }
-
-    fun cropNullToPath(): String {
-        return cropUri?.path ?: path
-    }
-
-    fun compressOrCropNullToPath(): String {
-        return compressUri?.path ?: cropUri?.path ?: path
-    }
-
     fun compressNullToUri(): Uri {
         return compressUri ?: uri
     }
@@ -97,21 +94,24 @@ class Media(
         return compressUri ?: cropUri ?: uri
     }
 
-    override fun toString(): String {
-        return "Media(mediaId='$mediaId', mediaType='$mineType', path='$path', size=$size, duration=$duration, uri=$uri, cropPath=$cropUri, compressPath=$compressUri)"
-    }
 
     companion object {
         const val ITEM_ID_CAPTURE: Long = -1
 
         fun valueOf(cursor: Cursor): Media {
-            return Media(
-                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
-                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
-                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+            val mineType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE))
+            val data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+            val size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE))
+            val width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.WIDTH))
+            val height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.HEIGHT))
+            val orientation = cursor.getInt(cursor.getColumnIndexOrThrow(MediaLoader.ORIENTATION))
+            val duration = try {
                 cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
-            )
+            } catch (e: IllegalArgumentException) {
+                0
+            }
+            return Media(id, mineType, data, size, width, height, orientation, duration)
         }
 
         @JvmField
@@ -131,6 +131,9 @@ class Media(
         parcel.writeString(mineType)
         parcel.writeString(path)
         parcel.writeLong(size)
+        parcel.writeInt(width)
+        parcel.writeInt(height)
+        parcel.writeInt(orientation)
         parcel.writeLong(duration)
         parcel.writeParcelable(cropUri, 0)
         parcel.writeParcelable(compressUri, 0)
@@ -145,6 +148,9 @@ class Media(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readLong(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt(),
         parcel.readLong()
     ) {
         cropUri = parcel.readParcelable(Uri::class.java.classLoader)
@@ -166,5 +172,9 @@ class Media(
         result = 31 * result + path.hashCode()
         result = 31 * result + uri.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "Media(mediaId=$mediaId, mineType='$mineType', path='$path', size=$size, width=$width, height=$height, orientation=$orientation, duration=$duration, uri=$uri, cropUri=$cropUri, compressUri=$compressUri)"
     }
 }

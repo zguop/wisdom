@@ -1,6 +1,7 @@
 package com.waitou.wisdaoapp.engine.crop
 
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.theartofdev.edmodo.cropper.CropImage
@@ -13,18 +14,18 @@ import com.waitou.wisdom_lib.interfaces.CropEngine
  */
 class CropperEngine : CropEngine {
 
-    override fun onStartCrop(sojourn: Fragment, media: Media): Int {
-        CropImage.activity(media.uri).start(sojourn.requireActivity(), sojourn)
-        Log.e("aa", "CropperEngine onStartCrop uri = ${media.uri}")
-        return CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
+    override fun onStartCrop(sojourn: Fragment, uri: Uri, requestCode: Int) {
+        Log.e("aa", "CropperEngine onStartCrop uri = ${uri}")
+        val cropImage = CropImage.activity(uri)
+        sojourn.startActivityForResult(cropImage.getIntent(sojourn.requireContext()), requestCode)
     }
 
-    override fun onCropResult(data: Intent?, media: Media) {
+    override fun onCropResult(data: Intent?): Uri {
         val activityResult = CropImage.getActivityResult(data)
         val uri = activityResult.uri
         Log.e("aa", "CropperEngine onCropResult uri = $uri")
         val originalUri = activityResult.originalUri
         Log.e("aa", "CropperEngine onCropResult originalUri = $originalUri")
-        media.cropUri = uri
+        return uri
     }
 }

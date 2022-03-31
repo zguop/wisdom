@@ -11,16 +11,19 @@ import com.waitou.wisdom_lib.config.WisdomConfig
  */
 class CropStrategy {
 
-    private lateinit var media: Media
-    var startCropRequest: Int? = null
-        internal set
-
-    fun startCrop(fragment: Fragment, media: Media) {
-        this.media = media
-        this.startCropRequest = WisdomConfig.getInstance().cropEngine?.onStartCrop(fragment, media)
+    companion object {
+        const val CROP_REQUEST = 0X22
     }
 
-    fun cropResult(data: Intent?): Media {
-        return media.apply { WisdomConfig.getInstance().cropEngine?.onCropResult(data, this) }
+    private lateinit var media: Media
+
+    internal fun startCrop(fragment: Fragment, media: Media) {
+        this.media = media
+        WisdomConfig.getInstance().cropEngine?.onStartCrop(fragment, media.uri, CROP_REQUEST)
+    }
+
+    internal fun cropResult(data: Intent?): Media {
+        val cropUri = WisdomConfig.getInstance().cropEngine?.onCropResult(data)
+        return media.also { it.cropUri = cropUri }
     }
 }

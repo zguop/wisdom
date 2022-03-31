@@ -1,14 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.waitou.wisdom_impl">
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    package="com.waitou.wisdom_impl">
 
     <application>
-        <activity android:name=".ui.PhotoWallActivity"
-                  android:configChanges="orientation|screenSize"/>
-        <activity android:name=".ui.PhotoPreviewActivity"
-                  android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".ui.PhotoWallActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".ui.PhotoPreviewActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 </manifest>

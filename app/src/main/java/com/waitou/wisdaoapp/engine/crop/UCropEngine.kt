@@ -16,18 +16,15 @@ import com.yalantis.ucrop.UCrop
  */
 class UCropEngine : CropEngine {
 
-    override fun onStartCrop(sojourn: Fragment, media: Media): Int {
+    override fun onStartCrop(sojourn: Fragment, uri: Uri, requestCode: Int) {
         val file = CameraStrategy.createImageFile(Utils.getApp(), "IMAGE_%s.jpg", "image")
-        Log.e("aa", "UCropEngine onStartCrop uri = ${media.uri} destUri = $file")
-        UCrop.of(media.uri, Uri.fromFile(file)).start(sojourn.requireActivity(), sojourn)
-        return UCrop.REQUEST_CROP
+        Log.e("aa", "UCropEngine onStartCrop uri = $uri destUri = $file")
+        UCrop.of(uri, Uri.fromFile(file)).start(sojourn.requireActivity(), sojourn, requestCode)
     }
 
-    override fun onCropResult(data: Intent?, media: Media) {
-        data?.let {
-            val output = UCrop.getOutput(it)
-            media.cropUri = output
-            Log.e("aa", "UCropEngine onCropResult uri = ${media.cropUri} ")
-        }
+    override fun onCropResult(data: Intent?): Uri? {
+        val output = UCrop.getOutput(data!!)
+        Log.e("aa", "UCropEngine onCropResult uri = $output ")
+        return output
     }
 }

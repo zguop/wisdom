@@ -1,6 +1,7 @@
 package com.waitou.wisdom_lib.config
 
 import com.waitou.wisdom_lib.bean.Media
+import com.waitou.wisdom_lib.interfaces.CameraEngine
 import com.waitou.wisdom_lib.interfaces.CompressEngine
 import com.waitou.wisdom_lib.interfaces.CropEngine
 import com.waitou.wisdom_lib.interfaces.ImageEngine
@@ -22,10 +23,11 @@ class WisdomConfig private constructor() {
     var maxSelectLimit = 1
     var imageEngine: ImageEngine? = null
     var compressEngine: CompressEngine? = null
+    var cameraEngine: CameraEngine? = null
     var cropEngine: CropEngine? = null
     var imgMedias: List<Media>? = null
-    var filterImageMaxSize: Int? = null //最大选择的图片大小，超过该大小的图片不展示
-    var filterVideoMaxSize: Int? = null //最大选择的视频大小，超过该大小的视频不展示
+    var filterImageMaxSize: Long? = null //最大选择的图片大小，超过该大小的图片不展示
+    var filterVideoMaxSize: Long? = null //最大选择的视频大小，超过该大小的视频不展示
     var mimeTypeSet: Set<String>? = null //限定文件类型 'image/gif','image/png'
     var isFilterMimeTypeSet = true // mimeTypeSet 过滤
     var hasFullImage = true
@@ -38,6 +40,7 @@ class WisdomConfig private constructor() {
         maxSelectLimit = 1
         imageEngine = null
         compressEngine = null
+        cameraEngine = null
         cropEngine = null
         imgMedias = null
         filterImageMaxSize = null

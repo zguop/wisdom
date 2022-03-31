@@ -4,13 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.waitou.wisdom_lib.bean.Media;
 import com.waitou.wisdom_lib.interfaces.CompressEngine;
 import com.zxy.tiny.Tiny;
 import com.zxy.tiny.callback.FileBatchCallback;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +25,7 @@ import kotlin.jvm.functions.Function0;
 public class TinyCompressEngine implements CompressEngine {
 
     @Override
-    public void compress(@NotNull Context context, @NotNull final List<Media> medias, @NotNull final Function0<Unit> function) {
+    public void compress(@NonNull Context context, @NonNull List<Media> medias, @NonNull Function0<Unit> function0) {
         Tiny.FileCompressOptions compressOptions = new Tiny.FileCompressOptions();
         compressOptions.config = Bitmap.Config.ARGB_8888;
         Uri[] fileArray = new Uri[medias.size()];
@@ -47,7 +47,7 @@ public class TinyCompressEngine implements CompressEngine {
                                 }
                             }
                         }
-                        function.invoke();
+                        function0.invoke();
                     }
                 });
     }
