@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--选择原图按钮选中-->
-    <attr name="wisCheckRadioSelectorColor" format="color|reference"/>
-    <attr name="wisCheckRadioNormalColor" format="color|reference"/>
 
-
+    <!--预览-->
+    <attr name="wisPreviewString" format="string|reference" />
+    <!--完成(%1$d/%2$d)-->
+    <attr name="wisCompleteString" format="string|reference" />
+    <!--相机-->
+    <attr name="wisTakeString" format="string|reference" />
+    <!--全部-->
+    <attr name="wisAllString" format="string|reference" />
+    <!--原图-->
+    <attr name="wisOriginalString" format="string|reference" />
+    <!--存储权限描述-->
+    <attr name="wisStoragePermissionString" format="string|reference" />
+    <!--相机权限描述-->
+    <attr name="wisCameraPermissionString" format="string|reference" />
+    <!--去设置-->
+    <attr name="wisToSettingString" format="string|reference" />
+    <!--取消-->
+    <attr name="wisCanCelString" format="string|reference" />
+    <!--授予-->
+    <attr name="wisAwardedString" format="string|reference" />
 
 </resources>

@@ -13,6 +13,7 @@ import androidx.core.graphics.BlendModeCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.utils.formatSize
+import com.waitou.wisdom_impl.utils.obtainAttrRes
 import com.waitou.wisdom_impl.view.CheckView
 import com.waitou.wisdom_lib.bean.Media
 import com.waitou.wisdom_lib.config.WisdomConfig
@@ -22,7 +23,7 @@ import com.waitou.wisdom_lib.utils.getScreenImageResize
  * auth aboom
  * date 2019-05-28
  */
-class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MediasAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val VIEW_TYPE_CAPTURE: Int = 0x01
@@ -73,12 +74,14 @@ class MediasAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val media = medias[position]
         if (holder is CameraViewHolder) {
-            holder.cameraText.text = holder.itemView.context.getString(R.string.wis_take)
+            val context = holder.itemView.context
+            val obtainAttrRes = context.obtainAttrRes(R.attr.wisTakeString, R.string.wis_take)
+            holder.cameraText.text = context.getString(obtainAttrRes)
         } else if (holder is MediaViewHolder) {
             WisdomConfig.getInstance().imageEngine?.displayThumbnail(
                 holder.media, media.uri, getScreenImageResize(), getScreenImageResize(), media.isGif()
             )
-            holder.checkView.setCheckedNum(selectMediaIndexOf(media))
+            holder.checkView.initCheckedNum(selectMediaIndexOf(media))
             holder.checkView.isEnabled = !(selectMedias.size >= WisdomConfig.getInstance().maxSelectLimit && !holder.checkView.isChecked)
             holder.media.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(if (holder.checkView.isChecked)
                 Color.argb(80, 0, 0, 0) else Color.TRANSPARENT, BlendModeCompat.SRC_ATOP)

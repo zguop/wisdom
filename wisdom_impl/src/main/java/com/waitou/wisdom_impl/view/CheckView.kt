@@ -5,11 +5,13 @@ import android.content.Context
 import android.graphics.*
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Checkable
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.utils.dp2pxF
+import kotlin.math.log
 import kotlin.math.max
 
 /**
@@ -125,6 +127,8 @@ class CheckView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         if (checkedNum > UNCHECKED && checkNum == UNCHECKED) {
             val loadAnimation = AnimationUtils.loadAnimation(context, R.anim.wis_check_in)
             startAnimation(loadAnimation)
+        }else{
+            clearAnimation()
         }
         initCheckedNum(checkedNum)
     }

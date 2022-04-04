@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.provider.Settings
+import com.waitou.wisdom_impl.R
 import java.math.BigDecimal
 
 /**
@@ -20,6 +21,20 @@ fun Int.dp2pxI(): Int {
 
 fun Int.dp2pxF(): Float {
     return this * Resources.getSystem().displayMetrics.density + 0.5f
+}
+
+fun Context.obtainAttrRes(attr: Int, defaultRes: Int): Int {
+    return obtainAttrRes(intArrayOf(attr), intArrayOf(defaultRes))[0]
+}
+
+fun Context.obtainAttrRes(attr: IntArray, defaultRes: IntArray): IntArray {
+    val ta = theme.obtainStyledAttributes(attr)
+    val intArray = IntArray(attr.size)
+    defaultRes.forEachIndexed { index, i ->
+        intArray[index] = ta.getResourceId(index, i)
+    }
+    ta.recycle()
+    return intArray
 }
 
 fun launchAppDetailsSettings(context: Context) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.waitou.wisdom_impl.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/media"
@@ -67,11 +67,12 @@
         android:background="#b0567ba3"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:text="@string/wis_gif"
+        android:text="GIF"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:textStyle="bold"
         android:visibility="gone"
+        tools:ignore="HardcodedText"
         tools:text="GIF"
         tools:visibility="gone" />
 

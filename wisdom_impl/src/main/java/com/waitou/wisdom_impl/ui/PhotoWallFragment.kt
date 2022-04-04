@@ -2,7 +2,6 @@ package com.waitou.wisdom_impl.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.waitou.wisdom_impl.R
 import com.waitou.wisdom_impl.adapter.MediasAdapter
 import com.waitou.wisdom_impl.utils.launchAppDetailsSettings
+import com.waitou.wisdom_impl.utils.obtainAttrRes
 import com.waitou.wisdom_impl.view.GridSpacingItemDecoration
 import com.waitou.wisdom_impl.viewmodule.PhotoWallViewModule
 import com.waitou.wisdom_lib.bean.Album
@@ -21,7 +21,6 @@ import com.waitou.wisdom_lib.ui.WisdomWallFragment
 import com.waitou.wisdom_lib.utils.isSingleImage
 import com.waitou.wisdom_lib.utils.onlyImages
 import com.waitou.wisdom_lib.utils.onlyVideos
-import kotlin.math.log
 
 /**
  * auth aboom
@@ -93,24 +92,46 @@ class PhotoWallFragment : WisdomWallFragment() {
     }
 
     override fun onCameraPermissionDenied(isDeniedForever: Boolean) {
+        val attrStringsRes = requireContext().obtainAttrRes(intArrayOf(
+            R.attr.wisCameraPermissionString,
+            R.attr.wisToSettingString,
+            R.attr.wisAwardedString,
+            R.attr.wisCanCelString
+        ), intArrayOf(
+            R.string.wis_camera_permission_denied,
+            R.string.wis_to_setting,
+            R.string.wis_awarded,
+            R.string.wis_cancel
+        ))
         AlertDialog.Builder(requireContext())
-            .setMessage(R.string.wis_camera_permission_denied)
-            .setPositiveButton(if (isDeniedForever) R.string.wis_to_setting else R.string.wis_awarded) { _, _ ->
+            .setMessage(attrStringsRes[0])
+            .setPositiveButton(if (isDeniedForever) attrStringsRes[1] else attrStringsRes[2]) { _, _ ->
                 if (isDeniedForever) {
                     launchAppDetailsSettings(requireContext())
                 } else {
                     requestCameraPermissionLaunch()
                 }
             }
-            .setNegativeButton(R.string.wis_cancel, null)
+            .setNegativeButton(attrStringsRes[3], null)
             .create()
             .show()
     }
 
     override fun onStoragePermissionDenied(isDeniedForever: Boolean) {
+        val attrStringsRes = requireContext().obtainAttrRes(intArrayOf(
+            R.attr.wisStoragePermissionString,
+            R.attr.wisToSettingString,
+            R.attr.wisAwardedString,
+            R.attr.wisCanCelString
+        ), intArrayOf(
+            R.string.wis_camera_permission_denied,
+            R.string.wis_to_setting,
+            R.string.wis_awarded,
+            R.string.wis_cancel
+        ))
         AlertDialog.Builder(requireContext())
-            .setMessage(R.string.wis_storage_permission_denied)
-            .setPositiveButton(if (isDeniedForever) R.string.wis_to_setting else R.string.wis_awarded) { _, _ ->
+            .setMessage(attrStringsRes[0])
+            .setPositiveButton(if (isDeniedForever) attrStringsRes[1] else attrStringsRes[2]) { _, _ ->
                 if (isDeniedForever) {
                     toStorageSetting = true
                     launchAppDetailsSettings(requireContext())
@@ -118,7 +139,7 @@ class PhotoWallFragment : WisdomWallFragment() {
                     requestStartPermissionLaunch()
                 }
             }
-            .setNegativeButton(R.string.wis_cancel) { _, _ ->
+            .setNegativeButton(attrStringsRes[3]) { _, _ ->
                 requireActivity().finish()
             }
             .setCancelable(false)

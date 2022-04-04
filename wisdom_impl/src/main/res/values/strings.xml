@@ -1,10 +1,6 @@
 <resources>
     <string name="wis_preview">Preview</string>
-    <string name="wis_picture">Image</string>
-    <string name="wis_video">Video</string>
-    <string name="wis_gif">GIF</string>
     <string name="wis_complete">OK(%1$d/%2$d)</string>
-    <string name="wis_count">%1$d/%2$d</string>
     <string name="wis_take">Camera</string>
     <string name="wis_all">All</string>
     <string name="wis_original">Full image</string>
@@ -13,5 +9,4 @@
     <string name="wis_to_setting">To set</string>
     <string name="wis_cancel">Cancel</string>
     <string name="wis_awarded">Authorize</string>
-
 </resources>

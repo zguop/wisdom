@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#80000000"
-        android:paddingTop="15dp">
+        android:paddingTop="20dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -82,15 +82,16 @@
                 tools:src="@drawable/wis_svg_ic_radio_normal_color" />
 
             <TextView
+                android:id="@+id/originalTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:enabled="true"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
-                android:text="@string/wis_original"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="@string/wis_original" />
 
         </LinearLayout>
 

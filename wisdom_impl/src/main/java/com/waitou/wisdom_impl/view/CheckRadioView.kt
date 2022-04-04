@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.waitou.wisdom_impl.R
@@ -22,22 +23,19 @@ class CheckRadioView @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.wis_CheckRadioView)
         val ta = context.theme.obtainStyledAttributes(
             intArrayOf(
-                R.attr.wisCheckRadioSelectorColor,
-                R.attr.wisCheckRadioNormalColor
+                R.attr.colorPrimary
             )
         )
         selectedColor = a.getColor(
             R.styleable.wis_CheckRadioView_wis_selected_color,
-            ta.getColor(0, Color.parseColor("#808080"))
+            ta.getColor(0, ContextCompat.getColor(context, android.R.color.darker_gray))
         )
-        unColor =
-            a.getColor(
-                R.styleable.wis_CheckRadioView_wis_normal_color,
-                ta.getColor(1, Color.parseColor("#808080"))
-            )
+        unColor = a.getColor(
+            R.styleable.wis_CheckRadioView_wis_normal_color,
+            ContextCompat.getColor(context, android.R.color.darker_gray)
+        )
         a.recycle()
         ta.recycle()
-
         setChecked(false)
     }
 

@@ -1,5 +1,6 @@
 package com.waitou.wisdom_impl.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -8,8 +9,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.viewpager.widget.ViewPager
-import com.to.aboomy.statusbar_lib.StatusBarUtil
+import com.gyf.immersionbar.ImmersionBar
 import com.waitou.wisdom_impl.R
+import com.waitou.wisdom_impl.utils.obtainAttrRes
 import com.waitou.wisdom_impl.view.CheckRadioView
 import com.waitou.wisdom_impl.view.CheckView
 import com.waitou.wisdom_lib.bean.Media
@@ -29,15 +31,19 @@ class PhotoPreviewActivity : WisPreViewActivity() {
     private lateinit var bottomBar: View
     private lateinit var pager: ViewPager
     private lateinit var checkView: CheckView
-    private lateinit var complete: TextView
-    private lateinit var barTitle: TextView
+    private lateinit var completeTv: TextView
+    private lateinit var barTitleTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wis_activity_preview)
-        StatusBarUtil.transparencyBar(this, false)
 
-        initViewsOrListener()
+        ImmersionBar.with(this)
+            .autoDarkModeEnable(true)
+            .transparentStatusBar()
+            .init()
+
+        initViewsAndEvent()
 
         //不可以编辑隐藏编辑按钮
         if (!isEditor()) {
@@ -46,19 +52,21 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         }
     }
 
-    private fun initViewsOrListener() {
+    private fun initViewsAndEvent() {
         titleBar = findViewById(R.id.titleBar)
         bottomBar = findViewById(R.id.bottomBar)
         pager = findViewById(R.id.pager)
         checkView = findViewById(R.id.checkView)
-        barTitle = findViewById(R.id.barTitle)
-        complete = findViewById(R.id.complete)
+        barTitleTv = findViewById(R.id.barTitle)
+        completeTv = findViewById(R.id.complete)
+
+        completeTv.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
+
+        findViewById<TextView>(R.id.originalTv)
+            .setText(obtainAttrRes(R.attr.wisOriginalString, R.string.wis_original))
 
         val original = findViewById<CheckRadioView>(R.id.original)
-        complete.setOnClickListener { onResultFinish(selectMedias.isNotEmpty()) }
-
         original.setChecked(fullImage)
-
 
         val originalLayout = findViewById<View>(R.id.originalLayout)
         originalLayout.visibility = if (WisdomConfig.getInstance().hasFullImage) View.VISIBLE else View.GONE
@@ -103,12 +111,12 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         val selectMediaIndexOf = selectMediaIndexOf(media)
         if (initialization) checkView.initCheckedNum(selectMediaIndexOf) else checkView.setCheckedNum(selectMediaIndexOf)
         checkView.isEnabled = !(selectMedias.size >= WisdomConfig.getInstance().maxSelectLimit && !checkView.isChecked)
-        complete.text = getString(
-            R.string.wis_complete,
+        completeTv.text = getString(
+            obtainAttrRes(R.attr.wisCompleteString, R.string.wis_complete),
             selectMedias.size,
             WisdomConfig.getInstance().maxSelectLimit
         )
-        barTitle.text = getString(R.string.wis_count, currentPosition + 1, medias.size)
+        barTitleTv.text = String.format("%1d/%2d", currentPosition + 1, medias.size)
     }
 
     private fun selectMediaIndexOf(media: Media): Int {

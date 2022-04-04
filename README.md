@@ -110,6 +110,7 @@ Wisdom.of(this@MainActivity)
     时间：20220331(1.0.21)
     内容：1.新增width,height,orientations属性
          2.新增CameraEngine扩展自定义相机
+         3.UI国际化保留zh，en，如需更多语言，支持自定义文案，在style配置![theme.xml](https://github.com/zguop/wisdom/blob/master/wisdom_impl/src/main/res/values/theme.xml)属性
 
     时间：20210721（1.0.20)
     内容：增加原图按钮是否显示的方法
