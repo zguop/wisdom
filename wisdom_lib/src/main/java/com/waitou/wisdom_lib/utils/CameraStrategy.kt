@@ -8,9 +8,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
-import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.webkit.URLUtil
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
@@ -19,7 +17,6 @@ import com.waitou.wisdom_lib.config.MIME_TYPE_IMAGE_JPEG
 import com.waitou.wisdom_lib.config.MIME_TYPE_VIDEO_MP4
 import com.waitou.wisdom_lib.config.WisdomConfig
 import com.waitou.wisdom_lib.config.isImage
-import com.waitou.wisdom_lib.loader.MediaLoader
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

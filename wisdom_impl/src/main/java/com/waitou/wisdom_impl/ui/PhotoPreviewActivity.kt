@@ -1,5 +1,6 @@
 package com.waitou.wisdom_impl.ui
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -106,6 +107,7 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         refreshSelectedUI(false)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun refreshSelectedUI(initialization: Boolean) {
         val media = medias[currentPosition]
         val selectMediaIndexOf = selectMediaIndexOf(media)
@@ -113,10 +115,9 @@ class PhotoPreviewActivity : WisPreViewActivity() {
         checkView.isEnabled = !(selectMedias.size >= WisdomConfig.getInstance().maxSelectLimit && !checkView.isChecked)
         completeTv.text = getString(
             obtainAttrRes(R.attr.wisCompleteString, R.string.wis_complete),
-            selectMedias.size,
-            WisdomConfig.getInstance().maxSelectLimit
+            "${selectMedias.size}/${WisdomConfig.getInstance().maxSelectLimit}"
         )
-        barTitleTv.text = String.format("%1d/%2d", currentPosition + 1, medias.size)
+        barTitleTv.text = "${currentPosition + 1}/${medias.size}"
     }
 
     private fun selectMediaIndexOf(media: Media): Int {

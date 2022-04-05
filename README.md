@@ -31,9 +31,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.21'
+    implementation 'io.github.zguop:wisdom_lib:1.0.22'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.21'
+    implementation 'io.github.zguop:wisdom_impl:1.0.22'
 }
 ```
 ### 使用
@@ -107,6 +107,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20220405(1.0.22)
+    内容：1.没啥改动，就是删除无用导包，UI部分词条优化
+
     时间：20220331(1.0.21)
     内容：1.新增width,height,orientations属性
          2.新增CameraEngine扩展自定义相机

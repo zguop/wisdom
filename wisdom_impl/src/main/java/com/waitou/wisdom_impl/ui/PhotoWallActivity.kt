@@ -109,7 +109,9 @@ class PhotoWallActivity : WisdomWallActivity() {
     private fun updateBottomTextUI(size: Int = 0) {
         completeTv.isEnabled = size > 0
         previewTv.isEnabled = size > 0
-        completeTv.text = getString(obtainAttrRes(R.attr.wisCompleteString, R.string.wis_complete), size, WisdomConfig.getInstance().maxSelectLimit)
+        completeTv.text = getString(
+            obtainAttrRes(R.attr.wisCompleteString, R.string.wis_complete),
+            "$size/${WisdomConfig.getInstance().maxSelectLimit}")
     }
 
     private fun showPop() {

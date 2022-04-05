@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.util.Log
 import com.waitou.wisdom_lib.config.isGif
 import com.waitou.wisdom_lib.config.isImage
 import com.waitou.wisdom_lib.config.isVideo

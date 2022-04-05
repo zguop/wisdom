@@ -5,17 +5,9 @@ package com.waitou.wisdom_lib.utils
 
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import com.waitou.wisdom_lib.config.*
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.R)
 fun isAndroidR():Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
