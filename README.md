@@ -31,9 +31,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.22'
+    implementation 'io.github.zguop:wisdom_lib:1.0.23'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.22'
+    implementation 'io.github.zguop:wisdom_impl:1.0.23'
 }
 ```
 ### 使用
