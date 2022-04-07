@@ -38,7 +38,7 @@ class MediaLoader private constructor(
         }
         //添加一个相机的item
         val mc = MatrixCursor(PROJECTION)
-        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", CameraStrategy.CONST_CAPTURE, 0, 0, 0, 0, 0))
+        mc.addRow(arrayOf(Media.ITEM_ID_CAPTURE, "", "", CameraStrategy.CONST_CAPTURE, 0, 0, 0, 0, 0))
         return MergeCursor(arrayOf(mc, cursor))
     }
 
@@ -52,6 +52,7 @@ class MediaLoader private constructor(
         private val PROJECTION = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.MIME_TYPE,
+            MediaStore.MediaColumns.DISPLAY_NAME,
             MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.SIZE,
             MediaStore.MediaColumns.WIDTH,

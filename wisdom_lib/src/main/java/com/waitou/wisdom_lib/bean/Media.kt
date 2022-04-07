@@ -26,6 +26,10 @@ class Media(
      */
     var mineType: String,
     /**
+     * file name
+     */
+    var displayName: String,
+    /**
      * path
      */
     var path: String,
@@ -100,6 +104,7 @@ class Media(
         fun valueOf(cursor: Cursor): Media {
             val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
             val mineType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE))
+            val displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME))
             val data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
             val size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE))
             val width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.WIDTH))
@@ -110,7 +115,7 @@ class Media(
             } catch (e: IllegalArgumentException) {
                 0
             }
-            return Media(id, mineType, data, size, width, height, orientation, duration)
+            return Media(id, mineType, displayName, data, size, width, height, orientation, duration)
         }
 
         @JvmField
@@ -128,6 +133,7 @@ class Media(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(mediaId)
         parcel.writeString(mineType)
+        parcel.writeString(displayName)
         parcel.writeString(path)
         parcel.writeLong(size)
         parcel.writeInt(width)
@@ -144,6 +150,7 @@ class Media(
 
     private constructor(parcel: Parcel) : this(
         parcel.readLong(),
+        parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readLong(),
@@ -174,6 +181,6 @@ class Media(
     }
 
     override fun toString(): String {
-        return "Media(mediaId=$mediaId, mineType='$mineType', path='$path', size=$size, width=$width, height=$height, orientation=$orientation, duration=$duration, uri=$uri, cropUri=$cropUri, compressUri=$compressUri)"
+        return "Media(mediaId=$mediaId, mineType='$mineType', displayName='$displayName', path='$path', size=$size, width=$width, height=$height, orientation=$orientation, duration=$duration, uri=$uri, cropUri=$cropUri, compressUri=$compressUri)"
     }
 }

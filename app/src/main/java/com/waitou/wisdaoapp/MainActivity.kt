@@ -1,6 +1,7 @@
 package com.waitou.wisdaoapp
 
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Intent
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -31,8 +32,13 @@ import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
 import com.waitou.wisdom_lib.interfaces.CameraEngine
 import com.waitou.wisdom_lib.interfaces.CompressEngine
+import com.zxy.tiny.core.CompressEngine
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
+import java.io.InputStream
 import java.math.BigDecimal
+import java.security.DigestInputStream
+import java.security.MessageDigest
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var imageEngine: ImageEngine = GlideEngine()
     private var compressEngine: CompressEngine? = null
     private var cropEngine: CropEngine? = null
-    private var cameraEngine : CameraEngine?= null
+    private var cameraEngine: CameraEngine? = null
     private var selectLimit = 2
     private var isCrop = false
     private var cropType = R.id.ucrop
@@ -126,11 +132,10 @@ class MainActivity : AppCompatActivity() {
                     Log.e("aa", " orientation=" + media.orientation)
                     Log.e("aa", " mimeType=" + media.mineType)
                     Log.e("aa", " duration=" + media.duration)
+                    Log.e("aa", " fileName=" + media.displayName)
+                    Log.e("aa", " md5=" + contentResolver.openInputStream(media.uri)?.encryptMD5InputStream())
                     Log.e("aa", " ===================================== ")
                 }
-
-
-
 
                 this.adapter.addData(it.map { media ->
 
@@ -144,6 +149,19 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    fun InputStream?.encryptMD5InputStream(): String {
+        return this?.use {
+            var md = MessageDigest.getInstance("MD5")
+            val digestInputStream = DigestInputStream(it, md)
+            val buffer = ByteArray(256 * 1024)
+            while (true) {
+                if (digestInputStream.read(buffer) <= 0) break
+            }
+            md = digestInputStream.messageDigest
+            ConvertUtils.bytes2HexString(md.digest())
+        } ?: ""
     }
 
 
@@ -184,13 +202,13 @@ class MainActivity : AppCompatActivity() {
         //相机
         camera.setOnCheckedChangeListener { _, isChecked ->
             isCamera = isChecked
-            customCameraEngine.visibility = if(isCamera) View.VISIBLE else View.GONE
+            customCameraEngine.visibility = if (isCamera) View.VISIBLE else View.GONE
         }
 
         customCameraEngine.setOnCheckedChangeListener { _, isChecked ->
-            cameraEngine = if(isChecked){
+            cameraEngine = if (isChecked) {
                 CustomCameraEngine()
-            }else{
+            } else {
                 null
             }
         }

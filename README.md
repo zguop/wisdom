@@ -76,6 +76,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
                         Log.e("aa", " orientation=" + media.orientation)
                         Log.e("aa", " mimeType=" + media.mineType)
                         Log.e("aa", " duration=" + media.duration)
+                        Log.e("aa", " fileName=" + media.displayName)
                         Log.e("aa", " ===================================== ")
                     }
         }
@@ -107,6 +108,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20220406(1.0.23)
+    内容：1.Media新增文件名称属性
+
     时间：20220405(1.0.22)
     内容：1.没啥改动，就是删除无用导包，UI部分词条优化
 
