@@ -31,9 +31,9 @@ allprojects {
 
 dependencies {
     //核心库版本
-    implementation 'io.github.zguop:wisdom_lib:1.0.23'
+    implementation 'io.github.zguop:wisdom_lib:1.0.24'
     //UI版本
-    implementation 'io.github.zguop:wisdom_impl:1.0.23'
+    implementation 'io.github.zguop:wisdom_impl:1.0.24'
 }
 ```
 ### 使用
@@ -108,6 +108,9 @@ Wisdom.of(this@MainActivity)
 
 
 ### 更新
+    时间：20220413(1.0.24)
+    内容：1.增加原图勾选回调 Wisdom.isFullImage(data:Intent)
+
     时间：20220406(1.0.23)
     内容：1.Media新增文件名称属性
 

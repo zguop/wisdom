@@ -214,6 +214,7 @@ abstract class WisdomWallFragment : Fragment(),
         compress(resultMedias) {
             val i = Intent()
             i.putParcelableArrayListExtra(Wisdom.EXTRA_RESULT_SELECTION, ArrayList(resultMedias))
+            i.putExtra(Wisdom.EXTRA_RESULT_FULL_IMAGE, iFullImage?.isFullImage() ?: false)
             requireActivity().setResult(Activity.RESULT_OK, i)
             backDispatcher.onBackPressed()
         }

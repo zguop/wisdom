@@ -31,9 +31,19 @@ class Wisdom private constructor(sojourn: Any) {
          */
         const val EXTRA_RESULT_SELECTION = "extra_result_selection"
 
+        /**
+         * 是否勾选原图
+         */
+        const val EXTRA_RESULT_FULL_IMAGE = "extra_result_full_image"
+
         @JvmStatic
         fun obtainResult(data: Intent): List<Media> {
             return data.getParcelableArrayListExtra<Media>(EXTRA_RESULT_SELECTION).orEmpty()
+        }
+
+        @JvmStatic
+        fun isFullImage(data: Intent): Boolean {
+            return data.getBooleanExtra(EXTRA_RESULT_FULL_IMAGE, false)
         }
 
         @JvmStatic

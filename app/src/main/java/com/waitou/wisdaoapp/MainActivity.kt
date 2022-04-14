@@ -32,11 +32,8 @@ import com.waitou.wisdom_lib.config.ofImage
 import com.waitou.wisdom_lib.config.ofVideo
 import com.waitou.wisdom_lib.interfaces.CameraEngine
 import com.waitou.wisdom_lib.interfaces.CompressEngine
-import com.zxy.tiny.core.CompressEngine
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import java.io.InputStream
-import java.math.BigDecimal
 import java.security.DigestInputStream
 import java.security.MessageDigest
 
@@ -118,10 +115,13 @@ class MainActivity : AppCompatActivity() {
 
         //相册回调
         if (requestCode == 0x11) {
+            val fullImage = Wisdom.isFullImage(data)
             resultMedia = Wisdom.obtainResult(data) //获取回调数据
+
             resultMedia?.also {
                 it.forEach { media ->
                     Log.e("aa", " ===================================== ")
+                    Log.e("aa", " fullImage=$fullImage")
                     Log.e("aa", " uri=" + media.uri)
                     Log.e("aa", " path=" + media.path)
                     Log.e("aa", " cropUri=" + media.cropUri)
